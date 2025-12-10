@@ -39,6 +39,12 @@ import { GroupCard } from "@/components/ui/GroupCard";
 import { studentTabs } from "@/components/ui/StudentDashboardNav";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/contexts/ToastContext";
+import { AttachmentListing } from "@/components/ui/AttachmentListing";
+import { UploadAttachmentDialog } from "@/components/ui/UploadAttachmentDialog";
+import { FileAttachment } from "@/components/ui/FilePickerInput";
+import { MaterialCard } from "@/components/ui/MaterialCard";
+import { AssignmentCard } from "@/components/ui/AssignmentCard";
+import { AttendanceCheckIn } from "@/components/ui/AttendanceCheckIn";
 
 interface ClassData {
   id: string;
@@ -74,6 +80,17 @@ interface ClassData {
   posts: Array<any>;
   assignments: Array<any>;
   learningMaterials: Array<any>;
+  attachments?: Array<{
+    id: string;
+    fileName: string;
+    fileUrl: string;
+    fileSize?: number | null;
+    mimeType?: string | null;
+    uploadedAt?: Date | string;
+    uploader?: {
+      name: string;
+    };
+  }>;
 }
 
 export default function StudentClassDetailPage({
@@ -91,6 +108,10 @@ export default function StudentClassDetailPage({
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [isExitDialogOpen, setIsExitDialogOpen] = useState(false);
   const [isPostDialogOpen, setIsPostDialogOpen] = useState(false);
+  const [isUploadAttachmentOpen, setIsUploadAttachmentOpen] = useState(false);
+  const [attachments, setAttachments] = useState<any[]>([]);
+  const [materials, setMaterials] = useState<any[]>([]);
+  const [assignments, setAssignments] = useState<any[]>([]);
 
   const fetchClassData = async () => {
     try {
@@ -118,6 +139,9 @@ export default function StudentClassDetailPage({
       router.push("/login");
     } else if (!isLoading && user && !classData) {
       fetchClassData();
+      fetchAttachments();
+      fetchMaterials();
+      fetchAssignments();
     }
   }, [user, isLoading]);
 
@@ -140,13 +164,18 @@ export default function StudentClassDetailPage({
     }
   };
 
-  const handleComment = async (postId: string, content: string) => {
+  const handleComment = async (
+    postId: string,
+    content: string,
+    attachments?: FileAttachment[]
+  ) => {
     if (!content?.trim()) return;
 
     try {
       await axios.post(`/api/posts/${postId}/comments`, {
         authorId: user?.id,
         content,
+        attachments,
       });
       fetchClassData();
       toast.success("Đã thêm bình luận");
@@ -160,6 +189,7 @@ export default function StudentClassDetailPage({
     title: string;
     content: string;
     type: string;
+    attachments?: FileAttachment[];
   }) => {
     try {
       await axios.post(`/api/classes/${id}/posts`, {
@@ -185,6 +215,71 @@ export default function StudentClassDetailPage({
     } catch (error) {
       console.error("Failed to exit class:", error);
       toast.error("Không thể rời khỏi lớp học");
+    }
+  };
+
+  const fetchAttachments = async () => {
+    try {
+      const response = await axios.get(`/api/classes/${id}/attachments`);
+      setAttachments(response.data);
+    } catch (error) {
+      console.error("Failed to fetch attachments:", error);
+      toast.error("Lỗi", "Không thể tải danh sách tệp đính kèm");
+    }
+  };
+
+  const fetchMaterials = async () => {
+    try {
+      const response = await axios.get(`/api/classes/${id}/materials`);
+      setMaterials(response.data);
+    } catch (error) {
+      console.error("Failed to fetch materials:", error);
+      toast.error("Lỗi", "Không thể tải danh sách tài liệu học tập");
+    }
+  };
+
+  const fetchAssignments = async () => {
+    try {
+      const response = await axios.get(
+        `/api/classes/${id}/assignments?studentId=${user?.id}`
+      );
+      setAssignments(response.data);
+    } catch (error) {
+      console.error("Failed to fetch assignments:", error);
+      toast.error("Lỗi", "Không thể tải danh sách bài tập");
+    }
+  };
+
+  const handleUploadAttachment = async (formData: {
+    fileName: string;
+    fileUrl: string;
+    fileSize: number;
+    mimeType: string;
+  }) => {
+    try {
+      await axios.post(`/api/classes/${id}/attachments`, {
+        uploaderId: user?.id,
+        ...formData,
+      });
+      setIsUploadAttachmentOpen(false);
+      toast.success("Đã tải lên", "Tệp đã được tải lên thành công");
+      fetchAttachments();
+    } catch (error) {
+      console.error("Failed to upload attachment:", error);
+      toast.error("Lỗi", "Không thể tải lên tệp");
+    }
+  };
+
+  const handleDeleteAttachment = async (attachmentId: string) => {
+    if (!confirm("Bạn có chắc chắn muốn xóa tệp này?")) return;
+
+    try {
+      await axios.delete(`/api/classes/${id}/attachments/${attachmentId}`);
+      toast.success("Đã xóa", "Tệp đã được xóa");
+      fetchAttachments();
+    } catch (error) {
+      console.error("Failed to delete attachment:", error);
+      toast.error("Lỗi", "Không thể xóa tệp");
     }
   };
 
@@ -264,7 +359,9 @@ export default function StudentClassDetailPage({
                   <Tabs.Trigger value="posts">Bài viết</Tabs.Trigger>
                   <Tabs.Trigger value="assignments">Bài tập</Tabs.Trigger>
                   <Tabs.Trigger value="materials">Tài liệu</Tabs.Trigger>
+                  <Tabs.Trigger value="attachments">Tệp đính kèm</Tabs.Trigger>
                   <Tabs.Trigger value="groups">Nhóm</Tabs.Trigger>
+                  <Tabs.Trigger value="attendance">Điểm danh</Tabs.Trigger>
                 </>
               )}
               <Tabs.Trigger value="members">Thành viên</Tabs.Trigger>
@@ -329,15 +426,26 @@ export default function StudentClassDetailPage({
               <Tabs.Content value="assignments">
                 <Flex direction="column" gap="4" className="mt-6">
                   <Heading size="6">Bài tập</Heading>
-                  <Card className="bg-white p-8 text-center">
-                    <FiFileText
-                      className="mx-auto text-gray-400 mb-4"
-                      size={48}
-                    />
-                    <Text className="text-gray-600">
-                      Chức năng đang phát triển
-                    </Text>
-                  </Card>
+
+                  {assignments.length > 0 ? (
+                    <Flex direction="column" gap="3">
+                      {assignments.map((assignment) => (
+                        <AssignmentCard
+                          key={assignment.id}
+                          assignment={assignment}
+                          submission={assignment.submissions?.[0] || null}
+                        />
+                      ))}
+                    </Flex>
+                  ) : (
+                    <Card className="bg-white p-8 text-center">
+                      <FiFileText
+                        className="mx-auto text-gray-400 mb-4"
+                        size={48}
+                      />
+                      <Text className="text-gray-600">Chưa có bài tập nào</Text>
+                    </Card>
+                  )}
                 </Flex>
               </Tabs.Content>
             )}
@@ -347,12 +455,77 @@ export default function StudentClassDetailPage({
               <Tabs.Content value="materials">
                 <Flex direction="column" gap="4" className="mt-6">
                   <Heading size="6">Tài liệu học tập</Heading>
-                  <Card className="bg-white p-8 text-center">
-                    <FiFile className="mx-auto text-gray-400 mb-4" size={48} />
-                    <Text className="text-gray-600">
-                      Chức năng đang phát triển
-                    </Text>
-                  </Card>
+
+                  {materials.length > 0 ? (
+                    <Flex direction="column" gap="4">
+                      {materials.map((material) => (
+                        <MaterialCard
+                          key={material.id}
+                          material={material}
+                          canDelete={false}
+                        />
+                      ))}
+                    </Flex>
+                  ) : (
+                    <Card className="bg-white p-8 text-center">
+                      <FiFile
+                        className="mx-auto text-gray-400 mb-4"
+                        size={48}
+                      />
+                      <Text className="text-gray-600">
+                        Chưa có tài liệu học tập nào
+                      </Text>
+                    </Card>
+                  )}
+                </Flex>
+              </Tabs.Content>
+            )}
+
+            {/* Attachments Tab - Only for enrolled students */}
+            {isEnrolled && (
+              <Tabs.Content value="attachments">
+                <Flex direction="column" gap="4" className="mt-6">
+                  <Flex justify="between" align="center">
+                    <Heading size="6">Tệp đính kèm</Heading>
+                    <Button
+                      className="bg-mint-500 hover:bg-mint-600"
+                      onClick={() => {
+                        setIsUploadAttachmentOpen(true);
+                      }}
+                    >
+                      <FiPlus size={16} /> Tải lên tệp
+                    </Button>
+                  </Flex>
+
+                  <UploadAttachmentDialog
+                    open={isUploadAttachmentOpen}
+                    onOpenChange={setIsUploadAttachmentOpen}
+                    onUpload={handleUploadAttachment}
+                  />
+
+                  {attachments.length > 0 ? (
+                    <Flex direction="column" gap="2">
+                      {attachments.map((attachment) => (
+                        <AttachmentListing
+                          key={attachment.id}
+                          attachment={attachment}
+                          canDelete={attachment.uploader?.id === user?.id}
+                          onDelete={handleDeleteAttachment}
+                        />
+                      ))}
+                    </Flex>
+                  ) : (
+                    <Card className="bg-white p-8 text-center">
+                      <FiFile
+                        className="mx-auto text-gray-400 mb-4"
+                        size={48}
+                      />
+                      <Text className="text-gray-600">
+                        Chưa có tệp đính kèm nào. Nhấn "Tải lên tệp" để thêm
+                        tệp.
+                      </Text>
+                    </Card>
+                  )}
                 </Flex>
               </Tabs.Content>
             )}
@@ -403,6 +576,16 @@ export default function StudentClassDetailPage({
                       </Text>
                     </Card>
                   )}
+                </Flex>
+              </Tabs.Content>
+            )}
+
+            {/* Attendance Tab - Only for enrolled students */}
+            {isEnrolled && (
+              <Tabs.Content value="attendance">
+                <Flex direction="column" gap="4" className="mt-6">
+                  <Heading size="6">Điểm danh</Heading>
+                  <AttendanceCheckIn classId={id} studentId={user.id} />
                 </Flex>
               </Tabs.Content>
             )}

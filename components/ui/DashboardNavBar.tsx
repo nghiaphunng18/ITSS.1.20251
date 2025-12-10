@@ -11,6 +11,7 @@ import {
 } from "@radix-ui/themes";
 import { FiBook, FiLogOut, FiUser, FiSettings } from "react-icons/fi";
 import { useAuth } from "@/contexts/AuthContext";
+import { NotificationBell } from "./NotificationBell";
 
 interface DashboardNavBarProps {
   tabs: { label: string; href: string; icon: React.ReactNode }[];
@@ -67,51 +68,59 @@ export default function DashboardNavBar({ tabs }: DashboardNavBarProps) {
             })}
           </Flex>
 
-          {/* User Menu */}
-          <DropdownMenu.Root>
-            <DropdownMenu.Trigger>
-              <Button variant="ghost" className="cursor-pointer">
-                <Flex align="center" gap="2">
-                  <Avatar
-                    size="2"
-                    src={user?.avatar}
-                    fallback={user?.name?.charAt(0) || "U"}
-                    className="bg-mint-500"
-                  />
-                  <span className="text-sm font-medium text-gray-700">
-                    {user?.name}
-                  </span>
-                </Flex>
-              </Button>
-            </DropdownMenu.Trigger>
-            <DropdownMenu.Content>
-              <DropdownMenu.Item>
-                <Link
-                  href="/dashboard/settings"
-                  className="flex items-center gap-2"
-                >
-                  <FiSettings size={16} />
-                  Cài đặt tài khoản
-                </Link>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item>
-                <Link
-                  href="/dashboard/profile"
-                  className="flex items-center gap-2"
-                >
-                  <FiUser size={16} />
-                  Hồ sơ cá nhân
-                </Link>
-              </DropdownMenu.Item>
-              <DropdownMenu.Separator />
-              <DropdownMenu.Item color="red" onClick={logout}>
-                <Flex align="center" gap="2">
-                  <FiLogOut size={16} />
-                  Đăng xuất
-                </Flex>
-              </DropdownMenu.Item>
-            </DropdownMenu.Content>
-          </DropdownMenu.Root>
+          {/* Right side: Notifications + User Menu */}
+          <Flex align="center" gap="2">
+            {/* Notification Bell - Only show for students and teachers */}
+            {user && (user.role === "STUDENT" || user.role === "TEACHER") && (
+              <NotificationBell />
+            )}
+
+            {/* User Menu */}
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger>
+                <Button variant="ghost" className="cursor-pointer">
+                  <Flex align="center" gap="2">
+                    <Avatar
+                      size="2"
+                      src={user?.avatar}
+                      fallback={user?.name?.charAt(0) || "U"}
+                      className="bg-mint-500"
+                    />
+                    <span className="text-sm font-medium text-gray-700">
+                      {user?.name}
+                    </span>
+                  </Flex>
+                </Button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content>
+                <DropdownMenu.Item>
+                  <Link
+                    href="/dashboard/settings"
+                    className="flex items-center gap-2"
+                  >
+                    <FiSettings size={16} />
+                    Cài đặt tài khoản
+                  </Link>
+                </DropdownMenu.Item>
+                <DropdownMenu.Item>
+                  <Link
+                    href="/dashboard/profile"
+                    className="flex items-center gap-2"
+                  >
+                    <FiUser size={16} />
+                    Hồ sơ cá nhân
+                  </Link>
+                </DropdownMenu.Item>
+                <DropdownMenu.Separator />
+                <DropdownMenu.Item color="red" onClick={logout}>
+                  <Flex align="center" gap="2">
+                    <FiLogOut size={16} />
+                    Đăng xuất
+                  </Flex>
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
+          </Flex>
         </Flex>
       </Container>
     </nav>

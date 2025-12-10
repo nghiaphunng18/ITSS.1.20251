@@ -63,6 +63,8 @@ async function main() {
     await prisma.notificationSubscription.deleteMany();
     await prisma.notification.deleteMany();
     await prisma.notificationCategory.deleteMany();
+    await prisma.attendanceCheckIn.deleteMany();
+    await prisma.attendanceSession.deleteMany();
     await prisma.attendance.deleteMany();
     await prisma.comment.deleteMany();
     await prisma.postAttachment.deleteMany();
@@ -82,6 +84,33 @@ async function main() {
   } catch (error) {
     console.log("ℹ️  Bỏ qua xóa dữ liệu (có thể là lần chạy đầu tiên)");
   }
+
+  // ========================================
+  // CREATE NOTIFICATION CATEGORIES
+  // ========================================
+  const attendanceStartedCategory = await prisma.notificationCategory.create({
+    data: {
+      code: "ATTENDANCE_STARTED",
+      name: "Điểm danh bắt đầu",
+      description: "Thông báo khi giáo viên bắt đầu điểm danh",
+      icon: "FiUserCheck",
+      color: "mint",
+      priority: "HIGH",
+    },
+  });
+
+  const attendanceMissedCategory = await prisma.notificationCategory.create({
+    data: {
+      code: "ATTENDANCE_MISSED",
+      name: "Vắng mặt điểm danh",
+      description: "Thông báo khi sinh viên vắng mặt buổi điểm danh",
+      icon: "FiAlertCircle",
+      color: "red",
+      priority: "NORMAL",
+    },
+  });
+
+  console.log("✅ Đã tạo các danh mục thông báo");
 
   // ========================================
   // CREATE USERS
@@ -683,15 +712,186 @@ async function main() {
   console.log("✅ Đã tạo bài viết và bình luận");
 
   // ========================================
+  // CREATE LEARNING MATERIALS
+  // ========================================
+
+  const videoMaterials = [
+    {
+      title: "Bài giảng 1: Giới thiệu môn học",
+      description: "Video giới thiệu tổng quan về môn học và yêu cầu",
+      fileName: "lecture_01_introduction.mp4",
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+      type: "VIDEO" as const,
+      size: 5253880, // ~5MB
+      mimeType: "video/mp4",
+    },
+    {
+      title: "Bài giảng 2: Các khái niệm cơ bản",
+      description: "Video giảng dạy các khái niệm cơ bản và ví dụ minh họa",
+      fileName: "lecture_02_basics.mp4",
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+      type: "VIDEO" as const,
+      size: 4584373,
+      mimeType: "video/mp4",
+    },
+    {
+      title: "Hướng dẫn thực hành",
+      description: "Video hướng dẫn chi tiết các bước thực hành",
+      fileName: "tutorial_practice.mp4",
+      url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      type: "VIDEO" as const,
+      size: 2299653,
+      mimeType: "video/mp4",
+    },
+  ];
+
+  const documentMaterials = [
+    {
+      title: "Giáo trình môn học",
+      description: "Giáo trình chính thức của môn học",
+      fileName: "textbook.pdf",
+      url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      type: "PDF" as const,
+      size: 13264,
+      mimeType: "application/pdf",
+    },
+    {
+      title: "Slide bài giảng đầy đủ",
+      description: "Tổng hợp slide tất cả các bài giảng",
+      fileName: "all_slides.pdf",
+      url: "https://www.africau.edu/images/default/sample.pdf",
+      type: "PRESENTATION" as const,
+      size: 3028,
+      mimeType: "application/pdf",
+    },
+    {
+      title: "Tài liệu tham khảo",
+      description: "Các tài liệu tham khảo bổ sung cho môn học",
+      fileName: "references.pdf",
+      url: "https://pdfobject.com/pdf/sample.pdf",
+      type: "DOCUMENT" as const,
+      size: 8752,
+      mimeType: "application/pdf",
+    },
+  ];
+
+  for (const classItem of classes) {
+    const classTeachers = await prisma.classTeacher.findMany({
+      where: { classId: classItem.id },
+      include: { teacher: true },
+    });
+
+    const teacher = classTeachers[0].teacher;
+
+    // Add 2-3 video materials per class
+    const numVideos = 2 + Math.floor(Math.random() * 2);
+    for (let i = 0; i < numVideos; i++) {
+      const video = videoMaterials[i % videoMaterials.length];
+      await prisma.learningMaterial.create({
+        data: {
+          classId: classItem.id,
+          uploadedById: teacher.id,
+          title: `${video.title} - ${classItem.code}`,
+          description: video.description,
+          fileName: video.fileName,
+          fileUrl: video.url,
+          fileSize: video.size,
+          mimeType: video.mimeType,
+          materialType: video.type,
+        },
+      });
+    }
+
+    // Add 2-3 document materials per class
+    const numDocs = 2 + Math.floor(Math.random() * 2);
+    for (let i = 0; i < numDocs; i++) {
+      const doc = documentMaterials[i % documentMaterials.length];
+      await prisma.learningMaterial.create({
+        data: {
+          classId: classItem.id,
+          uploadedById: teacher.id,
+          title: `${doc.title} - ${classItem.code}`,
+          description: doc.description,
+          fileName: doc.fileName,
+          fileUrl: doc.url,
+          fileSize: doc.size,
+          mimeType: doc.mimeType,
+          materialType: doc.type,
+        },
+      });
+    }
+
+    // Add some class attachments (different from learning materials)
+    const attachmentTypes = [
+      {
+        name: "Đề cương chi tiết môn học",
+        file: "syllabus_detailed.pdf",
+        url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+      },
+      {
+        name: "Quy định về bài tập và điểm số",
+        file: "grading_policy.pdf",
+        url: "https://www.africau.edu/images/default/sample.pdf",
+      },
+    ];
+
+    if (Math.random() > 0.3) {
+      const attachment = attachmentTypes[Math.floor(Math.random() * 2)];
+      await prisma.classAttachment.create({
+        data: {
+          classId: classItem.id,
+          uploaderId: teacher.id,
+          fileName: attachment.file,
+          fileUrl: attachment.url,
+          fileSize: 1024 * 512 + Math.floor(Math.random() * 1024 * 512),
+          mimeType: "application/pdf",
+        },
+      });
+    }
+  }
+
+  console.log("✅ Đã tạo tài liệu học tập và tệp đính kèm");
+
+  // ========================================
+  // CREATE NOTIFICATION CATEGORIES
+  // ========================================
+
+  const assignmentCategory = await prisma.notificationCategory.upsert({
+    where: { code: "ASSIGNMENT_CREATED" },
+    update: {},
+    create: {
+      code: "ASSIGNMENT_CREATED",
+      name: "Bài tập mới",
+      description: "Thông báo khi có bài tập mới được giao",
+      icon: "FiFileText",
+      color: "blue",
+      priority: "NORMAL",
+    },
+  });
+
+  console.log("✅ Đã tạo danh mục thông báo");
+
+  // ========================================
   // CREATE ASSIGNMENTS
   // ========================================
 
   const assignmentTemplates = [
-    "Bài tập về nhà",
-    "Bài tập thực hành",
-    "Project nhóm",
-    "Bài tập lớn",
-    "Tiểu luận",
+    {
+      title: "Bài tập về nhà",
+      desc: "Bài tập lý thuyết cần hoàn thành tại nhà",
+    },
+    {
+      title: "Bài tập thực hành",
+      desc: "Bài tập thực hành với code và demo",
+    },
+    {
+      title: "Project nhóm",
+      desc: "Dự án nhóm yêu cầu làm việc theo nhóm",
+    },
+    {
+      title: "Bài tập lớn cuối kỳ",
+      desc: "Bài tập tổng hợp kiến thức cả môn học",
+    },
   ];
 
   for (const classItem of classes) {
@@ -699,49 +899,267 @@ async function main() {
       where: { classId: classItem.id },
     });
 
+    const classStudents = await prisma.classEnrollment.findMany({
+      where: {
+        classId: classItem.id,
+        status: "ACTIVE",
+      },
+    });
+
+    // Get class groups
+    const classGroups = await prisma.group.findMany({
+      where: { classId: classItem.id },
+      include: {
+        members: true,
+      },
+    });
+
     const teacher = classTeachers[0];
-    const numAssignments = 2 + Math.floor(Math.random() * 2); // 2-3 assignments
+    const numAssignments = 2 + Math.floor(Math.random() * 3); // 2-4 assignments
 
     for (let i = 0; i < numAssignments; i++) {
       const dueDate = new Date();
       dueDate.setDate(dueDate.getDate() + 7 + i * 7);
 
-      await prisma.assignment.create({
+      const template = assignmentTemplates[i % assignmentTemplates.length];
+
+      // Randomly assign to a group or all students
+      const isGroupAssignment = classGroups.length > 0 && Math.random() > 0.6;
+      const targetGroup = isGroupAssignment
+        ? classGroups[Math.floor(Math.random() * classGroups.length)]
+        : null;
+
+      const assignment = await prisma.assignment.create({
         data: {
           classId: classItem.id,
+          groupId: targetGroup?.id || null,
           createdById: teacher.teacherId,
-          title: `${assignmentTemplates[i % assignmentTemplates.length]} ${
-            i + 1
-          } - ${classItem.name}`,
-          description: `Mô tả chi tiết bài tập ${i + 1} cho môn ${
-            classItem.name
-          }. Sinh viên cần hoàn thành và nộp đúng hạn. Bài tập này chiếm ${
+          title: `${template.title} ${i + 1}`,
+          description: `${template.desc}. ${
+            targetGroup
+              ? `Bài tập này dành riêng cho nhóm ${targetGroup.name}.`
+              : "Bài tập này dành cho tất cả sinh viên trong lớp."
+          } Sinh viên cần hoàn thành và nộp đúng hạn. Bài tập chiếm ${
             10 + i * 5
           }% điểm tổng kết.`,
           dueDate,
           maxPoints: 10 + i * 5,
           status: "PUBLISHED",
+          attachments:
+            Math.random() > 0.5
+              ? {
+                  create: [
+                    {
+                      fileName: `${classItem.code}_assignment_${i + 1}.pdf`,
+                      fileUrl: `https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf`,
+                      fileSize: 13264,
+                      mimeType: "application/pdf",
+                    },
+                  ],
+                }
+              : undefined,
         },
+      });
+
+      // Create notifications for affected students
+      const affectedStudentIds = targetGroup
+        ? targetGroup.members.map((m) => m.studentId)
+        : classStudents.map((e) => e.studentId);
+
+      await prisma.notification.createMany({
+        data: affectedStudentIds.map((studentId) => ({
+          userId: studentId,
+          categoryId: assignmentCategory.id,
+          title: targetGroup
+            ? `Bài tập nhóm mới: ${assignment.title}`
+            : `Bài tập mới: ${assignment.title}`,
+          message: `Giáo viên đã giao bài tập mới trong lớp ${
+            classItem.name
+          }. Hạn nộp: ${dueDate.toLocaleDateString("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })}`,
+          link: `/dashboard/student/assignments/${assignment.id}`,
+          priority: "NORMAL",
+          metadata: {
+            assignmentId: assignment.id,
+            classId: classItem.id,
+            groupId: targetGroup?.id || null,
+          },
+        })),
       });
     }
   }
 
-  console.log("✅ Đã tạo bài tập");
+  console.log("✅ Đã tạo bài tập và thông báo");
+
+  // ========================================
+  // ATTENDANCE SESSIONS
+  // ========================================
+  console.log("\n🔔 Tạo phiên điểm danh...");
+
+  for (const classItem of classes) {
+    // Get enrolled students
+    const enrolledStudents = await prisma.classEnrollment.findMany({
+      where: { classId: classItem.id },
+      select: { studentId: true },
+    });
+
+    if (enrolledStudents.length === 0) continue;
+
+    // Create 2-3 attendance sessions per class with varied states
+    const numSessions = 2 + Math.floor(Math.random() * 2);
+
+    for (let i = 0; i < numSessions; i++) {
+      const sessionCode = Math.floor(
+        100000 + Math.random() * 900000
+      ).toString();
+
+      const now = new Date();
+
+      // Different scenarios for demo purposes:
+      if (i === 0) {
+        // First session: Active with 5 minutes remaining (recently started)
+        const startTime = new Date(now.getTime() - 5 * 60 * 1000); // Started 5 mins ago
+        const endTime = new Date(now.getTime() + 5 * 60 * 1000); // Ends in 5 mins
+
+        const session = await prisma.attendanceSession.create({
+          data: {
+            classId: classItem.id,
+            title: "Điểm danh hôm nay",
+            sessionCode,
+            status: "ACTIVE",
+            createdById: classItem.createdBy!,
+            startTime,
+            endTime,
+          },
+        });
+
+        // 30-50% of students have already checked in
+        const earlyBirds = 0.3 + Math.random() * 0.2;
+        const numCheckedIn = Math.floor(enrolledStudents.length * earlyBirds);
+        const shuffled = [...enrolledStudents].sort(() => Math.random() - 0.5);
+        const attending = shuffled.slice(0, numCheckedIn);
+
+        for (const student of attending) {
+          const checkinTime = new Date(
+            startTime.getTime() + Math.random() * 5 * 60 * 1000
+          ); // Within first 5 mins
+
+          await prisma.attendanceCheckIn.create({
+            data: {
+              sessionId: session.id,
+              studentId: student.studentId,
+              checkedAt: checkinTime,
+            },
+          });
+        }
+      } else if (i === 1) {
+        // Second session: Just expired (1 minute ago) - missed deadline
+        const startTime = new Date(now.getTime() - 16 * 60 * 1000); // Started 16 mins ago
+        const endTime = new Date(now.getTime() - 1 * 60 * 1000); // Ended 1 min ago
+
+        const session = await prisma.attendanceSession.create({
+          data: {
+            classId: classItem.id,
+            title: "Điểm danh buổi trước",
+            sessionCode,
+            status: "ACTIVE", // Still marked active but expired
+            createdById: classItem.createdBy!,
+            startTime,
+            endTime,
+          },
+        });
+
+        // 60-75% checked in (some missed the deadline)
+        const attendanceRate = 0.6 + Math.random() * 0.15;
+        const numAttending = Math.floor(
+          enrolledStudents.length * attendanceRate
+        );
+        const shuffled = [...enrolledStudents].sort(() => Math.random() - 0.5);
+        const attending = shuffled.slice(0, numAttending);
+
+        for (const student of attending) {
+          const checkinTime = new Date(
+            startTime.getTime() + Math.random() * 14 * 60 * 1000
+          ); // Within the 15-min window
+
+          await prisma.attendanceCheckIn.create({
+            data: {
+              sessionId: session.id,
+              studentId: student.studentId,
+              checkedAt: checkinTime,
+            },
+          });
+        }
+      } else {
+        // Older sessions: Closed with good attendance
+        const daysAgo = i - 1;
+        const startTime = new Date(
+          now.getTime() - daysAgo * 24 * 60 * 60 * 1000
+        );
+        const endTime = new Date(startTime.getTime() + 15 * 60 * 1000);
+
+        const session = await prisma.attendanceSession.create({
+          data: {
+            classId: classItem.id,
+            title: `Điểm danh ${daysAgo} ngày trước`,
+            sessionCode,
+            status: "CLOSED",
+            createdById: classItem.createdBy!,
+            startTime,
+            endTime,
+          },
+        });
+
+        // 75-95% attendance for completed sessions
+        const attendanceRate = 0.75 + Math.random() * 0.2;
+        const numAttending = Math.floor(
+          enrolledStudents.length * attendanceRate
+        );
+        const shuffled = [...enrolledStudents].sort(() => Math.random() - 0.5);
+        const attending = shuffled.slice(0, numAttending);
+
+        for (const student of attending) {
+          const checkinTime = new Date(
+            startTime.getTime() + Math.random() * 15 * 60 * 1000
+          ); // Within 15 mins
+
+          await prisma.attendanceCheckIn.create({
+            data: {
+              sessionId: session.id,
+              studentId: student.studentId,
+              checkedAt: checkinTime,
+            },
+          });
+        }
+      }
+    }
+  }
+
+  console.log("✅ Đã tạo phiên điểm danh");
 
   console.log("\n✨ Hoàn thành khởi tạo cơ sở dữ liệu!");
   console.log("\n📊 Tóm tắt:");
   console.log(`- 1 admin`);
-  console.log(`- 10 giảng viên`);
+  console.log(`- 13 giảng viên`);
   console.log(`- 100 sinh viên`);
-  console.log(`- 7 lớp học (mỗi lớp 25-45 sinh viên)`);
-  console.log(`- Mỗi lớp có 3-5 bài viết`);
+  console.log(`- 13 lớp học (7 công khai + 6 riêng tư)`);
+  console.log(`- Mỗi lớp có 3-5 bài viết với tệp đính kèm`);
+  console.log(`- Mỗi lớp có 4-6 tài liệu học tập (video + PDF)`);
+  console.log(`- Mỗi lớp có 2-4 bài tập (cá nhân + nhóm)`);
+  console.log(`- Mỗi lớp có 2-3 phiên điểm danh:`);
+  console.log(`  • Phiên đang hoạt động (còn 5 phút)`);
+  console.log(`  • Phiên vừa hết hạn (quá 1 phút)`);
+  console.log(`  • Phiên đã đóng (ngày trước)`);
+  console.log(`- Thông báo bài tập mới cho sinh viên`);
   console.log(`- Mỗi bài viết có 2-6 bình luận`);
-  console.log(`- Mỗi lớp có 2-3 bài tập`);
   console.log("\n🔑 Thông tin đăng nhập:");
   console.log("────────────────────────────────");
   console.log("Admin: admin@hust.edu.vn / Admin@2025");
   console.log("Giảng viên: nguyenvanan@hust.edu.vn / Teacher@2025");
-  console.log("Sinh viên: (tự động tạo) / Student@2025");
+  console.log("Sinh viên: nguyenminhan20210001@sis.hust.edu.vn / Student@2025");
   console.log("────────────────────────────────");
 }
 

@@ -39,6 +39,23 @@ export async function GET(
             },
           },
         },
+        groups: {
+          include: {
+            members: {
+              include: {
+                student: {
+                  select: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    avatar: true,
+                    studentCode: true,
+                  },
+                },
+              },
+            },
+          },
+        },
         assignments: {
           orderBy: { dueDate: "asc" },
           take: 5,
@@ -68,6 +85,7 @@ export async function GET(
                 },
               },
             },
+            attachments: true,
             comments: {
               include: {
                 author: {
@@ -91,6 +109,7 @@ export async function GET(
                     },
                   },
                 },
+                attachments: true,
               },
             },
             votes: true,

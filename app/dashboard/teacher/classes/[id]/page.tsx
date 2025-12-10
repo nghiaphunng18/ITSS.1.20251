@@ -29,6 +29,7 @@ import {
   FiThumbsUp,
   FiCalendar,
   FiLogOut,
+  FiClock,
   FiUserPlus,
   FiSettings,
   FiTrash2,
@@ -44,6 +45,13 @@ import { CreatePostDialog } from "@/components/ui/CreatePostDialog";
 import { teacherTabs } from "@/components/ui/TeacherDashboardNav";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/contexts/ToastContext";
+import { AttachmentListing } from "@/components/ui/AttachmentListing";
+import { UploadAttachmentDialog } from "@/components/ui/UploadAttachmentDialog";
+import { FileAttachment } from "@/components/ui/FilePickerInput";
+import { MaterialCard } from "@/components/ui/MaterialCard";
+import { CreateAssignmentDialog } from "@/components/ui/CreateAssignmentDialog";
+import { AssignmentCard } from "@/components/ui/AssignmentCard";
+import { AttendanceSessionDialog } from "@/components/ui/AttendanceSessionDialog";
 
 interface ClassData {
   id: string;
@@ -81,6 +89,17 @@ interface ClassData {
   posts: Array<any>;
   assignments: Array<any>;
   learningMaterials: Array<any>;
+  attachments?: Array<{
+    id: string;
+    fileName: string;
+    fileUrl: string;
+    fileSize?: number | null;
+    mimeType?: string | null;
+    uploadedAt?: Date | string;
+    uploader?: {
+      name: string;
+    };
+  }>;
 }
 
 export default function TeacherClassDetailPage({
@@ -101,6 +120,16 @@ export default function TeacherClassDetailPage({
   const [isGroupDialogOpen, setIsGroupDialogOpen] = useState(false);
   const [isMembersDialogOpen, setIsMembersDialogOpen] = useState(false);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
+  const [isUploadAttachmentOpen, setIsUploadAttachmentOpen] = useState(false);
+  const [attachments, setAttachments] = useState<any[]>([]);
+  const [materials, setMaterials] = useState<any[]>([]);
+  const [isAssignmentDialogOpen, setIsAssignmentDialogOpen] = useState(false);
+  const [assignments, setAssignments] = useState<any[]>([]);
+  const [isAttendanceDialogOpen, setIsAttendanceDialogOpen] = useState(false);
+  const [attendanceSessions, setAttendanceSessions] = useState<any[]>([]);
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
+    null
+  );
 
   const fetchClassData = async () => {
     try {
@@ -125,11 +154,53 @@ export default function TeacherClassDetailPage({
     }
   };
 
+  const fetchAttachments = async () => {
+    try {
+      const { data } = await axios.get(`/api/classes/${id}/attachments`);
+      setAttachments(data);
+    } catch (error) {
+      console.error("Failed to fetch attachments:", error);
+    }
+  };
+
+  const fetchMaterials = async () => {
+    try {
+      const { data } = await axios.get(`/api/classes/${id}/materials`);
+      setMaterials(data);
+    } catch (error) {
+      console.error("Failed to fetch materials:", error);
+    }
+  };
+
+  const fetchAssignments = async () => {
+    try {
+      const { data } = await axios.get(`/api/classes/${id}/assignments`);
+      setAssignments(data);
+    } catch (error) {
+      console.error("Failed to fetch assignments:", error);
+    }
+  };
+
+  const fetchAttendanceSessions = async () => {
+    try {
+      const { data } = await axios.get(
+        `/api/classes/${id}/attendance-sessions`
+      );
+      setAttendanceSessions(data);
+    } catch (error) {
+      console.error("Failed to fetch attendance sessions:", error);
+    }
+  };
+
   useEffect(() => {
     if (!isLoading && (!user || user.role !== "TEACHER")) {
       router.push("/login");
     } else if (!isLoading && user && !classData) {
       fetchClassData();
+      fetchAttachments();
+      fetchMaterials();
+      fetchAssignments();
+      fetchAttendanceSessions();
     }
   }, [user, isLoading]);
 
@@ -173,13 +244,18 @@ export default function TeacherClassDetailPage({
     }
   };
 
-  const handleComment = async (postId: string, content: string) => {
+  const handleComment = async (
+    postId: string,
+    content: string,
+    attachments?: FileAttachment[]
+  ) => {
     if (!content?.trim()) return;
 
     try {
       await axios.post(`/api/posts/${postId}/comments`, {
         authorId: user?.id,
         content,
+        attachments,
       });
       fetchClassData();
       toast.success("Đã thêm bình luận");
@@ -224,6 +300,75 @@ export default function TeacherClassDetailPage({
     } catch (error) {
       console.error("Failed to join class:", error);
       toast.error("Lỗi", "Không thể tham gia lớp");
+    }
+  };
+
+  const handleCreateAssignment = async (formData: {
+    title: string;
+    description: string;
+    dueDate: string;
+    maxPoints: number;
+    groupId: string | null;
+    attachments?: FileAttachment[];
+  }) => {
+    try {
+      await axios.post(`/api/classes/${id}/assignments`, {
+        ...formData,
+        createdById: user?.id,
+      });
+      setIsAssignmentDialogOpen(false);
+      toast.success("Đã tạo bài tập", "Bài tập đã được giao thành công");
+      fetchAssignments();
+    } catch (error) {
+      console.error("Failed to create assignment:", error);
+      toast.error("Lỗi", "Không thể tạo bài tập");
+      throw error;
+    }
+  };
+
+  const handleDeleteAssignment = async (assignmentId: string) => {
+    if (!confirm("Bạn có chắc chắn muốn xóa bài tập này?")) return;
+
+    try {
+      await axios.delete(`/api/assignments/${assignmentId}`);
+      toast.success("Đã xóa", "Bài tập đã được xóa");
+      fetchAssignments();
+    } catch (error) {
+      console.error("Failed to delete assignment:", error);
+      toast.error("Lỗi", "Không thể xóa bài tập");
+    }
+  };
+
+  const handleUploadAttachment = async (formData: {
+    fileName: string;
+    fileUrl: string;
+    fileSize: number;
+    mimeType: string;
+  }) => {
+    try {
+      await axios.post(`/api/classes/${id}/attachments`, {
+        uploaderId: user?.id,
+        ...formData,
+      });
+      setIsUploadAttachmentOpen(false);
+      toast.success("Đã tải lên", "Tệp đã được tải lên thành công");
+      fetchAttachments();
+    } catch (error) {
+      console.error("Failed to upload attachment:", error);
+      toast.error("Lỗi", "Không thể tải lên tệp");
+    }
+  };
+
+  const handleDeleteAttachment = async (attachmentId: string) => {
+    if (!confirm("Bạn có chắc chắn muốn xóa tệp này?")) return;
+
+    try {
+      await axios.delete(`/api/classes/${id}/attachments/${attachmentId}`);
+      toast.success("Đã xóa", "Tệp đã được xóa");
+      fetchAttachments();
+    } catch (error) {
+      console.error("Failed to delete attachment:", error);
+      toast.error("Lỗi", "Không thể xóa tệp");
     }
   };
 
@@ -327,6 +472,17 @@ export default function TeacherClassDetailPage({
       toast.error("Lỗi", "Không thể lưu thay đổi thành viên");
       throw error;
     }
+  };
+
+  const handleOpenSessionDialog = (sessionId?: string) => {
+    setSelectedSessionId(sessionId || null);
+    setIsAttendanceDialogOpen(true);
+  };
+
+  const handleCloseAttendanceDialog = () => {
+    setIsAttendanceDialogOpen(false);
+    setSelectedSessionId(null);
+    fetchAttendanceSessions(); // Refresh the list
   };
 
   if (isLoading || loading) {
@@ -452,6 +608,7 @@ export default function TeacherClassDetailPage({
                   <Tabs.Trigger value="posts">Bài viết</Tabs.Trigger>
                   <Tabs.Trigger value="assignments">Bài tập</Tabs.Trigger>
                   <Tabs.Trigger value="materials">Tài liệu</Tabs.Trigger>
+                  <Tabs.Trigger value="attachments">Tệp đính kèm</Tabs.Trigger>
                 </>
               )}
               <Tabs.Trigger value="students">Sinh viên</Tabs.Trigger>
@@ -519,19 +676,44 @@ export default function TeacherClassDetailPage({
                 <Flex direction="column" gap="4" className="mt-6">
                   <Flex justify="between" align="center">
                     <Heading size="6">Bài tập</Heading>
-                    <Button className="bg-mint-500 hover:bg-mint-600">
+                    <Button
+                      className="bg-mint-500 hover:bg-mint-600"
+                      onClick={() => setIsAssignmentDialogOpen(true)}
+                    >
                       <FiPlus size={16} /> Tạo bài tập
                     </Button>
                   </Flex>
-                  <Card className="bg-white p-8 text-center">
-                    <FiFileText
-                      className="mx-auto text-gray-400 mb-4"
-                      size={48}
-                    />
-                    <Text className="text-gray-600">
-                      Chức năng đang phát triển
-                    </Text>
-                  </Card>
+
+                  <CreateAssignmentDialog
+                    open={isAssignmentDialogOpen}
+                    onOpenChange={setIsAssignmentDialogOpen}
+                    onSubmit={handleCreateAssignment}
+                    groups={classData.groups || []}
+                  />
+
+                  {assignments.length > 0 ? (
+                    <Flex direction="column" gap="3">
+                      {assignments.map((assignment) => (
+                        <AssignmentCard
+                          key={assignment.id}
+                          assignment={assignment}
+                          canDelete={true}
+                          onDelete={() => handleDeleteAssignment(assignment.id)}
+                        />
+                      ))}
+                    </Flex>
+                  ) : (
+                    <Card className="bg-white p-8 text-center">
+                      <FiFileText
+                        className="mx-auto text-gray-400 mb-4"
+                        size={48}
+                      />
+                      <Text className="text-gray-600">
+                        Chưa có bài tập nào. Nhấn "Tạo bài tập" để giao bài tập
+                        mới.
+                      </Text>
+                    </Card>
+                  )}
                 </Flex>
               </Tabs.Content>
             )}
@@ -542,16 +724,97 @@ export default function TeacherClassDetailPage({
                 <Flex direction="column" gap="4" className="mt-6">
                   <Flex justify="between" align="center">
                     <Heading size="6">Tài liệu học tập</Heading>
-                    <Button className="bg-mint-500 hover:bg-mint-600">
+                    <Button
+                      className="bg-mint-500 hover:bg-mint-600"
+                      onClick={() => {
+                        // TODO: Add upload learning material dialog
+                        toast.info(
+                          "Sắp ra mắt",
+                          "Chức năng tải lên tài liệu đang được phát triển"
+                        );
+                      }}
+                    >
                       <FiPlus size={16} /> Tải lên tài liệu
                     </Button>
                   </Flex>
-                  <Card className="bg-white p-8 text-center">
-                    <FiFile className="mx-auto text-gray-400 mb-4" size={48} />
-                    <Text className="text-gray-600">
-                      Chức năng đang phát triển
-                    </Text>
-                  </Card>
+
+                  {materials.length > 0 ? (
+                    <Flex direction="column" gap="4">
+                      {materials.map((material) => (
+                        <MaterialCard
+                          key={material.id}
+                          material={material}
+                          canDelete={material.uploadedBy?.id === user?.id}
+                          onDelete={(id) => {
+                            // TODO: Add delete material function
+                            toast.info(
+                              "Sắp ra mắt",
+                              "Chức năng xóa tài liệu đang được phát triển"
+                            );
+                          }}
+                        />
+                      ))}
+                    </Flex>
+                  ) : (
+                    <Card className="bg-white p-8 text-center">
+                      <FiFile
+                        className="mx-auto text-gray-400 mb-4"
+                        size={48}
+                      />
+                      <Text className="text-gray-600">
+                        Chưa có tài liệu học tập nào.
+                      </Text>
+                    </Card>
+                  )}
+                </Flex>
+              </Tabs.Content>
+            )}
+
+            {/* Attachments Tab - Only for teaching teachers */}
+            {isTeaching && (
+              <Tabs.Content value="attachments">
+                <Flex direction="column" gap="4" className="mt-6">
+                  <Flex justify="between" align="center">
+                    <Heading size="6">Tệp đính kèm</Heading>
+                    <Button
+                      className="bg-mint-500 hover:bg-mint-600"
+                      onClick={() => {
+                        setIsUploadAttachmentOpen(true);
+                      }}
+                    >
+                      <FiPlus size={16} /> Tải lên tệp
+                    </Button>
+                  </Flex>
+
+                  <UploadAttachmentDialog
+                    open={isUploadAttachmentOpen}
+                    onOpenChange={setIsUploadAttachmentOpen}
+                    onUpload={handleUploadAttachment}
+                  />
+
+                  {attachments.length > 0 ? (
+                    <Flex direction="column" gap="2">
+                      {attachments.map((attachment) => (
+                        <AttachmentListing
+                          key={attachment.id}
+                          attachment={attachment}
+                          canDelete={true}
+                          onDelete={handleDeleteAttachment}
+                        />
+                      ))}
+                    </Flex>
+                  ) : (
+                    <Card className="bg-white p-8 text-center">
+                      <FiFile
+                        className="mx-auto text-gray-400 mb-4"
+                        size={48}
+                      />
+                      <Text className="text-gray-600">
+                        Chưa có tệp đính kèm nào. Nhấn "Tải lên tệp" để thêm
+                        tệp.
+                      </Text>
+                    </Card>
+                  )}
                 </Flex>
               </Tabs.Content>
             )}
@@ -596,19 +859,115 @@ export default function TeacherClassDetailPage({
                 <Flex direction="column" gap="4" className="mt-6">
                   <Flex justify="between" align="center">
                     <Heading size="6">Điểm danh</Heading>
-                    <Button className="bg-mint-500 hover:bg-mint-600">
-                      <FiCalendar size={16} /> Tạo buổi điểm danh
+                    <Button
+                      className="bg-mint-500 hover:bg-mint-600"
+                      onClick={() => handleOpenSessionDialog()}
+                    >
+                      <FiCheckCircle size={16} /> Bắt đầu điểm danh
                     </Button>
                   </Flex>
-                  <Card className="bg-white p-8 text-center">
-                    <FiCheckCircle
-                      className="mx-auto text-gray-400 mb-4"
-                      size={48}
-                    />
-                    <Text className="text-gray-600">
-                      Chức năng đang phát triển
-                    </Text>
-                  </Card>
+
+                  <AttendanceSessionDialog
+                    open={isAttendanceDialogOpen}
+                    onOpenChange={handleCloseAttendanceDialog}
+                    classId={id}
+                    students={classData.enrollments.map((e) => ({
+                      ...e.student,
+                      studentCode: e.student.studentCode ?? null,
+                    }))}
+                    sessionId={selectedSessionId}
+                  />
+
+                  {attendanceSessions.length > 0 ? (
+                    <Flex direction="column" gap="3">
+                      {attendanceSessions.map((session) => {
+                        const totalStudents = classData.enrollments.length;
+                        const checkedInCount = session.checkIns?.length || 0;
+                        const attendanceRate =
+                          totalStudents > 0
+                            ? Math.round((checkedInCount / totalStudents) * 100)
+                            : 0;
+
+                        const isActive = session.status === "ACTIVE";
+                        const isExpired =
+                          session.endTime &&
+                          new Date() > new Date(session.endTime);
+
+                        return (
+                          <Card
+                            key={session.id}
+                            className="cursor-pointer hover:shadow-md transition-shadow"
+                            onClick={() => handleOpenSessionDialog(session.id)}
+                          >
+                            <Flex direction="column" gap="3" p="4">
+                              <Flex justify="between" align="start">
+                                <Flex direction="column" gap="2">
+                                  <Flex align="center" gap="2">
+                                    <FiClock className="text-mint-500" />
+                                    <Text size="3" weight="bold">
+                                      {session.title}
+                                    </Text>
+                                  </Flex>
+                                  <Text size="2" className="text-gray-600">
+                                    Mã:{" "}
+                                    <span className="font-mono font-bold">
+                                      {session.sessionCode}
+                                    </span>
+                                  </Text>
+                                  <Text size="1" className="text-gray-500">
+                                    Bắt đầu:{" "}
+                                    {new Date(session.startTime).toLocaleString(
+                                      "vi-VN",
+                                      {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                      }
+                                    )}
+                                  </Text>
+                                </Flex>
+                                <Flex direction="column" gap="2" align="end">
+                                  <Badge
+                                    color={
+                                      isActive && !isExpired
+                                        ? "green"
+                                        : isExpired
+                                        ? "orange"
+                                        : "gray"
+                                    }
+                                    size="2"
+                                  >
+                                    {isActive && !isExpired
+                                      ? "Đang hoạt động"
+                                      : isExpired
+                                      ? "Hết hạn"
+                                      : "Đã đóng"}
+                                  </Badge>
+                                  <Text size="2" weight="bold">
+                                    {checkedInCount}/{totalStudents} sinh viên (
+                                    {attendanceRate}%)
+                                  </Text>
+                                </Flex>
+                              </Flex>
+                            </Flex>
+                          </Card>
+                        );
+                      })}
+                    </Flex>
+                  ) : (
+                    <Card className="bg-white p-8 text-center">
+                      <FiCheckCircle
+                        className="mx-auto text-gray-400 mb-4"
+                        size={48}
+                      />
+                      <Text className="text-gray-600">
+                        Chưa có phiên điểm danh nào. Nhấn "Bắt đầu điểm danh" để
+                        tạo phiên mới.
+                      </Text>
+                    </Card>
+                  )}
                 </Flex>
               </Tabs.Content>
             )}

@@ -47,6 +47,7 @@ model User {
   postVotes                PostVote[]
   commentVotes             CommentVote[]
   attendanceRecords        Attendance[]
+  attendanceCheckIns       AttendanceCheckIn[]        @relation("AttendanceCheckIns")
   notifications            Notification[]
   notificationSubscriptions NotificationSubscription[]
   groupMemberships         GroupMember[]
@@ -90,6 +91,7 @@ model Class {
   assignments      Assignment[]
   posts            Post[]
   attendance       Attendance[]
+  attendanceSessions AttendanceSession[]
   groups           Group[]
   learningMaterials LearningMaterial[]
   attachments      ClassAttachment[]
@@ -431,6 +433,51 @@ enum AttendanceStatus {
   ABSENT
   LATE
   EXCUSED
+}
+
+enum AttendanceSessionStatus {
+  ACTIVE
+  CLOSED
+}
+
+// Live attendance checking sessions
+model AttendanceSession {
+  id          String                  @id @default(cuid())
+  classId     String
+  title       String                  @default("Điểm danh")
+  sessionCode String                  @unique // 6-digit code for students to check in
+  status      AttendanceSessionStatus @default(ACTIVE)
+  createdById String
+  startTime   DateTime                @default(now())
+  endTime     DateTime?
+  createdAt   DateTime                @default(now())
+  updatedAt   DateTime                @updatedAt
+
+  // Relations
+  class       Class                    @relation(fields: [classId], references: [id], onDelete: Cascade)
+  checkIns    AttendanceCheckIn[]
+
+  @@index([classId])
+  @@index([sessionCode])
+  @@index([status])
+  @@map("attendance_sessions")
+}
+
+// Records of students checking in to attendance sessions
+model AttendanceCheckIn {
+  id        String   @id @default(cuid())
+  sessionId String
+  studentId String
+  checkedAt DateTime @default(now())
+
+  // Relations
+  session AttendanceSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  student User              @relation("AttendanceCheckIns", fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, studentId])
+  @@index([sessionId])
+  @@index([studentId])
+  @@map("attendance_check_ins")
 }
 
 model Attendance {

@@ -25,6 +25,7 @@ import {
 } from "react-icons/fi";
 import { CommentCard } from "./CommentCard";
 import { AttachmentCard } from "./AttachmentCard";
+import { FilePickerInput, FileAttachment } from "./FilePickerInput";
 import { useState } from "react";
 
 interface PostCardProps {
@@ -81,7 +82,11 @@ interface PostCardProps {
   currentUserId: string;
   userVote?: { voteType: string } | null;
   onVote?: (postId: string, voteType: "UPVOTE" | "DOWNVOTE") => void;
-  onComment?: (postId: string, content: string) => void;
+  onComment?: (
+    postId: string,
+    content: string,
+    attachments?: FileAttachment[]
+  ) => void;
   onEdit?: (
     postId: string,
     title: string,
@@ -111,6 +116,10 @@ export function PostCard({
   onCommentSortChange,
 }: PostCardProps) {
   const [commentText, setCommentText] = useState("");
+  const [commentAttachments, setCommentAttachments] = useState<
+    FileAttachment[]
+  >([]);
+  const [showCommentAttachments, setShowCommentAttachments] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editTitle, setEditTitle] = useState(post.title);
   const [editContent, setEditContent] = useState(post.content);
@@ -148,8 +157,14 @@ export function PostCard({
 
   const handleCommentSubmit = () => {
     if (commentText.trim() && onComment) {
-      onComment(post.id, commentText);
+      onComment(
+        post.id,
+        commentText,
+        commentAttachments.length > 0 ? commentAttachments : undefined
+      );
       setCommentText("");
+      setCommentAttachments([]);
+      setShowCommentAttachments(false);
     }
   };
 
@@ -301,27 +316,45 @@ export function PostCard({
 
           {/* Comment input */}
           {onComment && (
-            <Flex gap="2" className="mt-2">
-              <TextField.Root
-                placeholder="Viết bình luận..."
-                value={commentText}
-                onChange={(e) => setCommentText(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleCommentSubmit();
+            <Flex direction="column" gap="2" className="mt-2">
+              <Flex gap="2">
+                <TextField.Root
+                  placeholder="Viết bình luận..."
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleCommentSubmit();
+                    }
+                  }}
+                  className="flex-1"
+                />
+                <IconButton
+                  size="2"
+                  variant="soft"
+                  onClick={() =>
+                    setShowCommentAttachments(!showCommentAttachments)
                   }
-                }}
-                className="flex-1"
-              />
-              <Button
-                size="2"
-                onClick={handleCommentSubmit}
-                className="bg-mint-500"
-                disabled={!commentText.trim()}
-              >
-                <FiSend size={14} />
-              </Button>
+                >
+                  <FiPaperclip size={14} />
+                </IconButton>
+                <Button
+                  size="2"
+                  onClick={handleCommentSubmit}
+                  className="bg-mint-500"
+                  disabled={!commentText.trim()}
+                >
+                  <FiSend size={14} />
+                </Button>
+              </Flex>
+              {showCommentAttachments && (
+                <FilePickerInput
+                  attachments={commentAttachments}
+                  onAttachmentsChange={setCommentAttachments}
+                  maxFiles={3}
+                />
+              )}
             </Flex>
           )}
         </Flex>

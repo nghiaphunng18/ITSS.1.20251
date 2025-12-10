@@ -11,6 +11,7 @@ import {
   Select,
 } from "@radix-ui/themes";
 import { FiPlus } from "react-icons/fi";
+import { FilePickerInput, FileAttachment } from "./FilePickerInput";
 
 interface CreatePostDialogProps {
   open: boolean;
@@ -19,6 +20,7 @@ interface CreatePostDialogProps {
     title: string;
     content: string;
     type: string;
+    attachments?: FileAttachment[];
   }) => Promise<void>;
 }
 
@@ -32,15 +34,20 @@ export function CreatePostDialog({
     content: "",
     type: "DISCUSSION",
   });
+  const [attachments, setAttachments] = useState<FileAttachment[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit(formData);
+    await onSubmit({
+      ...formData,
+      attachments: attachments.length > 0 ? attachments : undefined,
+    });
     setFormData({
       title: "",
       content: "",
       type: "DISCUSSION",
     });
+    setAttachments([]);
   };
 
   return (
@@ -98,6 +105,16 @@ export function CreatePostDialog({
                 }
                 rows={6}
                 required
+              />
+            </label>
+            <label>
+              <Text as="div" size="2" mb="1" weight="bold">
+                Tệp đính kèm
+              </Text>
+              <FilePickerInput
+                attachments={attachments}
+                onAttachmentsChange={setAttachments}
+                maxFiles={5}
               />
             </label>
           </Flex>
