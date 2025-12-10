@@ -130,6 +130,9 @@ export default function TeacherClassDetailPage({
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(
     null
   );
+  const [commentSortOrder, setCommentSortOrder] = useState<"time" | "votes">(
+    "time"
+  );
 
   const fetchClassData = async () => {
     try {
@@ -228,19 +231,45 @@ export default function TeacherClassDetailPage({
     postId: string,
     voteType: "UPVOTE" | "DOWNVOTE"
   ) => {
+    if (!classData) return;
+
+    // Optimistic update
+    const updatedPosts = classData.posts.map((post) => {
+      if (post.id !== postId) return post;
+
+      const existingVote = post.votes?.find((v: any) => v.userId === user?.id);
+      let newVotes = post.votes ? [...post.votes] : [];
+
+      if (existingVote) {
+        if (existingVote.voteType === voteType) {
+          // Remove vote
+          newVotes = newVotes.filter((v: any) => v.userId !== user?.id);
+        } else {
+          // Change vote
+          newVotes = newVotes.map((v: any) =>
+            v.userId === user?.id ? { ...v, voteType } : v
+          );
+        }
+      } else {
+        // Add vote
+        newVotes.push({ userId: user?.id, voteType });
+      }
+
+      return { ...post, votes: newVotes };
+    });
+
+    setClassData({ ...classData, posts: updatedPosts });
+
     try {
       await axios.post(`/api/posts/${postId}/vote`, {
         userId: user?.id,
         voteType,
       });
-      fetchClassData();
-      toast.success(
-        "Đã bình chọn",
-        `Đã ${voteType === "UPVOTE" ? "thích" : "không thích"} bài viết`
-      );
     } catch (error) {
       console.error("Failed to vote:", error);
       toast.error("Lỗi", "Không thể bình chọn bài viết");
+      // Revert on error
+      fetchClassData();
     }
   };
 
@@ -263,6 +292,64 @@ export default function TeacherClassDetailPage({
       console.error("Failed to comment:", error);
       toast.error("Không thể thêm bình luận");
     }
+  };
+
+  const handleCommentVote = async (
+    commentId: string,
+    voteType: "UPVOTE" | "DOWNVOTE"
+  ) => {
+    if (!classData) return;
+
+    // Optimistic update
+    const updatedPosts = classData.posts.map((post) => {
+      if (!post.comments) return post;
+
+      const updatedComments = post.comments.map((comment: any) => {
+        if (comment.id !== commentId) return comment;
+
+        const existingVote = comment.votes?.find(
+          (v: any) => v.userId === user?.id
+        );
+        let newVotes = comment.votes ? [...comment.votes] : [];
+
+        if (existingVote) {
+          if (existingVote.voteType === voteType) {
+            // Remove vote
+            newVotes = newVotes.filter((v: any) => v.userId !== user?.id);
+          } else {
+            // Change vote
+            newVotes = newVotes.map((v: any) =>
+              v.userId === user?.id ? { ...v, voteType } : v
+            );
+          }
+        } else {
+          // Add vote
+          newVotes.push({ userId: user?.id, voteType });
+        }
+
+        return { ...comment, votes: newVotes };
+      });
+
+      return { ...post, comments: updatedComments };
+    });
+
+    setClassData({ ...classData, posts: updatedPosts });
+
+    try {
+      await axios.post(`/api/comments/${commentId}/vote`, {
+        userId: user?.id,
+        voteType,
+      });
+    } catch (error) {
+      console.error("Failed to vote on comment:", error);
+      toast.error("Lỗi", "Không thể bình chọn bình luận");
+      // Revert on error
+      fetchClassData();
+    }
+  };
+
+  const handleCommentSortChange = (value: "time" | "votes") => {
+    setCommentSortOrder(value);
   };
 
   const handleLeave = async () => {
@@ -652,6 +739,9 @@ export default function TeacherClassDetailPage({
                             userVote={userVote}
                             onVote={handleVote}
                             onComment={handleComment}
+                            commentSortOrder={commentSortOrder}
+                            onCommentSortChange={handleCommentSortChange}
+                            onCommentVote={handleCommentVote}
                           />
                         );
                       })}
