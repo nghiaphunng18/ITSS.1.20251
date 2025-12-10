@@ -309,6 +309,7 @@ export default function TeacherClassDetailPage({
     dueDate: string;
     maxPoints: number;
     groupId: string | null;
+    isSeparateSubmission: boolean;
     attachments?: FileAttachment[];
   }) => {
     try {

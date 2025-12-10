@@ -945,16 +945,30 @@ async function main() {
           dueDate,
           maxPoints: 10 + i * 5,
           status: "PUBLISHED",
+          isSeparateSubmission: targetGroup ? Math.random() > 0.5 : true,
           attachments:
-            Math.random() > 0.5
+            i < 3 || Math.random() > 0.4
               ? {
                   create: [
                     {
-                      fileName: `${classItem.code}_assignment_${i + 1}.pdf`,
+                      fileName: `${classItem.code}_baitap_${i + 1}_yeucau.pdf`,
                       fileUrl: `https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf`,
                       fileSize: 13264,
                       mimeType: "application/pdf",
                     },
+                    ...(Math.random() > 0.6
+                      ? [
+                          {
+                            fileName: `${classItem.code}_baitap_${
+                              i + 1
+                            }_template.docx`,
+                            fileUrl: `https://calibre-ebook.com/downloads/demos/demo.docx`,
+                            fileSize: 24576,
+                            mimeType:
+                              "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                          },
+                        ]
+                      : []),
                   ],
                 }
               : undefined,

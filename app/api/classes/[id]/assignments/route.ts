@@ -41,6 +41,13 @@ export async function GET(
           ],
         },
         include: {
+          class: {
+            select: {
+              id: true,
+              name: true,
+              code: true,
+            },
+          },
           createdBy: {
             select: {
               id: true,
@@ -64,6 +71,16 @@ export async function GET(
               status: true,
               submittedAt: true,
               grade: true,
+              feedback: true,
+              attachments: {
+                select: {
+                  id: true,
+                  fileName: true,
+                  fileUrl: true,
+                  fileSize: true,
+                  mimeType: true,
+                },
+              },
             },
           },
           _count: {
@@ -133,6 +150,7 @@ export async function POST(
       dueDate,
       maxPoints,
       groupId,
+      isSeparateSubmission,
       createdById,
       attachments,
     } = await req.json();
@@ -154,6 +172,8 @@ export async function POST(
         dueDate: new Date(dueDate),
         maxPoints: maxPoints || 100,
         status: "PUBLISHED",
+        isSeparateSubmission:
+          isSeparateSubmission !== undefined ? isSeparateSubmission : true,
         createdById,
         attachments: attachments
           ? {

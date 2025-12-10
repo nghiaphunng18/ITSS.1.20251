@@ -9,6 +9,7 @@ import {
   TextField,
   TextArea,
   Select,
+  Checkbox,
 } from "@radix-ui/themes";
 import { FiX } from "react-icons/fi";
 import { FilePickerInput, FileAttachment } from "./FilePickerInput";
@@ -22,6 +23,7 @@ interface CreateAssignmentDialogProps {
     dueDate: string;
     maxPoints: number;
     groupId: string | null;
+    isSeparateSubmission: boolean;
     attachments?: FileAttachment[];
   }) => Promise<void>;
   groups?: Array<{ id: string; name: string }>;
@@ -39,6 +41,7 @@ export function CreateAssignmentDialog({
     dueDate: "",
     maxPoints: 100,
     groupId: null as string | null,
+    isSeparateSubmission: true,
   });
   const [attachments, setAttachments] = useState<FileAttachment[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,6 +66,7 @@ export function CreateAssignmentDialog({
         dueDate: "",
         maxPoints: 100,
         groupId: null,
+        isSeparateSubmission: true,
       });
       setAttachments([]);
       onOpenChange(false);
@@ -189,6 +193,29 @@ export function CreateAssignmentDialog({
                 </Select.Root>
                 <Text size="1" className="text-gray-500 mt-1">
                   Để trống để giao cho tất cả sinh viên trong lớp
+                </Text>
+              </label>
+            )}
+
+            {/* Submission Type for Group Assignments */}
+            {formData.groupId && (
+              <label>
+                <Flex gap="2" align="center">
+                  <Checkbox
+                    checked={formData.isSeparateSubmission}
+                    onCheckedChange={(checked) =>
+                      setFormData({
+                        ...formData,
+                        isSeparateSubmission: checked === true,
+                      })
+                    }
+                  />
+                  <Text size="2">Mỗi thành viên nộp bài riêng</Text>
+                </Flex>
+                <Text size="1" className="text-gray-500 ml-6 mt-1">
+                  {formData.isSeparateSubmission
+                    ? "Mỗi thành viên trong nhóm phải nộp bài riêng của mình"
+                    : "Chỉ cần một thành viên nộp bài cho cả nhóm"}
                 </Text>
               </label>
             )}

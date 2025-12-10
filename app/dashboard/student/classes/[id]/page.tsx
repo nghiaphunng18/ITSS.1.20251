@@ -43,7 +43,7 @@ import { AttachmentListing } from "@/components/ui/AttachmentListing";
 import { UploadAttachmentDialog } from "@/components/ui/UploadAttachmentDialog";
 import { FileAttachment } from "@/components/ui/FilePickerInput";
 import { MaterialCard } from "@/components/ui/MaterialCard";
-import { AssignmentCard } from "@/components/ui/AssignmentCard";
+import { AssignmentListItem } from "@/components/ui/AssignmentListItem";
 import { AttendanceCheckIn } from "@/components/ui/AttendanceCheckIn";
 
 interface ClassData {
@@ -112,6 +112,7 @@ export default function StudentClassDetailPage({
   const [attachments, setAttachments] = useState<any[]>([]);
   const [materials, setMaterials] = useState<any[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
+  const [userGroupId, setUserGroupId] = useState<string | null>(null);
 
   const fetchClassData = async () => {
     try {
@@ -127,6 +128,12 @@ export default function StudentClassDetailPage({
         (e: any) => e.student.id === user?.id
       );
       setIsEnrolled(enrolled);
+
+      // Find user's group
+      const userGroup = groupsData.groups?.find((g: any) =>
+        g.members.some((m: any) => m.student.id === user?.id)
+      );
+      setUserGroupId(userGroup?.id || null);
     } catch (error) {
       console.error("Failed to fetch class:", error);
     } finally {
@@ -430,10 +437,14 @@ export default function StudentClassDetailPage({
                   {assignments.length > 0 ? (
                     <Flex direction="column" gap="3">
                       {assignments.map((assignment) => (
-                        <AssignmentCard
+                        <AssignmentListItem
                           key={assignment.id}
                           assignment={assignment}
                           submission={assignment.submissions?.[0] || null}
+                          isStudent={true}
+                          currentUserId={user?.id}
+                          userGroupId={userGroupId}
+                          onUploadComplete={fetchAssignments}
                         />
                       ))}
                     </Flex>

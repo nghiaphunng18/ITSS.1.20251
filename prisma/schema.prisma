@@ -190,17 +190,18 @@ enum AssignmentStatus {
 }
 
 model Assignment {
-  id          String           @id @default(cuid())
-  classId     String
-  groupId     String?          // Optional: if set, assignment is for specific group only
-  title       String
-  description String?
-  dueDate     DateTime
-  maxPoints   Int              @default(100)
-  status      AssignmentStatus @default(DRAFT)
-  createdById String
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  id                   String           @id @default(cuid())
+  classId              String
+  groupId              String?          // Optional: if set, assignment is for specific group only
+  title                String
+  description          String?
+  dueDate              DateTime
+  maxPoints            Int              @default(100)
+  status               AssignmentStatus @default(DRAFT)
+  isSeparateSubmission Boolean          @default(true) // For group assignments: true = each member submits individually, false = one submission per group
+  createdById          String
+  createdAt            DateTime         @default(now())
+  updatedAt            DateTime         @updatedAt
 
   // Relations
   class       Class                  @relation(fields: [classId], references: [id], onDelete: Cascade)
@@ -243,6 +244,7 @@ model AssignmentSubmission {
   id           String           @id @default(cuid())
   assignmentId String
   studentId    String
+  groupId      String?          // For group submissions where isSeparateSubmission = false
   content      String?
   submittedAt  DateTime?
   status       SubmissionStatus @default(DRAFT)
@@ -260,6 +262,7 @@ model AssignmentSubmission {
   @@unique([assignmentId, studentId])
   @@index([assignmentId])
   @@index([studentId])
+  @@index([groupId])
   @@index([status])
   @@map("assignment_submissions")
 }
