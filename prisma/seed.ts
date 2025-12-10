@@ -872,6 +872,176 @@ async function main() {
   console.log("✅ Đã tạo danh mục thông báo");
 
   // ========================================
+  // CREATE GROUPS FOR SPECIFIC CLASSES
+  // ========================================
+
+  // Create groups for IT3180 (Giới thiệu về Công nghệ Phần mềm)
+  const it3180Class = classes.find((c) => c.code === "IT3180");
+  if (it3180Class) {
+    const it3180Students = await prisma.classEnrollment.findMany({
+      where: {
+        classId: it3180Class.id,
+        status: "ACTIVE",
+      },
+      include: {
+        student: true,
+      },
+    });
+
+    // Find demo students
+    const demoStudent1 = it3180Students.find(
+      (s) => s.student.email === "nguyenminhan20210001@sis.hust.edu.vn"
+    );
+    const demoStudent2 = it3180Students.find(
+      (s) => s.student.email === "tranvanbao20210002@sis.hust.edu.vn"
+    );
+    const demoStudent3 = it3180Students.find(
+      (s) => s.student.email === "lethichau20220010@sis.hust.edu.vn"
+    );
+
+    // Create Group 1 with demo student 1 (Nguyễn Minh An)
+    const group1 = await prisma.group.create({
+      data: {
+        classId: it3180Class.id,
+        name: "Nhóm 1",
+        description:
+          "Nhóm phát triển tính năng đăng nhập và quản lý người dùng",
+        maxMembers: 5,
+        createdById: demoStudent1?.student.id || it3180Students[0].student.id,
+      },
+    });
+
+    // Add members to Group 1
+    const group1Members = [
+      demoStudent1,
+      it3180Students.find(
+        (s, idx) =>
+          idx === 2 &&
+          s.id !== demoStudent1?.id &&
+          s.id !== demoStudent2?.id &&
+          s.id !== demoStudent3?.id
+      ),
+      it3180Students.find(
+        (s, idx) =>
+          idx === 3 &&
+          s.id !== demoStudent1?.id &&
+          s.id !== demoStudent2?.id &&
+          s.id !== demoStudent3?.id
+      ),
+      it3180Students.find(
+        (s, idx) =>
+          idx === 4 &&
+          s.id !== demoStudent1?.id &&
+          s.id !== demoStudent2?.id &&
+          s.id !== demoStudent3?.id
+      ),
+    ].filter(Boolean);
+
+    for (const member of group1Members) {
+      if (member) {
+        await prisma.groupMember.create({
+          data: {
+            groupId: group1.id,
+            studentId: member.student.id,
+          },
+        });
+      }
+    }
+
+    // Create Group 2 with demo student 2 (Trần Văn Bảo)
+    const group2 = await prisma.group.create({
+      data: {
+        classId: it3180Class.id,
+        name: "Nhóm 2",
+        description:
+          "Nhóm phát triển giao diện người dùng và responsive design",
+        maxMembers: 5,
+        createdById: demoStudent2?.student.id || it3180Students[5].student.id,
+      },
+    });
+
+    // Add members to Group 2
+    const group2Members = [
+      demoStudent2,
+      it3180Students.find(
+        (s, idx) =>
+          idx === 6 &&
+          s.id !== demoStudent1?.id &&
+          s.id !== demoStudent2?.id &&
+          s.id !== demoStudent3?.id
+      ),
+      it3180Students.find(
+        (s, idx) =>
+          idx === 7 &&
+          s.id !== demoStudent1?.id &&
+          s.id !== demoStudent2?.id &&
+          s.id !== demoStudent3?.id
+      ),
+      it3180Students.find(
+        (s, idx) =>
+          idx === 8 &&
+          s.id !== demoStudent1?.id &&
+          s.id !== demoStudent2?.id &&
+          s.id !== demoStudent3?.id
+      ),
+    ].filter(Boolean);
+
+    for (const member of group2Members) {
+      if (member) {
+        await prisma.groupMember.create({
+          data: {
+            groupId: group2.id,
+            studentId: member.student.id,
+          },
+        });
+      }
+    }
+
+    // Create Group 3 with demo student 3 (Lê Thị Châu)
+    const group3 = await prisma.group.create({
+      data: {
+        classId: it3180Class.id,
+        name: "Nhóm 3",
+        description: "Nhóm phát triển API Backend và Database",
+        maxMembers: 5,
+        createdById: demoStudent3?.student.id || it3180Students[10].student.id,
+      },
+    });
+
+    // Add members to Group 3
+    const group3Members = [
+      demoStudent3,
+      it3180Students.find(
+        (s, idx) =>
+          idx === 11 &&
+          s.id !== demoStudent1?.id &&
+          s.id !== demoStudent2?.id &&
+          s.id !== demoStudent3?.id
+      ),
+      it3180Students.find(
+        (s, idx) =>
+          idx === 12 &&
+          s.id !== demoStudent1?.id &&
+          s.id !== demoStudent2?.id &&
+          s.id !== demoStudent3?.id
+      ),
+    ].filter(Boolean);
+
+    for (const member of group3Members) {
+      if (member) {
+        await prisma.groupMember.create({
+          data: {
+            groupId: group3.id,
+            studentId: member.student.id,
+          },
+        });
+      }
+    }
+
+    console.log("✅ Đã tạo 3 nhóm cho lớp IT3180");
+  }
+
+  // ========================================
   // CREATE ASSIGNMENTS
   // ========================================
 
@@ -1003,6 +1173,174 @@ async function main() {
           },
         })),
       });
+    }
+  }
+
+  // Add specific group assignments for IT3180
+  if (it3180Class) {
+    const it3180Groups = await prisma.group.findMany({
+      where: { classId: it3180Class.id },
+      include: { members: true },
+      orderBy: { name: "asc" },
+    });
+
+    const it3180Teacher = await prisma.classTeacher.findFirst({
+      where: { classId: it3180Class.id },
+    });
+
+    if (it3180Groups.length >= 3 && it3180Teacher) {
+      // Group 1 Assignment (Nguyễn Minh An's group)
+      const group1Assignment = await prisma.assignment.create({
+        data: {
+          classId: it3180Class.id,
+          groupId: it3180Groups[0].id,
+          createdById: it3180Teacher.teacherId,
+          title: "Thiết kế hệ thống đăng nhập",
+          description:
+            "Nhóm 1 phụ trách thiết kế và phát triển chức năng đăng nhập, đăng ký tài khoản với xác thực JWT. Yêu cầu: Giao diện đăng nhập/đăng ký, API authentication, bảo mật mật khẩu với bcrypt, và session management. Bài tập này yêu cầu mỗi thành viên nộp báo cáo riêng về phần công việc của mình.",
+          dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
+          maxPoints: 30,
+          status: "PUBLISHED",
+          isSeparateSubmission: true, // Each member submits individually
+          attachments: {
+            create: [
+              {
+                fileName: "IT3180_Nhom1_YeuCau_DangNhap.pdf",
+                fileUrl:
+                  "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                fileSize: 145678,
+                mimeType: "application/pdf",
+              },
+              {
+                fileName: "IT3180_Nhom1_Template_BaoCao.docx",
+                fileUrl: "https://calibre-ebook.com/downloads/demos/demo.docx",
+                fileSize: 32456,
+                mimeType:
+                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              },
+            ],
+          },
+        },
+      });
+
+      // Notify Group 1 members
+      await prisma.notification.createMany({
+        data: it3180Groups[0].members.map((m) => ({
+          userId: m.studentId,
+          categoryId: assignmentCategory.id,
+          title: `Bài tập nhóm mới: ${group1Assignment.title}`,
+          message: `Nhóm ${
+            it3180Groups[0].name
+          } đã được giao bài tập mới. Mỗi thành viên cần nộp báo cáo riêng. Hạn nộp: ${new Date(
+            group1Assignment.dueDate
+          ).toLocaleDateString("vi-VN")}`,
+          link: `/dashboard/student/assignments/${group1Assignment.id}`,
+          priority: "NORMAL",
+          metadata: {
+            assignmentId: group1Assignment.id,
+            classId: it3180Class.id,
+            groupId: it3180Groups[0].id,
+          },
+        })),
+      });
+
+      // Group 2 Assignment (Trần Văn Bảo's group)
+      const group2Assignment = await prisma.assignment.create({
+        data: {
+          classId: it3180Class.id,
+          groupId: it3180Groups[1].id,
+          createdById: it3180Teacher.teacherId,
+          title: "Phát triển giao diện Dashboard",
+          description:
+            "Nhóm 2 phụ trách thiết kế và phát triển giao diện Dashboard responsive. Yêu cầu: Sử dụng React/Next.js, responsive design cho mobile/tablet/desktop, component reusable, và accessibility. Chỉ cần một thành viên nộp bài thay cho cả nhóm.",
+          dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
+          maxPoints: 30,
+          status: "PUBLISHED",
+          isSeparateSubmission: false, // One submission for whole group
+          attachments: {
+            create: [
+              {
+                fileName: "IT3180_Nhom2_YeuCau_Dashboard.pdf",
+                fileUrl:
+                  "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                fileSize: 123456,
+                mimeType: "application/pdf",
+              },
+            ],
+          },
+        },
+      });
+
+      // Notify Group 2 members
+      await prisma.notification.createMany({
+        data: it3180Groups[1].members.map((m) => ({
+          userId: m.studentId,
+          categoryId: assignmentCategory.id,
+          title: `Bài tập nhóm mới: ${group2Assignment.title}`,
+          message: `Nhóm ${
+            it3180Groups[1].name
+          } đã được giao bài tập mới. Chỉ cần một thành viên nộp bài cho cả nhóm. Hạn nộp: ${new Date(
+            group2Assignment.dueDate
+          ).toLocaleDateString("vi-VN")}`,
+          link: `/dashboard/student/assignments/${group2Assignment.id}`,
+          priority: "NORMAL",
+          metadata: {
+            assignmentId: group2Assignment.id,
+            classId: it3180Class.id,
+            groupId: it3180Groups[1].id,
+          },
+        })),
+      });
+
+      // Group 3 Assignment (Lê Thị Châu's group)
+      const group3Assignment = await prisma.assignment.create({
+        data: {
+          classId: it3180Class.id,
+          groupId: it3180Groups[2].id,
+          createdById: it3180Teacher.teacherId,
+          title: "Thiết kế API RESTful và Database",
+          description:
+            "Nhóm 3 phụ trách thiết kế và triển khai API Backend với Node.js/Express và PostgreSQL. Yêu cầu: Thiết kế database schema, RESTful API endpoints, validation, error handling, và API documentation. Mỗi thành viên nộp báo cáo về API endpoints mình phát triển.",
+          dueDate: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
+          maxPoints: 30,
+          status: "PUBLISHED",
+          isSeparateSubmission: true, // Each member submits individually
+          attachments: {
+            create: [
+              {
+                fileName: "IT3180_Nhom3_YeuCau_API.pdf",
+                fileUrl:
+                  "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+                fileSize: 167890,
+                mimeType: "application/pdf",
+              },
+            ],
+          },
+        },
+      });
+
+      // Notify Group 3 members
+      await prisma.notification.createMany({
+        data: it3180Groups[2].members.map((m) => ({
+          userId: m.studentId,
+          categoryId: assignmentCategory.id,
+          title: `Bài tập nhóm mới: ${group3Assignment.title}`,
+          message: `Nhóm ${
+            it3180Groups[2].name
+          } đã được giao bài tập mới. Mỗi thành viên cần nộp báo cáo riêng. Hạn nộp: ${new Date(
+            group3Assignment.dueDate
+          ).toLocaleDateString("vi-VN")}`,
+          link: `/dashboard/student/assignments/${group3Assignment.id}`,
+          priority: "NORMAL",
+          metadata: {
+            assignmentId: group3Assignment.id,
+            classId: it3180Class.id,
+            groupId: it3180Groups[2].id,
+          },
+        })),
+      });
+
+      console.log("✅ Đã tạo 3 bài tập nhóm riêng cho IT3180");
     }
   }
 
