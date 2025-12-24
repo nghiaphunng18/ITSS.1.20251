@@ -52,6 +52,7 @@ import { MaterialCard } from "@/components/ui/MaterialCard";
 import { CreateAssignmentDialog } from "@/components/ui/CreateAssignmentDialog";
 import { AssignmentCard } from "@/components/ui/AssignmentCard";
 import { AttendanceSessionDialog } from "@/components/ui/AttendanceSessionDialog";
+import { useLocale, useTranslations } from "next-intl";
 
 interface ClassData {
   id: string;
@@ -110,8 +111,15 @@ export default function TeacherClassDetailPage({
   const { id } = use(params);
   const { user, isLoading } = useAuth();
   const router = useRouter();
+  const locale = useLocale();
   const toast = useToast();
   const teacherTabs = useTeacherTabs();
+  const t = useTranslations('classes.detail');
+  const tTabs = useTranslations('classes.detail.tabs');
+  const tSections = useTranslations('classes.detail.sections');
+  const tButtons = useTranslations('classes.detail.buttons');
+  const tEmpty = useTranslations('classes.detail.empty_states');
+  const tActions = useTranslations('classes.detail.actions');
   const [classData, setClassData] = useState<ClassData | null>(null);
   const [loading, setLoading] = useState(true);
   const [isPostDialogOpen, setIsPostDialogOpen] = useState(false);
@@ -198,7 +206,7 @@ export default function TeacherClassDetailPage({
 
   useEffect(() => {
     if (!isLoading && (!user || user.role !== "TEACHER")) {
-      router.push("/login");
+      router.push(`/${locale}/login`);
     } else if (!isLoading && user && !classData) {
       fetchClassData();
       fetchAttachments();
@@ -219,11 +227,11 @@ export default function TeacherClassDetailPage({
         authorId: user?.id,
       });
       setIsPostDialogOpen(false);
-      toast.success("Đã đăng bài viết", "Bài viết đã được tạo thành công");
+      toast.success(tActions('post_created'), tActions('post_created_success'));
       fetchClassData();
     } catch (error) {
       console.error("Failed to create post:", error);
-      toast.error("Lỗi", "Không thể tạo bài viết");
+      toast.error(tActions('error'), tActions('post_failed'));
       throw error;
     }
   };
@@ -268,7 +276,7 @@ export default function TeacherClassDetailPage({
       });
     } catch (error) {
       console.error("Failed to vote:", error);
-      toast.error("Lỗi", "Không thể bình chọn bài viết");
+      toast.error(tActions('error'), tActions('vote_failed'));
       // Revert on error
       fetchClassData();
     }
@@ -288,10 +296,10 @@ export default function TeacherClassDetailPage({
         attachments,
       });
       fetchClassData();
-      toast.success("Đã thêm bình luận");
+      toast.success(tActions('comment_added'));
     } catch (error) {
       console.error("Failed to comment:", error);
-      toast.error("Không thể thêm bình luận");
+      toast.error(tActions('comment_failed'));
     }
   };
 
@@ -343,7 +351,7 @@ export default function TeacherClassDetailPage({
       });
     } catch (error) {
       console.error("Failed to vote on comment:", error);
-      toast.error("Lỗi", "Không thể bình chọn bình luận");
+      toast.error(tActions('error'), tActions('comment_vote_failed'));
       // Revert on error
       fetchClassData();
     }
@@ -357,11 +365,11 @@ export default function TeacherClassDetailPage({
     try {
       await axios.delete(`/api/classes/${id}/teachers?teacherId=${user?.id}`);
       setIsLeaveDialogOpen(false);
-      toast.info("Đã rời khỏi lớp", "Bạn có thể tham gia lại bất cứ lúc nào");
-      router.push("/dashboard/teacher/classes");
+      toast.info(tActions('left_class'), tActions('can_rejoin_anytime'));
+      router.push(`/${locale}/dashboard/teacher/classes`);
     } catch (error) {
       console.error("Failed to leave class:", error);
-      toast.error("Lỗi", "Không thể rời khỏi lớp");
+      toast.error(tActions('error'), tActions('leave_class_failed'));
     }
   };
 
@@ -369,11 +377,11 @@ export default function TeacherClassDetailPage({
     try {
       await axios.delete(`/api/classes/${id}`);
       setIsLeaveDialogOpen(false);
-      toast.success("Đã xóa lớp học", "Lớp học đã được xóa thành công");
-      router.push("/dashboard/teacher/classes");
+      toast.success(tActions('class_deleted'), tActions('class_deleted_success'));
+      router.push(`/${locale}/dashboard/teacher/classes`);
     } catch (error) {
       console.error("Failed to delete class:", error);
-      toast.error("Lỗi", "Không thể xóa lớp học");
+      toast.error(tActions('error'), tActions('delete_class_failed'));
     }
   };
 
@@ -383,11 +391,11 @@ export default function TeacherClassDetailPage({
         teacherId: user?.id,
         role: "TEACHER",
       });
-      toast.success("Đã tham gia lớp", "Bạn đã tham gia giảng dạy lớp học này");
+      toast.success(tActions('joined_class'), tActions('joined_teaching_class'));
       fetchClassData();
     } catch (error) {
       console.error("Failed to join class:", error);
-      toast.error("Lỗi", "Không thể tham gia lớp");
+      toast.error(tActions('error'), tActions('join_class_failed'));
     }
   };
 
@@ -406,25 +414,25 @@ export default function TeacherClassDetailPage({
         createdById: user?.id,
       });
       setIsAssignmentDialogOpen(false);
-      toast.success("Đã tạo bài tập", "Bài tập đã được giao thành công");
+      toast.success(tActions('assignment_created'), tActions('assignment_created_success'));
       fetchAssignments();
     } catch (error) {
       console.error("Failed to create assignment:", error);
-      toast.error("Lỗi", "Không thể tạo bài tập");
+      toast.error(tActions('error'), tActions('create_assignment_failed'));
       throw error;
     }
   };
 
   const handleDeleteAssignment = async (assignmentId: string) => {
-    if (!confirm("Bạn có chắc chắn muốn xóa bài tập này?")) return;
+    if (!confirm(tActions('confirm_delete_assignment'))) return;
 
     try {
       await axios.delete(`/api/assignments/${assignmentId}`);
-      toast.success("Đã xóa", "Bài tập đã được xóa");
+      toast.success(tActions('deleted'), tActions('assignment_deleted'));
       fetchAssignments();
     } catch (error) {
       console.error("Failed to delete assignment:", error);
-      toast.error("Lỗi", "Không thể xóa bài tập");
+      toast.error(tActions('error'), tActions('delete_assignment_failed'));
     }
   };
 
@@ -440,24 +448,24 @@ export default function TeacherClassDetailPage({
         ...formData,
       });
       setIsUploadAttachmentOpen(false);
-      toast.success("Đã tải lên", "Tệp đã được tải lên thành công");
+      toast.success(tActions('uploaded'), tActions('file_uploaded_success'));
       fetchAttachments();
     } catch (error) {
       console.error("Failed to upload attachment:", error);
-      toast.error("Lỗi", "Không thể tải lên tệp");
+      toast.error(tActions('error'), tActions('upload_failed'));
     }
   };
 
   const handleDeleteAttachment = async (attachmentId: string) => {
-    if (!confirm("Bạn có chắc chắn muốn xóa tệp này?")) return;
+    if (!confirm(tActions('confirm_delete_file'))) return;
 
     try {
       await axios.delete(`/api/classes/${id}/attachments/${attachmentId}`);
-      toast.success("Đã xóa", "Tệp đã được xóa");
+      toast.success(tActions('deleted'), tActions('file_deleted'));
       fetchAttachments();
     } catch (error) {
       console.error("Failed to delete attachment:", error);
-      toast.error("Lỗi", "Không thể xóa tệp");
+      toast.error(tActions('error'), tActions('delete_failed'));
     }
   };
 
@@ -489,20 +497,20 @@ export default function TeacherClassDetailPage({
       // Create detailed message
       let message = "";
       if (addedGroups.length > 0) {
-        message += `Đã thêm: ${addedGroups.join(", ")}. `;
+        message += tActions('groups_added', { groups: addedGroups.join(", ") }) + " ";
       }
       if (deletedGroups.length > 0) {
-        message += `Đã xóa: ${deletedGroups.join(", ")}. `;
+        message += tActions('groups_deleted', { groups: deletedGroups.join(", ") }) + " ";
       }
       if (addedGroups.length === 0 && deletedGroups.length === 0) {
-        message = `Đã cập nhật ${keptGroups.length} nhóm`;
+        message = tActions('groups_updated', { count: keptGroups.length });
       }
 
-      toast.success("Đã lưu cấu hình nhóm", message.trim());
+      toast.success(tActions('group_config_saved'), message.trim());
       fetchClassData();
     } catch (error) {
       console.error("Failed to save groups:", error);
-      toast.error("Lỗi", "Không thể lưu cấu hình nhóm");
+      toast.error(tActions('error'), tActions('save_groups_failed'));
       throw error;
     }
   };
@@ -542,23 +550,23 @@ export default function TeacherClassDetailPage({
       // Create detailed message
       let message = "";
       if (changes.addedTeachers.length > 0) {
-        message += `Đã thêm ${changes.addedTeachers.length} giảng viên. `;
+        message += tActions('teachers_added', { count: changes.addedTeachers.length }) + " ";
       }
       if (changes.removedTeachers.length > 0) {
-        message += `Đã xóa ${changes.removedTeachers.length} giảng viên. `;
+        message += tActions('teachers_removed', { count: changes.removedTeachers.length }) + " ";
       }
       if (changes.addedStudents.length > 0) {
-        message += `Đã thêm ${changes.addedStudents.length} sinh viên. `;
+        message += tActions('students_added', { count: changes.addedStudents.length }) + " ";
       }
       if (changes.removedStudents.length > 0) {
-        message += `Đã xóa ${changes.removedStudents.length} sinh viên. `;
+        message += tActions('students_removed', { count: changes.removedStudents.length }) + " ";
       }
 
-      toast.success("Đã lưu thành viên lớp", message.trim());
+      toast.success(tActions('members_saved'), message.trim());
       fetchClassData();
     } catch (error) {
       console.error("Failed to save members:", error);
-      toast.error("Lỗi", "Không thể lưu thay đổi thành viên");
+      toast.error(tActions('error'), tActions('save_members_failed'));
       throw error;
     }
   };
@@ -580,7 +588,7 @@ export default function TeacherClassDetailPage({
         <DashboardNavBar tabs={teacherTabs} />
         <Container size="4" className="py-8">
           <Text size="5" className="text-gray-600">
-            Đang tải...
+            {t('loading')}
           </Text>
         </Container>
       </div>
@@ -601,8 +609,8 @@ export default function TeacherClassDetailPage({
           <ClassHeader
             classData={classData}
             isEnrolled={isTeaching}
-            enrolledLabel="Đang giảng dạy"
-            onBack={() => router.push("/dashboard/teacher/classes")}
+            enrolledLabel={tButtons('teaching')}
+            onBack={() => router.push(`/${locale}/dashboard/teacher/classes`)}
             role="teacher"
             actionButton={
               isTeaching ? (
@@ -612,14 +620,14 @@ export default function TeacherClassDetailPage({
                     onClick={() => setIsSettingsDialogOpen(true)}
                   >
                     <FiSettings size={16} />
-                    Cấu hình lớp
+                    {tButtons('class_settings')}
                   </Button>
                   <Button
                     variant="soft"
                     onClick={() => setIsMembersDialogOpen(true)}
                   >
                     <FiUsers size={16} />
-                    Quản lý thành viên
+                    {tButtons('manage_members')}
                   </Button>
                   <Button
                     variant="soft"
@@ -627,32 +635,32 @@ export default function TeacherClassDetailPage({
                   >
                     <FiSettings size={16} />
                     {classData.groups && classData.groups.length > 0
-                      ? "Cấu hình nhóm"
-                      : "Tạo nhóm"}
+                      ? tButtons('configure_groups')
+                      : tButtons('create_groups')}
                   </Button>
                   <ConfirmDialog
                     open={isLeaveDialogOpen}
                     onOpenChange={setIsLeaveDialogOpen}
                     title={
                       isCreator
-                        ? "Xác nhận xóa lớp học"
-                        : "Xác nhận rời khỏi lớp giảng dạy"
+                        ? tActions('confirm_delete_class')
+                        : tActions('confirm_leave_teaching')
                     }
                     description={
                       isCreator
-                        ? "Bạn có chắc chắn muốn xóa lớp học này? Hành động này không thể hoàn tác."
-                        : "Bạn có chắc chắn muốn rời khỏi giảng dạy lớp học này? Bạn có thể tham gia lại sau."
+                        ? tActions('confirm_delete_class_description')
+                        : tActions('confirm_leave_teaching_description')
                     }
                     onConfirm={isCreator ? handleDelete : handleLeave}
                     trigger={
                       <Button color="red" variant="soft">
                         {isCreator ? (
                           <>
-                            <FiTrash2 size={16} /> Xóa lớp
+                            <FiTrash2 size={16} /> {tButtons('delete_class')}
                           </>
                         ) : (
                           <>
-                            <FiLogOut size={16} /> Rời khỏi
+                            <FiLogOut size={16} /> {tButtons('leave_class')}
                           </>
                         )}
                       </Button>
@@ -664,7 +672,7 @@ export default function TeacherClassDetailPage({
                   className="bg-mint-500 hover:bg-mint-600"
                   onClick={handleJoin}
                 >
-                  <FiUserPlus size={16} /> Tham gia giảng dạy
+                  <FiUserPlus size={16} /> {tButtons('join_teaching')}
                 </Button>
               )
             }
@@ -694,15 +702,15 @@ export default function TeacherClassDetailPage({
             <Tabs.List>
               {isTeaching && (
                 <>
-                  <Tabs.Trigger value="posts">Bài viết</Tabs.Trigger>
-                  <Tabs.Trigger value="assignments">Bài tập</Tabs.Trigger>
-                  <Tabs.Trigger value="materials">Tài liệu</Tabs.Trigger>
-                  <Tabs.Trigger value="attachments">Tệp đính kèm</Tabs.Trigger>
+                  <Tabs.Trigger value="posts">{tTabs('posts')}</Tabs.Trigger>
+                  <Tabs.Trigger value="assignments">{tTabs('assignments')}</Tabs.Trigger>
+                  <Tabs.Trigger value="materials">{tTabs('materials')}</Tabs.Trigger>
+                  <Tabs.Trigger value="attachments">{tTabs('attachments')}</Tabs.Trigger>
                 </>
               )}
-              <Tabs.Trigger value="students">Sinh viên</Tabs.Trigger>
+              <Tabs.Trigger value="students">{tTabs('students')}</Tabs.Trigger>
               {isTeaching && (
-                <Tabs.Trigger value="attendance">Điểm danh</Tabs.Trigger>
+                <Tabs.Trigger value="attendance">{tTabs('attendance')}</Tabs.Trigger>
               )}
             </Tabs.List>
 
@@ -711,12 +719,12 @@ export default function TeacherClassDetailPage({
               <Tabs.Content value="posts">
                 <Flex direction="column" gap="4" className="mt-6">
                   <Flex justify="between" align="center">
-                    <Heading size="6">Bài viết trong lớp</Heading>
+                    <Heading size="6">{tSections('posts_in_class')}</Heading>
                     <Button
                       className="bg-mint-500 hover:bg-mint-600"
                       onClick={() => setIsPostDialogOpen(true)}
                     >
-                      <FiPlus size={16} /> Tạo bài viết
+                      <FiPlus size={16} /> {tButtons('create_post')}
                     </Button>
                   </Flex>
 
@@ -754,7 +762,7 @@ export default function TeacherClassDetailPage({
                         size={48}
                       />
                       <Text className="text-gray-600">
-                        Chưa có bài viết nào
+                        {tEmpty('no_posts')}
                       </Text>
                     </Card>
                   )}
@@ -767,12 +775,12 @@ export default function TeacherClassDetailPage({
               <Tabs.Content value="assignments">
                 <Flex direction="column" gap="4" className="mt-6">
                   <Flex justify="between" align="center">
-                    <Heading size="6">Bài tập</Heading>
+                    <Heading size="6">{tSections('assignments')}</Heading>
                     <Button
                       className="bg-mint-500 hover:bg-mint-600"
                       onClick={() => setIsAssignmentDialogOpen(true)}
                     >
-                      <FiPlus size={16} /> Tạo bài tập
+                      <FiPlus size={16} /> {tButtons('create_assignment')}
                     </Button>
                   </Flex>
 
@@ -801,8 +809,7 @@ export default function TeacherClassDetailPage({
                         size={48}
                       />
                       <Text className="text-gray-600">
-                        Chưa có bài tập nào. Nhấn "Tạo bài tập" để giao bài tập
-                        mới.
+                        {tEmpty('no_assignments_prompt')}
                       </Text>
                     </Card>
                   )}
@@ -815,18 +822,18 @@ export default function TeacherClassDetailPage({
               <Tabs.Content value="materials">
                 <Flex direction="column" gap="4" className="mt-6">
                   <Flex justify="between" align="center">
-                    <Heading size="6">Tài liệu học tập</Heading>
+                    <Heading size="6">{tSections('learning_materials')}</Heading>
                     <Button
                       className="bg-mint-500 hover:bg-mint-600"
                       onClick={() => {
                         // TODO: Add upload learning material dialog
                         toast.info(
-                          "Sắp ra mắt",
-                          "Chức năng tải lên tài liệu đang được phát triển"
+                          tActions('coming_soon'),
+                          tActions('material_upload_coming_soon')
                         );
                       }}
                     >
-                      <FiPlus size={16} /> Tải lên tài liệu
+                      <FiPlus size={16} /> {tButtons('upload_material')}
                     </Button>
                   </Flex>
 
@@ -840,8 +847,8 @@ export default function TeacherClassDetailPage({
                           onDelete={(id) => {
                             // TODO: Add delete material function
                             toast.info(
-                              "Sắp ra mắt",
-                              "Chức năng xóa tài liệu đang được phát triển"
+                              tActions('coming_soon'),
+                              tActions('material_delete_coming_soon')
                             );
                           }}
                         />
@@ -854,7 +861,7 @@ export default function TeacherClassDetailPage({
                         size={48}
                       />
                       <Text className="text-gray-600">
-                        Chưa có tài liệu học tập nào.
+                        {tEmpty('no_materials')}
                       </Text>
                     </Card>
                   )}
@@ -867,14 +874,14 @@ export default function TeacherClassDetailPage({
               <Tabs.Content value="attachments">
                 <Flex direction="column" gap="4" className="mt-6">
                   <Flex justify="between" align="center">
-                    <Heading size="6">Tệp đính kèm</Heading>
+                    <Heading size="6">{tSections('attachments')}</Heading>
                     <Button
                       className="bg-mint-500 hover:bg-mint-600"
                       onClick={() => {
                         setIsUploadAttachmentOpen(true);
                       }}
                     >
-                      <FiPlus size={16} /> Tải lên tệp
+                      <FiPlus size={16} /> {tButtons('upload_file')}
                     </Button>
                   </Flex>
 
@@ -902,8 +909,7 @@ export default function TeacherClassDetailPage({
                         size={48}
                       />
                       <Text className="text-gray-600">
-                        Chưa có tệp đính kèm nào. Nhấn "Tải lên tệp" để thêm
-                        tệp.
+                        {tEmpty('no_attachments')}
                       </Text>
                     </Card>
                   )}
@@ -915,7 +921,7 @@ export default function TeacherClassDetailPage({
             <Tabs.Content value="students">
               <Flex direction="column" gap="4" className="mt-6">
                 <Heading size="6">
-                  Danh sách sinh viên ({classData.enrollments.length})
+                  {tSections('student_list', { count: classData.enrollments.length })}
                 </Heading>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                   {classData.enrollments.map((enrollment) => (
@@ -950,12 +956,12 @@ export default function TeacherClassDetailPage({
               <Tabs.Content value="attendance">
                 <Flex direction="column" gap="4" className="mt-6">
                   <Flex justify="between" align="center">
-                    <Heading size="6">Điểm danh</Heading>
+                    <Heading size="6">{tSections('attendance')}</Heading>
                     <Button
                       className="bg-mint-500 hover:bg-mint-600"
                       onClick={() => handleOpenSessionDialog()}
                     >
-                      <FiCheckCircle size={16} /> Bắt đầu điểm danh
+                      <FiCheckCircle size={16} /> {tButtons('start_attendance')}
                     </Button>
                   </Flex>
 
@@ -1001,13 +1007,13 @@ export default function TeacherClassDetailPage({
                                     </Text>
                                   </Flex>
                                   <Text size="2" className="text-gray-600">
-                                    Mã:{" "}
+                                    {tSections('attendance_code')}:{" "}
                                     <span className="font-mono font-bold">
                                       {session.sessionCode}
                                     </span>
                                   </Text>
                                   <Text size="1" className="text-gray-500">
-                                    Bắt đầu:{" "}
+                                    {tSections('started_at')}:{" "}
                                     {new Date(session.startTime).toLocaleString(
                                       "vi-VN",
                                       {
@@ -1032,13 +1038,13 @@ export default function TeacherClassDetailPage({
                                     size="2"
                                   >
                                     {isActive && !isExpired
-                                      ? "Đang hoạt động"
+                                      ? tSections('status_active')
                                       : isExpired
-                                      ? "Hết hạn"
-                                      : "Đã đóng"}
+                                      ? tSections('status_expired')
+                                      : tSections('status_closed')}
                                   </Badge>
                                   <Text size="2" weight="bold">
-                                    {checkedInCount}/{totalStudents} sinh viên (
+                                    {checkedInCount}/{totalStudents} {tSections('students_short')} (
                                     {attendanceRate}%)
                                   </Text>
                                 </Flex>
@@ -1055,8 +1061,7 @@ export default function TeacherClassDetailPage({
                         size={48}
                       />
                       <Text className="text-gray-600">
-                        Chưa có phiên điểm danh nào. Nhấn "Bắt đầu điểm danh" để
-                        tạo phiên mới.
+                        {tEmpty('no_attendance_sessions')}
                       </Text>
                     </Card>
                   )}

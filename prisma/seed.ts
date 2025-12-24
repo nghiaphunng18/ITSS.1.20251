@@ -1,4 +1,5 @@
 import { PrismaClient } from "./generated/client";
+import { setLocalizedFields } from "../lib/localization";
 
 const prisma = new PrismaClient();
 
@@ -56,6 +57,7 @@ async function main() {
 
   // Clear existing data in correct order (skip if tables don't exist)
   try {
+    await prisma.localization.deleteMany();
     await prisma.commentVote.deleteMany();
     await prisma.postVote.deleteMany();
     await prisma.commentAttachment.deleteMany();
@@ -110,7 +112,34 @@ async function main() {
     },
   });
 
-  console.log("✅ Đã tạo các danh mục thông báo");
+  const assignmentCategory = await prisma.notificationCategory.create({
+    data: {
+      code: "NEW_ASSIGNMENT",
+      name: "Bài tập mới",
+      description: "Thông báo khi có bài tập mới được giao",
+      icon: "FiFileText",
+      color: "blue",
+      priority: "NORMAL",
+    },
+  });
+
+  // Add localizations for notification categories
+  await setLocalizedFields(prisma, 'NOTIFICATION_CATEGORY', attendanceStartedCategory.id, 'ja', {
+    name: "出席が開始されました",
+    description: "教師が出席を開始したときの通知"
+  });
+
+  await setLocalizedFields(prisma, 'NOTIFICATION_CATEGORY', attendanceMissedCategory.id, 'ja', {
+    name: "欠席",
+    description: "学生が出席セッションに欠席したときの通知"
+  });
+
+  await setLocalizedFields(prisma, 'NOTIFICATION_CATEGORY', assignmentCategory.id, 'ja', {
+    name: "新しい課題",
+    description: "新しい課題が割り当てられたときの通知"
+  });
+
+  console.log("✅ Đã tạo các danh mục thông báo và bản địa hóa");
 
   // ========================================
   // CREATE USERS
@@ -526,6 +555,110 @@ async function main() {
   console.log("✅ Đã tạo 13 lớp học (7 công khai + 6 riêng tư)");
 
   // ========================================
+  // ADD LOCALIZATIONS FOR CLASSES
+  // ========================================
+  
+  const classLocalizations = [
+    {
+      classId: classes[0].id, // IT3180
+      ja: {
+        name: "ソフトウェア工学入門",
+        description: "ソフトウェア開発プロセス、開発モデル、ソフトウェアプロジェクト管理の基礎知識を提供します。"
+      }
+    },
+    {
+      classId: classes[1].id, // IT3190
+      ja: {
+        name: "Webアプリケーション開発",
+        description: "React、Node.js、最新のWeb技術を使用した現代的なWebアプリケーション開発を学びます。"
+      }
+    },
+    {
+      classId: classes[2].id, // IT4785
+      ja: {
+        name: "モバイルアプリ開発",
+        description: "React NativeとFlutterを使用したクロスプラットフォームのモバイルアプリ開発。"
+      }
+    },
+    {
+      classId: classes[3].id, // IT3100
+      ja: {
+        name: "オブジェクト指向プログラミング",
+        description: "Javaを使用したオブジェクト指向プログラミングの基本と高度な概念。"
+      }
+    },
+    {
+      classId: classes[4].id, // IT3080
+      ja: {
+        name: "データベース",
+        description: "リレーショナルデータベースの設計と管理、SQL、NoSQL、現代的なデータベースシステム。"
+      }
+    },
+    {
+      classId: classes[5].id, // IT4895
+      ja: {
+        name: "機械学習基礎",
+        description: "機械学習、深層学習のアルゴリズムと実践的なアプリケーションの紹介。"
+      }
+    },
+    {
+      classId: classes[6].id, // IT4210
+      ja: {
+        name: "情報セキュリティ",
+        description: "暗号化技術、システムセキュリティ、ネットワークセキュリティ。"
+      }
+    },
+    {
+      classId: classes[7].id, // AI2025
+      ja: {
+        name: "人工知能上級",
+        description: "AI専門コース：ニューラルネットワーク、コンピュータビジョン、NLP、研究における実践的アプリケーション。"
+      }
+    },
+    {
+      classId: classes[8].id, // ML2025
+      ja: {
+        name: "機械学習とDeep Learning",
+        description: "機械学習上級コース：Deep Learning、CNN、RNN、Transformer、最先端モデル。"
+      }
+    },
+    {
+      classId: classes[9].id, // DS2025
+      ja: {
+        name: "データサイエンス",
+        description: "ビッグデータ分析、データマイニング、可視化、Pythonと現代的なツールによるデータパイプライン構築。"
+      }
+    },
+    {
+      classId: classes[10].id, // WEB2025
+      ja: {
+        name: "フルスタックWeb開発",
+        description: "実践コース：Next.js、TypeScript、Prismaを使用した完全なWebアプリケーション構築とクラウドデプロイ。"
+      }
+    },
+    {
+      classId: classes[11].id, // CYBER2025
+      ja: {
+        name: "サイバーセキュリティ",
+        description: "サイバーセキュリティ専門コース：ペネトレーションテスト、エシカルハッキング、フォレンジック、サイバー攻撃防御。"
+      }
+    },
+    {
+      classId: classes[12].id, // IOT2025
+      ja: {
+        name: "モノのインターネット",
+        description: "IoTシステムの設計と開発：Arduino、Raspberry Pi、MQTT、クラウドIoT、実践的アプリケーション。"
+      }
+    }
+  ];
+
+  for (const loc of classLocalizations) {
+    await setLocalizedFields(prisma, 'CLASS', loc.classId, 'ja', loc.ja);
+  }
+
+  console.log("✅ Đã thêm bản địa hóa tiếng Nhật cho 13 lớp học");
+
+  // ========================================
   // CREATE POSTS AND COMMENTS
   // ========================================
 
@@ -851,25 +984,6 @@ async function main() {
   }
 
   console.log("✅ Đã tạo tài liệu học tập và tệp đính kèm");
-
-  // ========================================
-  // CREATE NOTIFICATION CATEGORIES
-  // ========================================
-
-  const assignmentCategory = await prisma.notificationCategory.upsert({
-    where: { code: "ASSIGNMENT_CREATED" },
-    update: {},
-    create: {
-      code: "ASSIGNMENT_CREATED",
-      name: "Bài tập mới",
-      description: "Thông báo khi có bài tập mới được giao",
-      icon: "FiFileText",
-      color: "blue",
-      priority: "NORMAL",
-    },
-  });
-
-  console.log("✅ Đã tạo danh mục thông báo");
 
   // ========================================
   // CREATE GROUPS FOR SPECIFIC CLASSES
@@ -1345,6 +1459,52 @@ async function main() {
   }
 
   console.log("✅ Đã tạo bài tập và thông báo");
+
+  // ========================================
+  // ADD LOCALIZATIONS FOR ASSIGNMENTS
+  // ========================================
+  
+  // Get some assignments to localize (first assignment from each class)
+  const assignmentsToLocalize = await prisma.assignment.findMany({
+    where: {
+      classId: { in: classes.map(c => c.id) }
+    },
+    take: 30,
+    orderBy: { createdAt: 'asc' }
+  });
+
+  const assignmentLocalizationTemplates = {
+    "Bài tập lập trình": "プログラミング課題",
+    "Bài tập thiết kế": "設計課題",
+    "Bài tập phân tích": "分析課題",
+    "Bài tập nhóm": "グループ課題",
+    "Project cuối kỳ": "期末プロジェクト",
+    "Bài tập thực hành": "実践課題",
+    "đúng hạn": "期限内に",
+    "Sinh viên cần hoàn thành": "学生は完了する必要があります",
+    "Bài tập này dành cho tất cả sinh viên trong lớp": "この課題はクラスの全学生を対象としています",
+    "Bài tập này dành riêng cho nhóm": "この課題は以下のグループ専用です",
+    "chiếm": "占める",
+    "điểm tổng kết": "総合評価点"
+  };
+
+  for (const assignment of assignmentsToLocalize) {
+    let jaTitle = assignment.title;
+    let jaDescription = assignment.description || '';
+    
+    // Simple translation mapping for common patterns
+    for (const [vi, ja] of Object.entries(assignmentLocalizationTemplates)) {
+      jaTitle = jaTitle.replace(vi, ja);
+      jaDescription = jaDescription.replace(new RegExp(vi, 'g'), ja);
+    }
+
+    await setLocalizedFields(prisma, 'ASSIGNMENT', assignment.id, 'ja', {
+      title: jaTitle,
+      description: jaDescription
+    });
+  }
+
+  console.log(`✅ Đã thêm bản địa hóa tiếng Nhật cho ${assignmentsToLocalize.length} bài tập`);
 
   // ========================================
   // ATTENDANCE SESSIONS

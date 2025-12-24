@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale, useTranslations } from 'next-intl';
 import {
   Badge,
   Flex,
@@ -41,6 +42,8 @@ interface Notification {
 export function NotificationBell() {
   const { user } = useAuth();
   const router = useRouter();
+  const locale = useLocale();
+  const t = useTranslations('notifications.general');
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
@@ -149,7 +152,7 @@ export function NotificationBell() {
             className="p-4 border-b border-gray-200"
           >
             <Text size="4" weight="bold">
-              Thông báo
+              {t('title')}
             </Text>
             {unreadCount > 0 && (
               <Button
@@ -158,7 +161,7 @@ export function NotificationBell() {
                 onClick={handleMarkAllAsRead}
                 className="text-mint-600 hover:text-mint-700"
               >
-                Đánh dấu tất cả đã đọc
+                {t('mark_all_read')}
               </Button>
             )}
           </Flex>
@@ -172,7 +175,7 @@ export function NotificationBell() {
                 className="p-8 text-center"
               >
                 <FiBell size={48} className="text-gray-400" />
-                <Text className="text-gray-600">Không có thông báo mới</Text>
+                <Text className="text-gray-600">{t('no_new')}</Text>
               </Flex>
             ) : (
               <Flex direction="column" gap="0">
@@ -230,12 +233,12 @@ export function NotificationBell() {
             <Button
               variant="ghost"
               onClick={() => {
-                router.push("/dashboard/student/notifications");
+                router.push(`/${locale}/dashboard/student/notifications`);
                 setIsOpen(false);
               }}
               className="text-mint-600 hover:text-mint-700"
             >
-              Xem tất cả thông báo
+              {t('view_all')}
             </Button>
           </Flex>
         </Flex>

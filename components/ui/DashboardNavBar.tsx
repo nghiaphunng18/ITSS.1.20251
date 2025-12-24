@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLocale, useTranslations } from 'next-intl';
 import {
   Button,
   Container,
@@ -12,6 +13,7 @@ import {
 import { FiBook, FiLogOut, FiUser, FiSettings } from "react-icons/fi";
 import { useAuth } from "@/contexts/AuthContext";
 import { NotificationBell } from "./NotificationBell";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 
 interface DashboardNavBarProps {
   tabs: { label: string; href: string; icon: React.ReactNode }[];
@@ -20,12 +22,15 @@ interface DashboardNavBarProps {
 export default function DashboardNavBar({ tabs }: DashboardNavBarProps) {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  const locale = useLocale();
+  const t = useTranslations('navigation.settings');
+  const tAuth = useTranslations('authentication.logout');
 
   const getDashboardUrl = () => {
-    if (!user) return "/";
-    if (user.role === "ADMINISTRATOR") return "/dashboard/admin";
-    if (user.role === "TEACHER") return "/dashboard/teacher/classes";
-    return "/dashboard/student/classes";
+    if (!user) return `/${locale}`;
+    if (user.role === "ADMINISTRATOR") return `/${locale}/dashboard/admin`;
+    if (user.role === "TEACHER") return `/${locale}/dashboard/teacher/classes`;
+    return `/${locale}/dashboard/student/classes`;
   };
 
   return (
@@ -74,6 +79,9 @@ export default function DashboardNavBar({ tabs }: DashboardNavBarProps) {
             {user && (user.role === "STUDENT" || user.role === "TEACHER") && (
               <NotificationBell />
             )}
+            
+            {/* Language Switcher */}
+            <LanguageSwitcher />
 
             {/* User Menu */}
             <DropdownMenu.Root>
@@ -95,27 +103,27 @@ export default function DashboardNavBar({ tabs }: DashboardNavBarProps) {
               <DropdownMenu.Content>
                 <DropdownMenu.Item>
                   <Link
-                    href="/dashboard/settings"
+                    href={`/${locale}/dashboard/settings`}
                     className="flex items-center gap-2"
                   >
                     <FiSettings size={16} />
-                    Cài đặt tài khoản
+                    {t('account_settings')}
                   </Link>
                 </DropdownMenu.Item>
                 <DropdownMenu.Item>
                   <Link
-                    href="/dashboard/profile"
+                    href={`/${locale}/dashboard/profile`}
                     className="flex items-center gap-2"
                   >
                     <FiUser size={16} />
-                    Hồ sơ cá nhân
+                    {t('profile')}
                   </Link>
                 </DropdownMenu.Item>
                 <DropdownMenu.Separator />
                 <DropdownMenu.Item color="red" onClick={logout}>
                   <Flex align="center" gap="2">
                     <FiLogOut size={16} />
-                    Đăng xuất
+                    {tAuth('button')}
                   </Flex>
                 </DropdownMenu.Item>
               </DropdownMenu.Content>

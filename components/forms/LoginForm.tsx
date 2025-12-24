@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
+import { useLocale, useTranslations } from 'next-intl';
 import {
   Flex,
   Heading,
@@ -17,16 +18,10 @@ import {
 import { FiMail, FiLock, FiAlertCircle, FiLogIn } from "react-icons/fi";
 import { useAuth } from "@/contexts/AuthContext";
 
-// Validation schema
-const loginSchema = z.object({
-  email: z
-    .string()
-    .min(1, "Email không được để trống")
-    .email("Email không hợp lệ"),
-  password: z.string().min(6, "Mật khẩu phải có ít nhất 6 ký tự"),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
+type LoginFormData = {
+  email: string;
+  password: string;
+};
 
 interface LoginFormProps {
   onFillForm?: (email: string, password: string) => void;
@@ -41,6 +36,19 @@ const LoginForm = forwardRef<LoginFormRef, LoginFormProps>(
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [successMessage, setSuccessMessage] = useState<string | null>(null);
     const { login, isLoading } = useAuth();
+    const locale = useLocale();
+    const t = useTranslations('authentication.login');
+    const tValidation = useTranslations('authentication.validation');
+    const tFields = useTranslations('authentication.fields');
+
+    // Validation schema
+    const loginSchema = z.object({
+      email: z
+        .string()
+        .min(1, tValidation('email_required'))
+        .email(tValidation('email_invalid')),
+      password: z.string().min(6, tValidation('password_min_length')),
+    });
 
     const {
       register,
@@ -67,12 +75,12 @@ const LoginForm = forwardRef<LoginFormRef, LoginFormProps>(
 
       try {
         await login(data.email, data.password);
-        setSuccessMessage("Đăng nhập thành công! Đang chuyển hướng...");
+        setSuccessMessage(t('success_redirecting'));
       } catch (error) {
         setErrorMessage(
           error instanceof Error
             ? error.message
-            : "Đăng nhập thất bại. Vui lòng thử lại."
+            : t('error_retry')
         );
       }
     };
@@ -87,10 +95,10 @@ const LoginForm = forwardRef<LoginFormRef, LoginFormProps>(
                 <FiLogIn className="text-white" size={32} />
               </div>
               <Heading size="7" className="text-gray-900">
-                Đăng nhập
+                {t('heading')}
               </Heading>
               <Text className="text-gray-600 text-center">
-                Đăng nhập vào hệ thống HUST LMS
+                {t('description')}
               </Text>
             </Flex>
 
@@ -123,12 +131,12 @@ const LoginForm = forwardRef<LoginFormRef, LoginFormProps>(
                 htmlFor="email"
                 className="text-sm font-medium text-gray-700"
               >
-                Email
+                {tFields('email')}
               </label>
               <TextField.Root
                 id="email"
                 type="email"
-                placeholder="example@hust.edu.vn"
+                placeholder={tFields('email_placeholder')}
                 size="3"
                 {...register("email")}
                 className="w-full"
@@ -150,12 +158,12 @@ const LoginForm = forwardRef<LoginFormRef, LoginFormProps>(
                 htmlFor="password"
                 className="text-sm font-medium text-gray-700"
               >
-                Mật khẩu
+                {tFields('password')}
               </label>
               <TextField.Root
                 id="password"
                 type="password"
-                placeholder="••••••••"
+                placeholder={tFields('password_placeholder')}
                 size="3"
                 {...register("password")}
                 className="w-full"
@@ -179,14 +187,14 @@ const LoginForm = forwardRef<LoginFormRef, LoginFormProps>(
                   className="w-4 h-4 text-mint-600 rounded border-gray-300 focus:ring-mint-500 dark:bg-gray-800"
                 />
                 <Text size="2" className="text-gray-600">
-                  Ghi nhớ đăng nhập
+                  {t('remember_me')}
                 </Text>
               </label>
               <Link
-                href="/forgot-password"
+                href={`/${locale}/forgot-password`}
                 className="text-sm text-mint-600 hover:text-mint-700 dark:hover:text-mint-300"
               >
-                Quên mật khẩu?
+                {t('forgot_password')}
               </Link>
             </Flex>
 
@@ -197,26 +205,26 @@ const LoginForm = forwardRef<LoginFormRef, LoginFormProps>(
               disabled={isLoading}
               className="bg-mint-500 hover:bg-mint-600 dark:hover:bg-mint-500 text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed w-full"
             >
-              {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
+              {isLoading ? t('button_loading') : t('button')}
             </Button>
 
             {/* Divider */}
             <Flex align="center" gap="3">
               <div className="flex-1 h-px bg-gray-300" />
               <Text size="2" className="text-gray-500">
-                hoặc
+                {t('or')}
               </Text>
               <div className="flex-1 h-px bg-gray-300" />
             </Flex>
 
             {/* Sign Up Link */}
             <Text size="2" className="text-center text-gray-600">
-              Chưa có tài khoản?{" "}
+              {t('no_account')}{" "}
               <Link
-                href="/register"
+                href={`/${locale}/register`}
                 className="text-mint-600 hover:text-mint-700 dark:hover:text-mint-300 font-medium"
               >
-                Đăng ký ngay
+                {t('register_now')}
               </Link>
             </Text>
           </Flex>

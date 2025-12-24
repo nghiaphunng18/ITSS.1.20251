@@ -630,3 +630,43 @@ model NotificationSubscription {
   @@index([isActive])
   @@map("notification_subscriptions")
 }
+
+// ========================================
+// LOCALIZATION SYSTEM
+// ========================================
+
+// Supported locales for the application
+enum Locale {
+  vi  // Vietnamese (default)
+  ja  // Japanese
+  en  // English (future)
+}
+
+// Entity types that support localization
+enum LocalizableEntity {
+  CLASS
+  ASSIGNMENT
+  POST
+  LEARNING_MATERIAL
+  GROUP
+  NOTIFICATION_CATEGORY
+}
+
+// Central localization table for database content
+// This enables multi-language support for user-generated or dynamic content
+model Localization {
+  id         String            @id @default(cuid())
+  entityType LocalizableEntity // Type of entity being localized
+  entityId   String            // ID of the entity (e.g., classId, assignmentId)
+  locale     Locale            // Language code (vi, ja, en)
+  field      String            // Field name being localized (e.g., "name", "description")
+  value      String            @db.Text // Localized content
+  
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
+
+  @@unique([entityType, entityId, locale, field]) // One translation per field per locale per entity
+  @@index([entityType, entityId])
+  @@index([locale])
+  @@map("localizations")
+}

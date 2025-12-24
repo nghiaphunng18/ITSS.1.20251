@@ -3,6 +3,7 @@
 import { Card, Flex, Heading, Text, Button, Select } from "@radix-ui/themes";
 import { FiUser, FiCopy } from "react-icons/fi";
 import { useState } from "react";
+import { useTranslations } from 'next-intl';
 
 interface DemoAccount {
   role: string;
@@ -91,6 +92,7 @@ interface DemoAccountsCardProps {
 export default function DemoAccountsCard({
   onFillForm,
 }: DemoAccountsCardProps) {
+  const t = useTranslations('authentication.demo_accounts');
   const [selectedAdmin, setSelectedAdmin] = useState(
     demoAccountsByRole.admin[0].email
   );
@@ -127,11 +129,11 @@ export default function DemoAccountsCard({
         <Flex align="center" gap="2">
           <FiUser className="text-mint-600" size={24} />
           <Heading size="5" className="text-mint-900">
-            Tài khoản Demo
+            {t('title')}
           </Heading>
         </Flex>
         <Text className="text-gray-600 text-sm">
-          Chọn tài khoản và nhấp "Sử dụng" để tự động điền thông tin đăng nhập
+          {t('subtitle')}
         </Text>
 
         <Flex direction="column" gap="3">
@@ -140,7 +142,7 @@ export default function DemoAccountsCard({
             <Flex direction="column" gap="3">
               <Flex justify="between" align="center">
                 <Text weight="bold" size="3" className="text-gray-900">
-                  👨‍💼 Quản trị viên
+                  👨‍💼 {t('role_admin')}
                 </Text>
                 <Button
                   size="2"
@@ -148,7 +150,7 @@ export default function DemoAccountsCard({
                   className="bg-mint-500 hover:bg-mint-600 text-white cursor-pointer"
                 >
                   <FiCopy size={16} />
-                  Sử dụng
+                  {t('use_account')}
                 </Button>
               </Flex>
               <Flex direction="column" gap="2">
@@ -167,7 +169,7 @@ export default function DemoAccountsCard({
             <Flex direction="column" gap="3">
               <Flex justify="between" align="center">
                 <Text weight="bold" size="3" className="text-gray-900">
-                  👨‍🏫 Giảng viên
+                  👨‍🏫 {t('role_teacher')}
                 </Text>
                 <Button
                   size="2"
@@ -175,7 +177,7 @@ export default function DemoAccountsCard({
                   className="bg-mint-500 hover:bg-mint-600 text-white cursor-pointer"
                 >
                   <FiCopy size={16} />
-                  Sử dụng
+                  {t('use_account')}
                 </Button>
               </Flex>
               <Select.Root
@@ -202,7 +204,7 @@ export default function DemoAccountsCard({
             <Flex direction="column" gap="3">
               <Flex justify="between" align="center">
                 <Text weight="bold" size="3" className="text-gray-900">
-                  👨‍🎓 Sinh viên
+                  👨‍🎓 {t('role_student')}
                 </Text>
                 <Button
                   size="2"
@@ -210,7 +212,7 @@ export default function DemoAccountsCard({
                   className="bg-mint-500 hover:bg-mint-600 text-white cursor-pointer"
                 >
                   <FiCopy size={16} />
-                  Sử dụng
+                  {t('use_account')}
                 </Button>
               </Flex>
               <Select.Root

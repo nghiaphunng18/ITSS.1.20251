@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import axios from "@/lib/axios";
 import { useToast } from "./ToastContext";
 
@@ -30,7 +30,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
   const toast = useToast();
+
+  // Extract locale from pathname
+  const locale = pathname?.split('/')[1] || 'vi';
 
   useEffect(() => {
     // Check if user is already logged in (from localStorage or session)
@@ -67,11 +71,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Redirect based on role
       if (userData.role === "ADMINISTRATOR") {
-        router.push("/dashboard/admin");
+        router.push(`/${locale}/dashboard/admin`);
       } else if (userData.role === "TEACHER") {
-        router.push("/dashboard/teacher");
+        router.push(`/${locale}/dashboard/teacher/classes`);
       } else {
-        router.push("/dashboard/student");
+        router.push(`/${locale}/dashboard/student/classes`);
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -90,7 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
     localStorage.removeItem("user");
     toast.info("Đăng xuất thành công", `Hẹn gặp lại ${userName}!`);
-    router.push("/");
+    router.push(`/${locale}`);
   };
 
   return (
