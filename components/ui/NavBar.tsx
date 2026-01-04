@@ -66,6 +66,15 @@ export default function NavBar() {
               {t('about')}
             </Link>
             <LanguageSwitcher />
+            <Link href={`/${locale}/register`}>
+              <Button
+                size="2"
+                variant="outline"
+                className="text-mint-600 border-mint-500 hover:bg-mint-50 cursor-pointer"
+              >
+                {t('register')}
+              </Button>
+            </Link>
             <Link href={`/${locale}/login`}>
               <Button
                 size="2"

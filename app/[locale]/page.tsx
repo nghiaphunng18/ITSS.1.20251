@@ -47,12 +47,21 @@ export default function Home() {
               {t('hero.description')}
             </Text>
             <Flex gap="4" mt="4">
-              <Link href={`/${locale}/login`}>
+              <Link href={`/${locale}/register`}>
                 <Button
                   size="4"
                   className="bg-mint-500 hover:bg-mint-600 text-white cursor-pointer px-8"
                 >
                   {t('hero.cta_primary')}
+                </Button>
+              </Link>
+              <Link href={`/${locale}/login`}>
+                <Button
+                  size="4"
+                  variant="outline"
+                  className="border-mint-500 text-mint-700 hover:bg-mint-50 cursor-pointer px-8"
+                >
+                  {t('hero.cta_login')}
                 </Button>
               </Link>
               <Link href={`/${locale}/about`}>

@@ -22,16 +22,48 @@
       "success": "Đăng xuất thành công",
       "goodbye": "Hẹn gặp lại {name}!"
     },
+    "register": {
+      "heading": "Đăng ký tài khoản",
+      "description": "Tạo tài khoản mới để sử dụng HUST LMS",
+      "button": "Đăng ký",
+      "button_loading": "Đang đăng ký...",
+      "have_account": "Đã có tài khoản?",
+      "login_now": "Đăng nhập ngay",
+      "optional": "tùy chọn",
+      "student_code_hint": "Mã sinh viên 8-9 chữ số (VD: 20211234)",
+      "password_requirements": "Mật khẩu phải có ít nhất 6 ký tự, bao gồm chữ hoa, chữ thường và số",
+      "agree_terms": "Tôi đồng ý với điều khoản sử dụng và chính sách bảo mật",
+      "success_message": "Đăng ký thành công! Đang chuyển đến trang đăng nhập...",
+      "error_message": "Đăng ký thất bại. Vui lòng thử lại."
+    },
     "validation": {
       "email_required": "Email không được để trống",
       "email_invalid": "Email không hợp lệ",
-      "password_min_length": "Mật khẩu phải có ít nhất 6 ký tự"
+      "password_min_length": "Mật khẩu phải có ít nhất 6 ký tự",
+      "password_uppercase": "Mật khẩu phải có ít nhất một chữ cái viết hoa",
+      "password_lowercase": "Mật khẩu phải có ít nhất một chữ cái viết thường",
+      "password_number": "Mật khẩu phải có ít nhất một chữ số",
+      "name_required": "Tên không được để trống",
+      "name_min_length": "Tên phải có ít nhất 2 ký tự",
+      "confirm_password_required": "Vui lòng xác nhận mật khẩu",
+      "passwords_not_match": "Mật khẩu xác nhận không khớp",
+      "student_code_invalid": "Mã sinh viên phải là 8-9 chữ số",
+      "agree_terms_required": "Bạn phải đồng ý với điều khoản sử dụng"
     },
     "fields": {
       "email_label": "Email",
       "email_placeholder": "example@hust.edu.vn",
       "password_label": "Mật khẩu",
-      "password_placeholder": "••••••••"
+      "password_placeholder": "••••••••",
+      "name_label": "Họ và tên",
+      "name_placeholder": "Nguyễn Văn A",
+      "confirm_password_label": "Xác nhận mật khẩu",
+      "confirm_password_placeholder": "••••••••",
+      "student_code_label": "Mã sinh viên",
+      "student_code_placeholder": "20211234",
+      "role_label": "Vai trò",
+      "role_student": "Sinh viên",
+      "role_teacher": "Giảng viên"
     },
     "demo_accounts": {
       "title": "Tài khoản demo",
@@ -54,6 +86,7 @@
       "home": "Trang chủ",
       "about": "Về chúng tôi",
       "login": "Đăng nhập",
+      "register": "Đăng ký",
       "lms_subtitle": "Hệ thống Quản lý Học tập",
       "back_to_home": "Quay lại trang chủ",
       "learn_more": "Tìm hiểu thêm",
@@ -76,6 +109,7 @@
       "title": "Hệ thống Quản lý Học tập",
       "description": "Nền tảng học tập trực tuyến hiện đại cho Đại học Bách Khoa Hà Nội. Kết nối giảng viên và sinh viên trong môi trường học tập số hóa.",
       "cta_primary": "Bắt đầu ngay",
+      "cta_login": "Đăng nhập",
       "cta_secondary": "Tìm hiểu thêm"
     },
     "features": {
