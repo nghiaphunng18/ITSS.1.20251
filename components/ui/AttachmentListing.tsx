@@ -1,6 +1,6 @@
 "use client";
 
-import { Badge, Card, Flex, IconButton, Text } from "@radix-ui/themes";
+import { Badge, Card, Flex, IconButton, Text, Dialog } from "@radix-ui/themes";
 import {
   FiFile,
   FiFileText,
@@ -11,9 +11,12 @@ import {
   FiShare2,
   FiLink,
   FiTrash2,
+  FiEye,
 } from "react-icons/fi";
 import { useState } from "react";
 import { useToast } from "@/contexts/ToastContext";
+import { DocumentViewer } from "./DocumentViewer";
+import { VideoPlayer } from "./VideoPlayer";
 
 interface AttachmentListingProps {
   attachment: {
@@ -124,6 +127,134 @@ export function AttachmentListing({
       );
     }
   };
+
+  // Check file type for rendering
+  const mimeType = attachment.mimeType?.toLowerCase() || "";
+  const isVideo = mimeType.startsWith("video/");
+  const isDocument = 
+    mimeType.includes("pdf") ||
+    mimeType.includes("document") ||
+    mimeType.includes("word") ||
+    mimeType.includes("spreadsheet") ||
+    mimeType.includes("excel") ||
+    mimeType.includes("presentation") ||
+    mimeType.includes("powerpoint");
+
+  // For videos, render VideoPlayer
+  if (isVideo) {
+    return (
+      <Card className="bg-white">
+        <VideoPlayer
+          videoUrl={attachment.fileUrl}
+          fileName={attachment.fileName}
+          fileSize={attachment.fileSize}
+        />
+        {attachment.uploader && (
+          <Flex gap="2" className="p-3 pt-0">
+            <Text size="1" className="text-gray-500">
+              Tải lên bởi {attachment.uploader.name}
+            </Text>
+            {attachment.uploadedAt && (
+              <>
+                <Text size="1" className="text-gray-400">•</Text>
+                <Text size="1" className="text-gray-500">
+                  {new Date(attachment.uploadedAt).toLocaleDateString("vi-VN")}
+                </Text>
+              </>
+            )}
+          </Flex>
+        )}
+      </Card>
+    );
+  }
+
+  // For documents, use DocumentViewer with custom trigger
+  if (isDocument) {
+    const trigger = (
+      <Card
+        className="bg-white hover:shadow-md transition-all cursor-pointer"
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
+        <Flex gap="3" align="center" className="p-3">
+          <div className="flex-shrink-0">{getFileIcon()}</div>
+          <Flex direction="column" gap="1" className="flex-1 min-w-0">
+            <Text size="2" weight="medium" className="truncate">
+              {attachment.fileName}
+            </Text>
+            <Flex align="center" gap="2" wrap="wrap">
+              <Badge size="1" color="gray">
+                {getFileExtension()}
+              </Badge>
+              <Text size="1" className="text-gray-500">
+                {formatFileSize(attachment.fileSize)}
+              </Text>
+              {attachment.uploader && (
+                <>
+                  <Text size="1" className="text-gray-400">•</Text>
+                  <Text size="1" className="text-gray-500">
+                    {attachment.uploader.name}
+                  </Text>
+                </>
+              )}
+              {attachment.uploadedAt && (
+                <>
+                  <Text size="1" className="text-gray-400">•</Text>
+                  <Text size="1" className="text-gray-500">
+                    {new Date(attachment.uploadedAt).toLocaleDateString("vi-VN")}
+                  </Text>
+                </>
+              )}
+            </Flex>
+          </Flex>
+
+          {/* Action buttons - visible on hover */}
+          {isHovering && (
+            <Flex gap="1" className="flex-shrink-0">
+              <IconButton
+                size="1"
+                variant="soft"
+                color="mint"
+                title="Xem"
+              >
+                <FiEye size={14} />
+              </IconButton>
+              <IconButton
+                size="1"
+                variant="soft"
+                color="gray"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDownload();
+                }}
+                title="Tải xuống"
+              >
+                <FiDownload size={14} />
+              </IconButton>
+              {canDelete && (
+                <IconButton
+                  size="1"
+                  variant="soft"
+                  color="red"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleDelete();
+                  }}
+                  title="Xóa"
+                >
+                  <FiTrash2 size={14} />
+                </IconButton>
+              )}
+            </Flex>
+          )}
+        </Flex>
+      </Card>
+    );
+
+    return <DocumentViewer attachment={attachment} trigger={trigger} />;
+  }
+
+  // For other files (images, etc), render the regular card
 
   return (
     <Card

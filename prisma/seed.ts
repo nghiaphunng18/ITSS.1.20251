@@ -50,6 +50,11 @@ function generateVietnameseName(): string {
   return `${lastName} ${middleName} ${firstName}`;
 }
 
+function generateAttendancePassword(): string {
+  // Generate a 6-digit password
+  return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 async function main() {
   console.log("🌱 Bắt đầu khởi tạo cơ sở dữ liệu...");
 
@@ -1539,6 +1544,7 @@ async function main() {
             classId: classItem.id,
             title: "Điểm danh hôm nay",
             sessionCode,
+            password: generateAttendancePassword(),
             status: "ACTIVE",
             createdById: classItem.createdBy!,
             startTime,
@@ -1575,6 +1581,7 @@ async function main() {
             classId: classItem.id,
             title: "Điểm danh buổi trước",
             sessionCode,
+            password: generateAttendancePassword(),
             status: "ACTIVE", // Still marked active but expired
             createdById: classItem.createdBy!,
             startTime,
@@ -1616,6 +1623,7 @@ async function main() {
             classId: classItem.id,
             title: `Điểm danh ${daysAgo} ngày trước`,
             sessionCode,
+            password: generateAttendancePassword(),
             status: "CLOSED",
             createdById: classItem.createdBy!,
             startTime,

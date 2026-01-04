@@ -75,6 +75,9 @@ export async function POST(
 
     // Generate a 6-digit session code
     const sessionCode = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    // Generate a 6-digit password for attendance check-in
+    const password = Math.floor(100000 + Math.random() * 900000).toString();
 
     // Calculate auto-close time based on duration
     const endTime = new Date();
@@ -85,6 +88,7 @@ export async function POST(
         classId,
         title,
         sessionCode,
+        password,
         createdById: createdById || classId, // Fallback if createdById not provided
         status: "ACTIVE",
         endTime,

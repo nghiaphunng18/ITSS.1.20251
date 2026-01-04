@@ -451,6 +451,7 @@ model AttendanceSession {
   classId     String
   title       String                  @default("Điểm danh")
   sessionCode String                  @unique // 6-digit code for students to check in
+  password    String                  // 6-digit password required for check-in
   status      AttendanceSessionStatus @default(ACTIVE)
   createdById String
   startTime   DateTime                @default(now())

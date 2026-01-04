@@ -129,6 +129,10 @@ export default function StudentClassDetailPage({
     "time"
   );
   const [postSortOrder, setPostSortOrder] = useState<"latest" | "oldest" | "most_votes" | "recently_updated">("latest");
+  const [isDeletePostDialogOpen, setIsDeletePostDialogOpen] = useState(false);
+  const [postToDelete, setPostToDelete] = useState<string | null>(null);
+  const [isDeleteCommentDialogOpen, setIsDeleteCommentDialogOpen] = useState(false);
+  const [commentToDelete, setCommentToDelete] = useState<string | null>(null);
 
   const fetchClassData = async () => {
     try {
@@ -271,11 +275,83 @@ export default function StudentClassDetailPage({
         };
       });
       setClassData({ ...classData, posts: finalPosts });
+      // Refresh attachments if the comment has attachments
+      if (attachments && attachments.length > 0) {
+        fetchAttachments();
+      }
     } catch (error) {
       console.error("Failed to comment:", error);
       toast.error(tActions('comment_failed'));
       // Revert optimistic update
       fetchClassData();
+    }
+  };
+
+  const handleDeletePost = async (postId: string) => {
+    // Open confirmation dialog
+    setPostToDelete(postId);
+    setIsDeletePostDialogOpen(true);
+  };
+
+  const confirmDeletePost = async () => {
+    if (!postToDelete || !classData) return;
+
+    const postHasAttachments = classData.posts.find(
+      (p) => p.id === postToDelete
+    )?.attachments?.length > 0;
+
+    try {
+      await axios.delete(`/api/posts/${postToDelete}`, {
+        data: { authorId: user?.id },
+      });
+      toast.success(tActions('post_deleted'), tActions('post_deleted_success'));
+      setIsDeletePostDialogOpen(false);
+      setPostToDelete(null);
+      fetchClassData();
+      // Refresh attachments if post had attachments
+      if (postHasAttachments) {
+        fetchAttachments();
+      }
+    } catch (error) {
+      console.error("Failed to delete post:", error);
+      toast.error(tActions('error'), tActions('post_delete_failed'));
+    }
+  };
+
+  const handleCommentDelete = async (commentId: string) => {
+    // Open confirmation dialog
+    setCommentToDelete(commentId);
+    setIsDeleteCommentDialogOpen(true);
+  };
+
+  const confirmDeleteComment = async () => {
+    if (!commentToDelete || !classData) return;
+
+    // Check if comment has attachments
+    let commentHasAttachments = false;
+    for (const post of classData.posts) {
+      const comment = post.comments?.find((c: any) => c.id === commentToDelete);
+      if (comment?.attachments?.length > 0) {
+        commentHasAttachments = true;
+        break;
+      }
+    }
+
+    try {
+      await axios.delete(`/api/comments/${commentToDelete}`, {
+        data: { authorId: user?.id },
+      });
+      toast.success(tActions('comment_deleted'), tActions('comment_deleted_success'));
+      setIsDeleteCommentDialogOpen(false);
+      setCommentToDelete(null);
+      fetchClassData();
+      // Refresh attachments if comment had attachments
+      if (commentHasAttachments) {
+        fetchAttachments();
+      }
+    } catch (error) {
+      console.error("Failed to delete comment:", error);
+      toast.error(tActions('error'), tActions('comment_delete_failed'));
     }
   };
 
@@ -590,9 +666,11 @@ export default function StudentClassDetailPage({
                               userVote={userVote}
                               onVote={handleVote}
                               onComment={handleComment}
+                              onDelete={handleDeletePost}
                               commentSortOrder={commentSortOrder}
                               onCommentSortChange={handleCommentSortChange}
                               onCommentVote={handleCommentVote}
+                              onCommentDelete={handleCommentDelete}
                             />
                           );
                         });
@@ -848,6 +926,26 @@ export default function StudentClassDetailPage({
           </Tabs.Root>
         </Flex>
       </Container>
+
+      <ConfirmDialog
+        open={isDeletePostDialogOpen}
+        onOpenChange={setIsDeletePostDialogOpen}
+        onConfirm={confirmDeletePost}
+        title={tActions('delete_post_title')}
+        description={tActions('delete_post_description')}
+        confirmLabel={tActions('delete')}
+        cancelLabel={tActions('cancel')}
+      />
+
+      <ConfirmDialog
+        open={isDeleteCommentDialogOpen}
+        onOpenChange={setIsDeleteCommentDialogOpen}
+        onConfirm={confirmDeleteComment}
+        title={tActions('delete_comment_title')}
+        description={tActions('delete_comment_description')}
+        confirmLabel={tActions('delete')}
+        cancelLabel={tActions('cancel')}
+      />
     </div>
   );
 }

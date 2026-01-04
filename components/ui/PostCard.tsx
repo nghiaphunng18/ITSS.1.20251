@@ -29,6 +29,8 @@ import {
 } from "react-icons/fi";
 import { CommentCard } from "./CommentCard";
 import { AttachmentCard } from "./AttachmentCard";
+import { DocumentViewer } from "./DocumentViewer";
+import { VideoPlayer } from "./VideoPlayer";
 import { FilePickerInput, FileAttachment } from "./FilePickerInput";
 import { VoteButtons } from "./VoteButtons";
 import { useState } from "react";
@@ -295,25 +297,40 @@ export function PostCard({
           {/* Attachments */}
           {post.attachments && post.attachments.length > 0 && (
             <Flex direction="column" gap="2" className="mt-2">
-              {post.attachments.map((attachment) => (
-                <a
-                  key={attachment.id}
-                  href={attachment.fileUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 p-2 bg-mint-50 hover:bg-mint-100 rounded-md transition-colors"
-                >
-                  <FiPaperclip size={16} className="text-mint-600" />
-                  <Text size="2" className="text-mint-600 font-medium">
-                    {attachment.fileName}
-                  </Text>
-                  {attachment.fileSize && (
-                    <Text size="1" className="text-gray-500">
-                      ({Math.round(attachment.fileSize / 1024)} KB)
-                    </Text>
-                  )}
-                </a>
-              ))}
+              {post.attachments.map((attachment) => {
+                const mimeType = attachment.mimeType?.toLowerCase() || "";
+                
+                // Check file type
+                const isVideo = mimeType.startsWith("video/");
+                const isDocument = 
+                  mimeType.includes("pdf") ||
+                  mimeType.includes("document") ||
+                  mimeType.includes("word") ||
+                  mimeType.includes("spreadsheet") ||
+                  mimeType.includes("excel") ||
+                  mimeType.includes("presentation") ||
+                  mimeType.includes("powerpoint");
+
+                // Use appropriate component based on file type
+                if (isVideo) {
+                  return (
+                    <VideoPlayer
+                      key={attachment.id}
+                      videoUrl={attachment.fileUrl}
+                      fileName={attachment.fileName}
+                      fileSize={attachment.fileSize}
+                    />
+                  );
+                } else if (isDocument) {
+                  return (
+                    <DocumentViewer key={attachment.id} attachment={attachment} />
+                  );
+                } else {
+                  return (
+                    <AttachmentCard key={attachment.id} attachment={attachment} />
+                  );
+                }
+              })}
             </Flex>
           )}
 

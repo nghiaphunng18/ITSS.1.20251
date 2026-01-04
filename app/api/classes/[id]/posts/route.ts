@@ -9,7 +9,7 @@ export async function POST(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, content, type, authorId } = body;
+    const { title, content, type, authorId, attachments } = body;
 
     if (!title || !content || !authorId) {
       return NextResponse.json(
@@ -25,6 +25,16 @@ export async function POST(
         title,
         content,
         type: type || "DISCUSSION",
+        attachments: attachments
+          ? {
+              create: attachments.map((att: any) => ({
+                fileName: att.fileName,
+                fileUrl: att.fileUrl,
+                fileSize: att.fileSize,
+                mimeType: att.mimeType,
+              })),
+            }
+          : undefined,
       },
       include: {
         author: {
@@ -34,6 +44,21 @@ export async function POST(
             avatar: true,
           },
         },
+        attachments: true,
+        comments: {
+          include: {
+            author: {
+              select: {
+                id: true,
+                name: true,
+                avatar: true,
+              },
+            },
+            attachments: true,
+            votes: true,
+          },
+        },
+        votes: true,
       },
     });
 

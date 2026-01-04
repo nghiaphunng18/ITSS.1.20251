@@ -13,6 +13,8 @@ import {
 } from "@radix-ui/themes";
 import { FiThumbsUp, FiThumbsDown, FiEdit2, FiTrash2, FiCheck } from "react-icons/fi";
 import { AttachmentCard } from "./AttachmentCard";
+import { DocumentViewer } from "./DocumentViewer";
+import { VideoPlayer } from "./VideoPlayer";
 import { VoteButtons } from "./VoteButtons";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -160,9 +162,40 @@ export function CommentCard({
           {/* Attachments */}
           {comment.attachments && comment.attachments.length > 0 && (
             <Flex direction="column" gap="2" className="mt-2">
-              {comment.attachments.map((att) => (
-                <AttachmentCard key={att.id} attachment={att} />
-              ))}
+              {comment.attachments.map((attachment) => {
+                const mimeType = attachment.mimeType?.toLowerCase() || "";
+                
+                // Check file type
+                const isVideo = mimeType.startsWith("video/");
+                const isDocument = 
+                  mimeType.includes("pdf") ||
+                  mimeType.includes("document") ||
+                  mimeType.includes("word") ||
+                  mimeType.includes("spreadsheet") ||
+                  mimeType.includes("excel") ||
+                  mimeType.includes("presentation") ||
+                  mimeType.includes("powerpoint");
+
+                // Use appropriate component based on file type
+                if (isVideo) {
+                  return (
+                    <VideoPlayer
+                      key={attachment.id}
+                      videoUrl={attachment.fileUrl}
+                      fileName={attachment.fileName}
+                      fileSize={attachment.fileSize}
+                    />
+                  );
+                } else if (isDocument) {
+                  return (
+                    <DocumentViewer key={attachment.id} attachment={attachment} />
+                  );
+                } else {
+                  return (
+                    <AttachmentCard key={attachment.id} attachment={attachment} />
+                  );
+                }
+              })}
             </Flex>
           )}
         </div>

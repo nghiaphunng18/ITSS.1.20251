@@ -23,6 +23,7 @@ interface Student {
 interface AttendanceSession {
   id: string;
   sessionCode: string;
+  password: string;
   title: string;
   status: "ACTIVE" | "CLOSED";
   startTime: string;
@@ -276,6 +277,18 @@ export function AttendanceSessionDialog({
                           : "Đã đóng"}
                       </Badge>
                     </Flex>
+                  </Flex>
+
+                  {/* Password Display for Teachers */}
+                  <Flex gap="2" align="center" className="bg-amber-50 p-3 rounded-lg border border-amber-200">
+                    <div className="flex-1">
+                      <Text size="2" weight="bold" className="block text-amber-900">
+                        Mật khẩu điểm danh (chỉ giáo viên thấy)
+                      </Text>
+                      <Text size="5" weight="bold" className="text-amber-600 font-mono">
+                        {session.password}
+                      </Text>
+                    </div>
                   </Flex>
 
                   <Flex gap="4" align="center">

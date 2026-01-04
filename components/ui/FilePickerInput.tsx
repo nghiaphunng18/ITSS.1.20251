@@ -107,22 +107,49 @@ export function FilePickerInput({
     return `${(bytes / (1024 * 1024 * 1024)).toFixed(1)} GB`;
   };
 
-  const handleAddFile = () => {
-    if (!newFile.fileName || !newFile.fileUrl) return;
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-    const mimeType = getMimeType(newFile.fileName);
-    const fileSize = 1024 * 1024; // Mock 1MB file size
+    // Validate file size (10MB limit)
+    if (file.size > 10 * 1024 * 1024) {
+      alert("File size must be less than 10MB");
+      return;
+    }
 
-    const newAttachment: FileAttachment = {
-      fileName: newFile.fileName,
-      fileUrl: newFile.fileUrl,
-      fileSize,
-      mimeType,
-    };
+    setIsAdding(true);
 
-    handleChange([...attachments, newAttachment]);
-    setNewFile({ fileName: "", fileUrl: "" });
-    setIsAdding(false);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const result = await response.json();
+
+      const newAttachment: FileAttachment = {
+        fileName: result.fileName,
+        fileUrl: result.fileUrl,
+        fileSize: result.fileSize,
+        mimeType: result.mimeType,
+      };
+
+      handleChange([...attachments, newAttachment]);
+    } catch (error) {
+      console.error("Failed to upload file:", error);
+      alert("Failed to upload file. Please try again.");
+    } finally {
+      setIsAdding(false);
+      // Reset file input
+      e.target.value = "";
+    }
   };
 
   const handleRemoveFile = (index: number) => {
@@ -164,58 +191,32 @@ export function FilePickerInput({
       {/* Add file button/form */}
       {isAdding ? (
         <Card size="1">
-          <Flex direction="column" gap="2" className="p-2">
-            <input
-              type="text"
-              placeholder="Tên file (ví dụ: document.pdf)"
-              value={newFile.fileName}
-              onChange={(e) =>
-                setNewFile({ ...newFile, fileName: e.target.value })
-              }
-              className="w-full px-2 py-1 text-sm border rounded"
-            />
-            <input
-              type="text"
-              placeholder="URL file (ví dụ: https://example.com/file.pdf)"
-              value={newFile.fileUrl}
-              onChange={(e) =>
-                setNewFile({ ...newFile, fileUrl: e.target.value })
-              }
-              className="w-full px-2 py-1 text-sm border rounded"
-            />
-            <Flex gap="2" justify="end">
-              <Button
-                size="1"
-                variant="soft"
-                color="gray"
-                onClick={() => {
-                  setIsAdding(false);
-                  setNewFile({ fileName: "", fileUrl: "" });
-                }}
-              >
-                Hủy
-              </Button>
-              <Button
-                size="1"
-                onClick={handleAddFile}
-                disabled={!newFile.fileName || !newFile.fileUrl}
-              >
-                Thêm
-              </Button>
-            </Flex>
+          <Flex direction="column" gap="2" className="p-3">
+            <Text size="2" weight="medium">Đang tải file lên...</Text>
           </Flex>
         </Card>
       ) : (
         attachments.length < maxFiles && (
-          <Button
-            size="1"
-            variant="soft"
-            onClick={() => setIsAdding(true)}
-            className="w-full"
-          >
-            <FiPaperclip size={14} /> Đính kèm file ({attachments.length}/
-            {maxFiles})
-          </Button>
+          <label className="cursor-pointer">
+            <input
+              type="file"
+              onChange={handleFileUpload}
+              className="hidden"
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.csv,.jpg,.jpeg,.png,.gif,.mp4,.webm,.mp3,.wav,.zip,.rar"
+            />
+            <Button
+              size="1"
+              variant="soft"
+              type="button"
+              className="w-full"
+              asChild
+            >
+              <span>
+                <FiPaperclip size={14} /> Đính kèm file ({attachments.length}/
+                {maxFiles})
+              </span>
+            </Button>
+          </label>
         )
       )}
 

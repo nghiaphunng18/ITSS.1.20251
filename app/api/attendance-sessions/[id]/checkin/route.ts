@@ -9,11 +9,18 @@ export async function POST(
   try {
     const { id: sessionId } = await params;
     const body = await req.json();
-    const { studentId } = body;
+    const { studentId, password } = body;
 
     if (!studentId) {
       return NextResponse.json(
         { error: "Student ID is required" },
+        { status: 400 }
+      );
+    }
+
+    if (!password) {
+      return NextResponse.json(
+        { error: "Password is required" },
         { status: 400 }
       );
     }
@@ -36,6 +43,14 @@ export async function POST(
       return NextResponse.json(
         { error: "This attendance session is no longer active" },
         { status: 400 }
+      );
+    }
+
+    // Validate password
+    if (session.password !== password) {
+      return NextResponse.json(
+        { error: "Incorrect password" },
+        { status: 401 }
       );
     }
 
