@@ -34,7 +34,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const toast = useToast();
 
   // Extract locale from pathname
-  const locale = pathname?.split('/')[1] || 'vi';
+  const locale = pathname?.split("/")[1] || "vi";
 
   useEffect(() => {
     // Check if user is already logged in (from localStorage or session)

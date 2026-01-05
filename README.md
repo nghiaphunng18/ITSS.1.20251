@@ -14,10 +14,12 @@ Trước khi bắt đầu, hãy đảm bảo bạn đã cài đặt các phần 
 **Chọn một trong hai phương án setup Database:**
 
 ### Phương án A: Sử dụng Docker (Khuyến nghị)
+
 - **Docker** - Platform để chạy containers
   - Tải về tại: [https://www.docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop)
 
 ### Phương án B: Cài đặt PostgreSQL thủ công
+
 - **PostgreSQL** (phiên bản 12 trở lên) - Hệ quản trị cơ sở dữ liệu
   - Tải về tại: [https://www.postgresql.org/download/](https://www.postgresql.org/download/)
 
@@ -68,6 +70,7 @@ docker compose up -d
 ```
 
 Lệnh này sẽ:
+
 - Tải image PostgreSQL 17 (nếu chưa có)
 - Tạo và chạy container với tên `lms_postgres`
 - Cài đặt dependencies và khởi tạo database
@@ -80,6 +83,9 @@ npm i
 
 # Đẩy schema database lên PostgreSQL
 npm run db:push
+
+# tạo prisma/generated/client
+npx prisma generate
 
 # Seed dữ liệu mẫu vào database
 npm run db:seed
@@ -94,8 +100,10 @@ npm run db:seed
 ### 5r compose down -v
 
 # Khởi động lại container
+
 docker restart lms_postgres
-```
+
+````
 
 #### Phương án B: Cài đặt PostgreSQL thủ công
 
@@ -107,7 +115,7 @@ Sử dụng pgAdmin hoặc chạy lệnh SQL:
 
 ```sql
 CREATE DATABASE course_management;
-```
+````
 
 **Bước 2: Cập nhật `.env`**
 
@@ -118,6 +126,7 @@ POSTGRES_URL=postgresql://username:password@localhost:5432/database_name
 ```
 
 **Giải thích chuỗi kết nối:**
+
 - `username`: Tên người dùng PostgreSQL (mặc định: `postgres`)
 - `password`: Mật khẩu bạn đã đặt khi cài PostgreSQL
 - `localhost`: Địa chỉ máy chủ
@@ -205,13 +214,16 @@ Sau khi seed database, bạn có thể đăng nhập bằng các tài khoản sa
 - ✅ Xem thống kê hệ thống
 
 ## Công nghệ sử dụng
+
 **Nếu dùng Docker:**
+
 - Kiểm tra container đang chạy: `docker ps`
 - Xem logs: `docker logs lms_postgres`
 - Khởi động lại container: `docker restart lms_postgres`
 - Kiểm tra biến môi trường trong `.env` khớp với `docker-compose.yml`
 
 **Nếu dùng PostgreSQL thủ công:**
+
 - Kiểm tra PostgreSQL đã chạy chưa
 - Xác nhận thông tin trong `.env` đúng
 - Đảm bảo database đã được tạo
@@ -234,25 +246,27 @@ PORT=3001 npm run dev
 Nếu bạn đã có PostgreSQL cài sẵn và đang chạy trên port 5432, bạn có hai lựa chọn:
 
 1. **Dừng PostgreSQL local và dùng Docker:**
+
    ```bash
    # Windows (trong PowerShell as Admin)
    Stop-Service postgresql-x64-[version]
-   
+
    # Linux/macOS
    sudo service postgresql stop
    ```
 
 2. **Sử dụng PostgreSQL local thay vì Docker:**
    - Không chạy `docker compose up`
-   - Tạo database thủ công theo hướng dẫn Phương án B components/            # React components
-│   └── ui/               # Reusable UI components
-├── contexts/             # React contexts
-├── lib/                  # Utility libraries
-├── prisma/               # Prisma schema & migrations
-│   ├── schema.prisma    # Database schema
-│   └── seed.ts          # Seed script
-└── public/               # Static files
-```
+   - Tạo database thủ công theo hướng dẫn Phương án B components/ # React components
+     │ └── ui/ # Reusable UI components
+     ├── contexts/ # React contexts
+     ├── lib/ # Utility libraries
+     ├── prisma/ # Prisma schema & migrations
+     │ ├── schema.prisma # Database schema
+     │ └── seed.ts # Seed script
+     └── public/ # Static files
+
+````
 
 ## Scripts hữu ích
 
@@ -277,7 +291,7 @@ npm run db:reset
 
 # Xem database với Prisma Studio
 npm run db:studio
-```
+````
 
 ## Xử lý sự cố
 
