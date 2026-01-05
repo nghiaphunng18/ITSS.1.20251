@@ -1,0 +1,11 @@
+{
+  "[project]/components/features/interactive-slides/PDFMainViewer.tsx [app-client] (ecmascript, next/dynamic entry)": {
+    "id": "[project]/components/features/interactive-slides/PDFMainViewer.tsx [app-client] (ecmascript, next/dynamic entry)",
+    "files": [
+      "static/chunks/node_modules_92f46b0f._.js",
+      "static/chunks/components_features_interactive-slides_PDFMainViewer_tsx_8ed7a810._.js",
+      "static/chunks/node_modules_react-pdf_dist_Page_68a5a099._.css",
+      "static/chunks/components_features_interactive-slides_PDFMainViewer_tsx_2b71381d._.js"
+    ]
+  }
+}

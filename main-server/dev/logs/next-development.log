@@ -1,0 +1,53 @@
+[00:00:01.045] Server  WARN     ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+[00:00:01.173] Server  LOG      ✓ Ready in 951ms
+[00:00:09.264] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:23.821] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:00:27.877] Browser INFO    %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_post_title` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_post_description` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.cancel` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_comment_title` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_comment_description` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.cancel` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_post_title` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_post_description` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.cancel` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_comment_title` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_comment_description` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.cancel` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_post_title` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_post_description` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.cancel` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_comment_title` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_comment_description` in messages for locale `vi`."}
+[00:01:44.159] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.cancel` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_post_title` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_post_description` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.cancel` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_comment_title` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete_comment_description` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.delete` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.detail.actions.cancel` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}
+[00:01:44.160] Browser ERROR   {"code":"MISSING_MESSAGE","originalMessage":"Could not resolve `classes.groups_dialog.save_groups` in messages for locale `vi`."}

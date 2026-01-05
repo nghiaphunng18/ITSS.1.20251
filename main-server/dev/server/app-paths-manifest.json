@@ -1,0 +1,19 @@
+{
+  "/[locale]/dashboard/teacher/classes/[id]/page": "app/[locale]/dashboard/teacher/classes/[id]/page.js",
+  "/[locale]/dashboard/teacher/classes/page": "app/[locale]/dashboard/teacher/classes/page.js",
+  "/[locale]/dashboard/teacher/presentations/[id]/edit/page": "app/[locale]/dashboard/teacher/presentations/[id]/edit/page.js",
+  "/[locale]/dashboard/teacher/presentations/page": "app/[locale]/dashboard/teacher/presentations/page.js",
+  "/[locale]/login/page": "app/[locale]/login/page.js",
+  "/[locale]/page": "app/[locale]/page.js",
+  "/api/auth/login/route": "app/api/auth/login/route.js",
+  "/api/classes/[id]/assignments/route": "app/api/classes/[id]/assignments/route.js",
+  "/api/classes/[id]/attachments/route": "app/api/classes/[id]/attachments/route.js",
+  "/api/classes/[id]/attendance-sessions/route": "app/api/classes/[id]/attendance-sessions/route.js",
+  "/api/classes/[id]/groups/route": "app/api/classes/[id]/groups/route.js",
+  "/api/classes/[id]/materials/route": "app/api/classes/[id]/materials/route.js",
+  "/api/classes/[id]/route": "app/api/classes/[id]/route.js",
+  "/api/classes/route": "app/api/classes/route.js",
+  "/api/notifications/route": "app/api/notifications/route.js",
+  "/api/presentations/[id]/route": "app/api/presentations/[id]/route.js",
+  "/api/presentations/teacher/[id]/route": "app/api/presentations/teacher/[id]/route.js"
+}
