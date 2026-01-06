@@ -6,6 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { Play } from "lucide-react";
 import { useToast } from "@/contexts/ToastContext";
+import { useTranslations } from "next-intl";
 
 type FormData = {
   sessionName: string;
@@ -24,6 +25,7 @@ export default function StartSessionDialog({
   open,
   onClose,
 }: Props) {
+  const t = useTranslations("start_session_dialog");
   const { user } = useAuth();
   const router = useRouter();
   const toast = useToast();
@@ -49,12 +51,10 @@ export default function StartSessionDialog({
         }
       );
 
-      const newSession = res.data; // Chứa id, joinCode...
+      const newSession = res.data; // id, joinCode...
 
-      toast.success("Đã tạo phiên học", "Đang chuyển hướng...");
+      toast.success(t("toast.success_title"), t("toast.success_message"));
 
-      // 2. Chuyển hướng sang trang Live (kèm sessionId)
-      // Lưu ý: Ta dùng query param ?sessionId=...
       const locale = window.location.pathname.split("/")[1] || "vi";
       router.push(
         `/${locale}/dashboard/teacher/presentations/${presentationId}/live?sessionId=${newSession.id}`
@@ -63,7 +63,7 @@ export default function StartSessionDialog({
       onClose();
     } catch (error) {
       console.error(error);
-      toast.error("Lỗi", "Không thể tạo phiên học");
+      toast.error(t("toast.error_title"), t("toast.error_message"));
     }
   };
 
@@ -81,13 +81,11 @@ export default function StartSessionDialog({
           <div className="p-2 bg-green-100 text-green-600 rounded-full">
             <Play size={24} fill="currentColor" />
           </div>
-          <h2 className="text-xl font-bold text-gray-800">
-            Bắt đầu trình chiếu
-          </h2>
+          <h2 className="text-xl font-bold text-gray-800">{t("title")}</h2>
         </div>
 
         <p className="text-sm text-gray-500 mb-6">
-          Bạn đang mở bài giảng:{" "}
+          {t("description")}{" "}
           <span className="font-semibold text-gray-700">
             {presentationName}
           </span>
@@ -96,16 +94,19 @@ export default function StartSessionDialog({
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Tên phiên học / Tên lớp <span className="text-red-500">*</span>
+              {t("form.session_name_label")}{" "}
+              <span className="text-red-500">
+                {t("form.session_name_required")}
+              </span>
             </label>
             <input
               {...register("sessionName", { required: true })}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:ring-2 focus:ring-green-500 outline-none"
-              placeholder="VD: Lớp ITSS - Chiều Thứ 2"
+              placeholder={t("form.session_name_placeholder")}
               autoFocus
             />
             <p className="text-xs text-gray-400 mt-1">
-              Giúp bạn quản lý lịch sử và báo cáo điểm sau này.
+              {t("form.session_name_help")}
             </p>
           </div>
 
@@ -115,14 +116,14 @@ export default function StartSessionDialog({
               onClick={onClose}
               className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
             >
-              Hủy
+              {t("buttons.cancel")}
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
               className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 disabled:opacity-50 flex items-center gap-2"
             >
-              {isSubmitting ? "Đang khởi tạo..." : "Bắt đầu ngay"}
+              {isSubmitting ? t("buttons.creating") : t("buttons.start")}
             </button>
           </div>
         </form>

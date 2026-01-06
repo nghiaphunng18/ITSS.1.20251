@@ -269,7 +269,8 @@
       "try_different_search": "Thử tìm kiếm với từ khóa khác",
       "no_teaching": "Hãy tạo lớp học đầu tiên của bạn!",
       "all_joined": "Bạn đã tham gia tất cả các lớp học",
-      "confirm_delete": "Bạn có chắc chắn muốn xóa lớp học này?"
+      "confirm_delete": "Bạn có chắc chắn muốn xóa lớp học này?",
+      "interactive_lecture_management": "Quản lý bài giảng tương tác"
     },
     "detail": {
       "loading": "Đang tải...",
@@ -848,5 +849,346 @@
       "max_size": "Kích thước tối đa: 10MB",
       "upload_failed": "Tải file thất bại. Vui lòng thử lại."
     }
+  },
+  "presentations_page": {
+    "loading_presentations": "Đang tải thư viện bài giảng...",
+    "header": {
+      "title": "Thư viện bài giảng",
+      "subtitle": "Quản lý slide và tổ chức phiên học tương tác trực tiếp",
+      "presentations_count": "{count} bài giảng",
+      "live_document": "Live Document tích hợp sẵn",
+      "upload_new": "Tải lên bài mới"
+    },
+    "empty_state": {
+      "title": "Thư viện trống",
+      "description": "Bắt đầu xây dựng bộ sưu tập bài giảng tương tác của bạn. Tải lên file PDF để tự động kích hoạt tính năng Live Document.",
+      "create_first": "Tạo bài giảng đầu tiên"
+    },
+    "presentation_card": {
+      "live_badge": "LIVE",
+      "edit_button": "Sửa",
+      "edit_title": "Biên tập câu hỏi",
+      "reports_button": "Báo cáo",
+      "reports_title": "Xem báo cáo",
+      "live_button": "Live",
+      "live_title": "Bắt đầu trình chiếu"
+    },
+    "buttons": {
+      "upload_new_full": "Tải lên bài mới"
+    }
+  },
+  "create_presentation_dialog": {
+    "title": "Tải lên bài giảng mới",
+    "subtitle": "Tạo bài giảng tương tác với tính năng Live Document",
+    "form": {
+      "name_label": "Tên bài giảng",
+      "name_required": "*",
+      "name_placeholder": "Ví dụ: Chương 2 - Scrum Framework trong Agile Development",
+      "name_error": "Vui lòng nhập tên bài giảng",
+      "file_label": "File PDF bài giảng",
+      "file_required": "*",
+      "upload_area": {
+        "drag_drop": "Kéo thả hoặc click để chọn file",
+        "description": "Hỗ trợ định dạng PDF, kích thước tối đa 10MB",
+        "live_document": "Được tích hợp tính năng Live Document tự động"
+      },
+      "file_format_error": "Chỉ chấp nhận file PDF bài giảng",
+      "file_missing_error": "Vui lòng chọn file PDF bài giảng",
+      "file_selected": {
+        "pdf_document": "PDF Document",
+        "remove_title": "Xóa file"
+      }
+    },
+    "buttons": {
+      "cancel": "Hủy bỏ",
+      "create": "Tạo bài giảng",
+      "uploading": "Đang xử lý..."
+    },
+    "toast": {
+      "success_title": "Thành công",
+      "success_message": "Đã tạo bài giảng mới",
+      "error_format_title": "Lỗi định dạng",
+      "error_missing_title": "Thiếu file",
+      "error_general_title": "Lỗi",
+      "error_general_message": "Có lỗi xảy ra khi upload hoặc tạo bài giảng"
+    }
+  },
+  "start_session_dialog": {
+    "title": "Bắt đầu trình chiếu",
+    "description": "Bạn đang mở bài giảng:",
+    "form": {
+      "session_name_label": "Tên phiên học / Tên lớp",
+      "session_name_required": "*",
+      "session_name_placeholder": "VD: Lớp ITSS - Chiều Thứ 2",
+      "session_name_help": "Giúp bạn quản lý lịch sử và báo cáo điểm sau này."
+    },
+    "buttons": {
+      "cancel": "Hủy",
+      "start": "Bắt đầu ngay",
+      "creating": "Đang khởi tạo..."
+    },
+    "toast": {
+      "success_title": "Đã tạo phiên học",
+      "success_message": "Đang chuyển hướng...",
+      "error_title": "Lỗi",
+      "error_message": "Không thể tạo phiên học"
+    }
+  },
+  "edit_presentation_page": {
+    "loading": {
+      "loading_pdf": "Đang tải trình đọc...",
+      "loading_presentation": "Đang tải bài giảng...",
+      "preparing_editor": "Chuẩn bị chế độ biên tập"
+    },
+    "error": {
+      "title": "Bài giảng không tồn tại",
+      "description": "Không tìm thấy bài giảng với ID đã cho.",
+      "back_to_library": "Quay lại thư viện"
+    },
+    "header": {
+      "edit_mode": "Chế độ biên tập câu hỏi tương tác",
+      "previous_page": "Trang trước",
+      "next_page": "Trang sau",
+      "has_checkpoint": "Đã có câu hỏi"
+    },
+    "toast": {
+      "error_loading_title": "Lỗi",
+      "error_loading_message": "Không thể tải bài giảng",
+      "success_save_title": "Thành công",
+      "success_save_message": "Đã lưu câu hỏi cho trang {pageNumber}",
+      "error_save_title": "Thất bại",
+      "error_save_message": "Không thể lưu câu hỏi",
+      "success_delete_title": "Đã xóa",
+      "success_delete_message": "Câu hỏi đã được xóa khỏi trang này",
+      "error_delete_title": "Lỗi",
+      "error_delete_message": "Không thể xóa câu hỏi"
+    },
+    "navigation": {
+      "back_to_library_title": "Quay lại thư viện"
+    }
+  },
+  "checkpoint_editor_sidebar": {
+    "header": {
+      "edit_title": "Chỉnh sửa câu hỏi",
+      "new_title": "Tạo câu hỏi mới",
+      "page_indicator": "Trang {pageNumber}",
+      "subtitle": "Thêm câu hỏi tương tác để tăng hiệu quả giảng dạy"
+    },
+    "form": {
+      "question_section": {
+        "label": "Nội dung câu hỏi",
+        "required": "*",
+        "placeholder": "Nhập nội dung câu hỏi cho sinh viên...",
+        "error": "Vui lòng nhập câu hỏi"
+      },
+      "options_section": {
+        "label": "Các phương án",
+        "add_button": "Thêm đáp án",
+        "input_placeholder": "Nhập nội dung đáp án {optionLabel}...",
+        "hint": "Bấm vào chữ cái (A, B, C...) để chọn đáp án đúng.",
+        "multiple_answers": "Một câu hỏi có thể có nhiều đáp án đúng."
+      },
+      "time_section": {
+        "label": "Thời gian trả lời",
+        "unit": "giây"
+      },
+      "button_titles": {
+        "select_correct": "Click để chọn làm đáp án đúng",
+        "remove_option": "Xóa phương án này",
+        "remove_question": "Xóa câu hỏi"
+      }
+    },
+    "buttons": {
+      "delete": "Xóa câu hỏi",
+      "save": "Lưu thay đổi",
+      "create": "Tạo câu hỏi",
+      "processing": "Đang xử lý...",
+      "delete_confirmation": "Xóa câu hỏi này? Hành động này không thể hoàn tác."
+    },
+    "alerts": {
+      "no_correct_answer": "Vui lòng chọn ít nhất một đáp án đúng!"
+    }
+  },
+  "presentation_reports_page": {
+    "header": {
+      "title": "Lịch sử phiên học",
+      "subtitle": "Quản lý và phân tích các phiên học đã tổ chức",
+      "back_button": "Quay lại danh sách bài giảng"
+    },
+    "stats": {
+      "total_sessions": "Tổng phiên học",
+      "active_sessions": "Đang hoạt động",
+      "total_interactions": "Tổng tương tác"
+    },
+    "session_card": {
+      "active_badge": "Đang diễn ra",
+      "ended_badge": "Đã kết thúc",
+      "ended_time": "Kết thúc: {time}",
+      "session_id": "ID: {id}",
+      "interactions": "{count} tương tác",
+      "buttons": {
+        "back_to_live": "Quay lại Live",
+        "view_report": "Xem báo cáo"
+      }
+    },
+    "empty_state": {
+      "title": "Chưa có phiên học nào",
+      "description": "Bài giảng này chưa được trình chiếu lần nào. Hãy bắt đầu một phiên học tương tác mới để thu thập dữ liệu.",
+      "start_first_session": "Bắt đầu phiên học đầu tiên"
+    }
+  },
+  "session_report_page": {
+    "loading": {
+      "title": "Đang tổng hợp dữ liệu...",
+      "description": "Vui lòng đợi trong giây lát"
+    },
+    "error": {
+      "title": "Không tìm thấy dữ liệu",
+      "description": "Không thể tải báo cáo cho phiên học này.",
+      "back_to_sessions": "Quay lại danh sách phiên học"
+    },
+    "header": {
+      "title": "Báo cáo chi tiết",
+      "subtitle": "{sessionName} • Phân tích từng câu hỏi",
+      "stats": {
+        "questions": "Câu hỏi",
+        "students": "Sinh viên",
+        "responses": "Phản hồi",
+        "accuracy": "Chính xác"
+      }
+    },
+    "question_card": {
+      "question_number": "Câu {number}",
+      "page_number": "Trang {page}",
+      "responses_count": "{count} phản hồi",
+      "chart": {
+        "title": "Thống kê lựa chọn",
+        "legend": {
+          "correct_answer": "Đáp án đúng",
+          "wrong_choice": "Lựa chọn sai",
+          "not_selected": "Chưa ai chọn"
+        }
+      },
+      "student_section": {
+        "title": "Chi tiết sinh viên",
+        "wrong_hint": "Đỏ = Khoanh sai",
+        "no_responses": {
+          "title": "Chưa có phản hồi",
+          "description": "Chưa có sinh viên nào trả lời câu hỏi này."
+        },
+        "student_code": "Không có mã SV",
+        "answers": {
+          "correct": "Chính xác",
+          "wrong": "Sai"
+        },
+        "time_format": {
+          "hour": "2-digit",
+          "minute": "2-digit",
+          "second": "2-digit"
+        }
+      }
+    }
+  },
+  "student_live_page": {
+    "loading": {
+      "loading_pdf": "Đang tải bài giảng...",
+      "loading_session": "Đang vào lớp học...",
+      "please_wait": "Vui lòng đợi trong giây lát",
+      "session_not_found": "Phiên học không tồn tại hoặc đã kết thúc"
+    },
+    "header": {
+      "student_mode": "Chế độ sinh viên • Phiên học live"
+    },
+    "page_navigation": {
+      "page": "Trang {current}",
+      "previous": "Trang trước",
+      "next": "Trang sau"
+    },
+    "question_popup": {
+      "title": "Câu hỏi tương tác",
+      "page": "Trang {page}",
+      "status": {
+        "ongoing": "Đang diễn ra",
+        "closed": "Ẩn câu hỏi (Vẫn chạy ngầm)"
+      },
+      "time_up": "Hết thời gian nộp bài",
+      "submitted": "Đã nộp bài thành công",
+      "submit_button": "Gửi câu trả lời",
+      "selected_answers": "Đã chọn:",
+      "toast": {
+        "new_question_title": "Câu hỏi mới!",
+        "new_question_message": "Vui lòng xem trang {page}",
+        "question_closed_title": "Hết giờ",
+        "question_closed_message": "Câu hỏi đã đóng.",
+        "submit_success_title": "Đã nộp",
+        "submit_success_message": "Câu trả lời của bạn đã được ghi nhận.",
+        "submit_error_title": "Lỗi",
+        "submit_error_message": "Không thể lưu kết quả vào hệ thống."
+      }
+    },
+    "info_badge": {
+      "title": "Đang theo dõi bài giảng",
+      "description": "Sẵn sàng nhận câu hỏi từ giảng viên"
+    }
+  },
+  "pdf_main_viewer": {
+    "header": {
+      "current_page": "Trang {page}",
+      "hint": "Click vào biểu tượng để thêm câu hỏi tương tác"
+    },
+    "loading": {
+      "title": "Đang tải tài liệu...",
+      "description": "Vui lòng đợi trong giây lát"
+    },
+    "error": {
+      "title": "Không thể tải file PDF",
+      "description": "Vui lòng kiểm tra lại đường dẫn hoặc định dạng file. Hệ thống chỉ hỗ trợ định dạng PDF cho bài giảng tương tác."
+    },
+    "toolbar": {
+      "zoom_out": "Thu nhỏ (Ctrl + Scroll)",
+      "zoom_in": "Phóng to (Ctrl + Scroll)",
+      "reset_zoom": "Đặt lại zoom",
+      "enter_fullscreen": "Toàn màn hình",
+      "exit_fullscreen": "Thoát toàn màn hình",
+      "percentage": "{percent}%"
+    }
+  },
+  "teacher_live_page": {
+    "loading": {
+      "loading_pdf": "Đang tải bài giảng..."
+    },
+    "missing_session_id": "Thiếu Session ID",
+    "success": "Thành công",
+    "link_copied": "Link tham gia đã được sao chép!",
+    "end_session_confirmation": "Kết thúc phiên học sẽ đóng kết nối với tất cả sinh viên. Bạn chắc chắn chứ?",
+    "error": "Lỗi",
+    "end_session_error": "Không thể kết thúc phiên học lúc này.",
+    "preparing_session": "Đang chuẩn bị phiên học...",
+    "please_wait_moment": "Vui lòng đợi trong giây lát",
+    "options": "Các phương án",
+    "correct_answer": "Đáp án đúng",
+    "live": "LIVE",
+    "offline": "OFFLINE",
+    "active_session": "Phiên học đang hoạt động",
+    "id": "ID",
+    "copy_join_link": "Sao chép link tham gia",
+    "page": "Trang",
+    "end_session": "Kết thúc phiên",
+    "current_page": "Trang hiện tại",
+    "live_control_panel": "Bảng điều khiển Live",
+    "questions": "câu hỏi",
+    "panel_description": "Quản lý và kích hoạt câu hỏi tương tác thời gian thực",
+    "no_questions": "Không có câu hỏi",
+    "no_questions_description": "Trang hiện tại không có câu hỏi tương tác nào. Chuyển trang hoặc thêm câu hỏi trong chế độ biên tập.",
+    "question": "Câu hỏi",
+    "active": "ĐANG HOẠT ĐỘNG",
+    "responses": "phản hồi",
+    "time_remaining": "Thời gian còn lại",
+    "count_unit": "lượt",
+    "count": "Số lượng",
+    "stop_question": "Dừng câu hỏi",
+    "start_question": "Bắt đầu câu hỏi",
+    "question_running": "Đang chạy câu hỏi",
+    "ready_to_activate": "Sẵn sàng kích hoạt"
   }
 }

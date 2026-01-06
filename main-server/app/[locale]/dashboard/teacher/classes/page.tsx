@@ -165,7 +165,7 @@ export default function TeacherClassesPage() {
                 }
               >
                 <FiLayers size={18} />
-                Quản lý bài giảng tương tác
+                {t("interactive_lecture_management")}
               </Button>
               <Button
                 size="3"
