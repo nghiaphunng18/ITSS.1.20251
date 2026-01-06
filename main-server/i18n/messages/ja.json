@@ -482,6 +482,7 @@
       "cancel": "キャンセル",
       "save_changes": "変更を保存",
       "saving": "保存中...",
+      "save_groups": "グループを保存",
       "error_empty_input": "グループ数を入力してください",
       "error_invalid_number": "グループ数が無効です",
       "error_no_students": "グループに分ける学生がいません",
@@ -1114,6 +1115,13 @@
     "edited": "(編集済み)"
   },
   "groups": {
+    "labels": {
+      "members": "{count} 名",
+      "members_title": "グループのメンバー",
+      "assignments_title": "グループ課題",
+      "assignments_count": "{count} 件の課題",
+      "due_label": "期限:"
+    },
     "dialog_title": "グループ管理",
     "dialog_description": "学生をグループに分ける",
     "tab_distribution": "配分",

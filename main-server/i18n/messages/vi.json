@@ -440,7 +440,8 @@
       "current_students": "Sinh viên hiện tại",
       "cancel": "Hủy",
       "save_changes": "Lưu thay đổi",
-      "saving": "Đang lưu..."
+      "saving": "Đang lưu...",
+      "save_groups": "Lưu nhóm"
     }
   },
   
@@ -649,7 +650,11 @@
     "labels": {
       "no_group": "Chưa có nhóm",
       "join_group": "Vui lòng tham gia nhóm để làm việc với các thành viên khác",
-      "members": "{count} thành viên"
+      "members": "{count} thành viên",
+      "members_title": "Thành viên nhóm",
+      "assignments_title": "Bài tập nhóm",
+      "assignments_count": "{count} bài tập",
+      "due_label": "Hạn:"
     },
     "page": {
       "student": {

@@ -1,4 +1,5 @@
 import { Card, Flex, Badge, Heading, Text, Avatar } from "@radix-ui/themes";
+import { useTranslations, useLocale } from "next-intl";
 import { FiUsers, FiFileText } from "react-icons/fi";
 
 interface GroupCardProps {
@@ -27,6 +28,9 @@ interface GroupCardProps {
 }
 
 export function GroupCard({ group, classCode, className }: GroupCardProps) {
+  const t = useTranslations('groups.labels');
+  const tAssign = useTranslations('assignments.general');
+  const locale = useLocale();
   return (
     <Card className="bg-white p-6">
       <Flex direction="column" gap="4">
@@ -55,13 +59,13 @@ export function GroupCard({ group, classCode, className }: GroupCardProps) {
           <Flex align="center" gap="2">
             <FiUsers className="text-mint-600" size={20} />
             <Text size="2">
-              <strong>{group.members.length}</strong> thành viên
+              <strong>{group.members.length}</strong> {t('members', { count: group.members.length })}
             </Text>
           </Flex>
           <Flex align="center" gap="2">
             <FiFileText className="text-mint-600" size={20} />
             <Text size="2">
-              <strong>{group.assignments?.length || 0}</strong> bài tập
+              <strong>{group.assignments?.length || 0}</strong> {t('assignments_count', { count: group.assignments?.length || 0 })}
             </Text>
           </Flex>
         </Flex>
@@ -69,7 +73,7 @@ export function GroupCard({ group, classCode, className }: GroupCardProps) {
         {/* Members */}
         <div>
           <Text size="2" weight="bold" className="mb-2 block">
-            Thành viên nhóm
+            {t('members_title')}
           </Text>
           <Flex wrap="wrap" gap="3">
             {group.members.map((member) => (
@@ -103,7 +107,7 @@ export function GroupCard({ group, classCode, className }: GroupCardProps) {
         {group.assignments && group.assignments.length > 0 && (
           <div>
             <Text size="2" weight="bold" className="mb-2 block">
-              Bài tập nhóm
+              {t('assignments_title')}
             </Text>
             <Flex direction="column" gap="2">
               {group.assignments.map((assignment) => (
@@ -114,10 +118,7 @@ export function GroupCard({ group, classCode, className }: GroupCardProps) {
                         {assignment.title}
                       </Text>
                       <Text size="1" className="text-gray-500">
-                        Hạn:{" "}
-                        {new Date(assignment.dueDate).toLocaleDateString(
-                          "vi-VN"
-                        )}
+                        {t('due_label')} {new Date(assignment.dueDate).toLocaleDateString(locale === 'ja' ? 'ja-JP' : 'vi-VN')}
                       </Text>
                     </div>
                     <Badge
@@ -129,7 +130,7 @@ export function GroupCard({ group, classCode, className }: GroupCardProps) {
                           : "gray"
                       }
                     >
-                      {assignment.maxPoints} điểm
+                      {assignment.maxPoints} {tAssign('points_value')}
                     </Badge>
                   </Flex>
                 </Card>
