@@ -7,30 +7,31 @@ const io = new Server(3001, {
   },
 });
 
-console.log("🚀 Socket Server is running on port 3001");
+console.log("Socket Server is running on port 3001");
 
-// Lưu trạng thái phòng học
-// Structure: { activeCheckpoint: object, deadline: number }
+// save classroom state
+// structure: { activeCheckpoint: object, deadline: number }
 const sessions = {};
 
 io.on("connection", (socket) => {
   console.log(`User connected: ${socket.id}`);
 
-  // 1. Tham gia
+  // Join
   socket.on("JOIN_SESSION", ({ sessionId, userId, role }) => {
     socket.join(sessionId);
     console.log(`User ${userId} (${role}) joined session ${sessionId}`);
 
-    // Nếu đang có câu hỏi, gửi ngay cho người mới vào (kèm deadline để tính giờ còn lại)
+    // have any questions, send them to the new member immediately
+    // include a deadline to calculate remaining time
     if (sessions[sessionId]?.activeCheckpoint) {
       socket.emit("SYNC_CURRENT_CHECKPOINT", {
         checkpoint: sessions[sessionId].activeCheckpoint,
-        deadline: sessions[sessionId].deadline, // Gửi deadline đã lưu
+        deadline: sessions[sessionId].deadline, // send saved deadline
       });
     }
   });
 
-  // 2. Giáo viên MỞ câu hỏi (Nhận thêm deadline)
+  // teacher opens questions (additional deadline applies)
   socket.on(
     "TEACHER_TRIGGER_CHECKPOINT",
     ({ sessionId, checkpointData, deadline }) => {
@@ -38,12 +39,12 @@ io.on("connection", (socket) => {
         `Session ${sessionId}: Start CP ${checkpointData.id} until ${deadline}`
       );
 
-      // Lưu lại cả câu hỏi và thời gian kết thúc
+      // save both the question and the end time
       if (!sessions[sessionId]) sessions[sessionId] = {};
       sessions[sessionId].activeCheckpoint = checkpointData;
       sessions[sessionId].deadline = deadline;
 
-      // Gửi cho sinh viên: Cả data và deadline
+      // to the students: both the data and the deadline.
       socket.to(sessionId).emit("NEW_CHECKPOINT_STARTED", {
         checkpoint: checkpointData,
         deadline: deadline,
@@ -51,7 +52,7 @@ io.on("connection", (socket) => {
     }
   );
 
-  // 3. Giáo viên DỪNG câu hỏi
+  // teacher stopped asking the question.
   socket.on("TEACHER_STOP_CHECKPOINT", ({ sessionId }) => {
     if (sessions[sessionId]) {
       sessions[sessionId].activeCheckpoint = null;
@@ -60,7 +61,7 @@ io.on("connection", (socket) => {
     socket.to(sessionId).emit("CHECKPOINT_STOPPED");
   });
 
-  // 4. Sinh viên nộp bài
+  // students submit their assignments.
   socket.on(
     "STUDENT_SUBMIT_ANSWER",
     ({ sessionId, checkpointId, answerData }) => {
@@ -72,6 +73,6 @@ io.on("connection", (socket) => {
   );
 
   socket.on("disconnect", () => {
-    // console.log("User disconnected");
+    console.log("User disconnected");
   });
 });
