@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Card,
   Flex,
@@ -16,6 +18,7 @@ import {
   FiGlobe,
 } from "react-icons/fi";
 import { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 
 interface ClassHeaderProps {
   classData: {
@@ -42,11 +45,17 @@ export default function ClassHeader({
   classData,
   isEnrolled,
   enrolledLabel,
-  availableLabel = "Có sẵn",
+  availableLabel,
   onBack,
   actionButton,
   role = "student",
 }: ClassHeaderProps) {
+  const tCommon = useTranslations("common.status");
+  const tCommonActions = useTranslations("common.actions");
+  const tClassStats = useTranslations("classes.statistics");
+
+  const finalAvailableLabel = availableLabel || tCommon("available");
+
   return (
     <Card className="bg-white p-6">
       <Flex direction="column" gap="3">
@@ -58,11 +67,11 @@ export default function ClassHeader({
               </Badge>
               {classData.isPrivate ? (
                 <Badge color="purple" size="2">
-                  <FiLock size={12} /> Riêng tư
+                  <FiLock size={12} /> {tCommon("private")}
                 </Badge>
               ) : (
                 <Badge color="blue" size="2">
-                  <FiGlobe size={12} /> Công khai
+                  <FiGlobe size={12} /> {tCommon("public")}
                 </Badge>
               )}
               {isEnrolled ? (
@@ -71,7 +80,7 @@ export default function ClassHeader({
                 </Badge>
               ) : (
                 <Badge color="gray" size="2">
-                  {availableLabel}
+                  {finalAvailableLabel}
                 </Badge>
               )}
             </Flex>
@@ -84,7 +93,7 @@ export default function ClassHeader({
           </div>
           <Flex gap="2" className="shrink-0">
             <Button variant="soft" onClick={onBack}>
-              Quay lại
+              {tCommonActions("back")}
             </Button>
             {actionButton}
           </Flex>
@@ -114,7 +123,7 @@ export default function ClassHeader({
           <Flex align="center" gap="2">
             <FiUsers className="text-mint-600" size={20} />
             <Text size="2">
-              <strong>{classData.enrollments.length}</strong> sinh viên
+              {tClassStats("students", { count: classData.enrollments.length })}
             </Text>
           </Flex>
           {role === "teacher" && (
@@ -122,13 +131,17 @@ export default function ClassHeader({
               <Flex align="center" gap="2">
                 <FiFileText className="text-mint-600" size={20} />
                 <Text size="2">
-                  <strong>{classData.assignments?.length || 0}</strong> bài tập
+                  {tClassStats("assignments", {
+                    count: classData.assignments?.length || 0,
+                  })}
                 </Text>
               </Flex>
               <Flex align="center" gap="2">
                 <FiMessageSquare className="text-mint-600" size={20} />
                 <Text size="2">
-                  <strong>{classData.posts?.length || 0}</strong> bài viết
+                  {tClassStats("posts", {
+                    count: classData.posts?.length || 0,
+                  })}
                 </Text>
               </Flex>
             </>

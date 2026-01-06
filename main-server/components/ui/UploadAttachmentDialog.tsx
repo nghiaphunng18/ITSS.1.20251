@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Dialog, Button, Flex, Text } from "@radix-ui/themes";
 import { FiUpload, FiFile, FiX } from "react-icons/fi";
 import { useToast } from "@/contexts/ToastContext";
+import { useTranslations } from "next-intl";
 
 interface UploadAttachmentDialogProps {
   open: boolean;
@@ -25,13 +26,14 @@ export function UploadAttachmentDialog({
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
+  const t = useTranslations("materials");
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       // Validate file size (max 10MB)
       if (file.size > 10 * 1024 * 1024) {
-        toast.error("Lỗi", "Kích thước tệp vượt quá giới hạn 10MB");
+        toast.error(t("error_title"), t("error_file_size"));
         return;
       }
       setSelectedFile(file);
@@ -55,7 +57,7 @@ export function UploadAttachmentDialog({
     e.preventDefault();
 
     if (!selectedFile) {
-      toast.error("Lỗi", "Vui lòng chọn tệp");
+      toast.error(t("error_title"), t("error_select_file"));
       return;
     }
 
@@ -78,14 +80,14 @@ export function UploadAttachmentDialog({
 
       await onUpload(uploadData);
 
-      toast.success("Thành công", "Đã tải lên tài liệu");
+      toast.success(t("success_title"), t("success_uploaded"));
       setSelectedFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
       onOpenChange(false);
     } catch (error) {
-      toast.error("Lỗi", "Không thể tải lên tài liệu");
+      toast.error(t("error_title"), t("error_upload_failed"));
     } finally {
       setUploading(false);
     }
@@ -94,16 +96,16 @@ export function UploadAttachmentDialog({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content style={{ maxWidth: 500 }}>
-        <Dialog.Title>Tải lên tài liệu</Dialog.Title>
+        <Dialog.Title>{t("upload_dialog_title")}</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Chọn tệp để tải lên (tối đa 10MB)
+          {t("upload_dialog_description")}
         </Dialog.Description>
 
         <form onSubmit={handleSubmit}>
           <Flex direction="column" gap="3">
             <div>
               <Text as="div" size="2" mb="2" weight="bold">
-                Chọn tệp <span className="text-red-500">*</span>
+                {t("upload_label_file")} <span className="text-red-500">*</span>
               </Text>
               
               {!selectedFile ? (
@@ -118,7 +120,7 @@ export function UploadAttachmentDialog({
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500 transition-colors">
                     <FiUpload className="mx-auto text-4xl text-gray-400 mb-2" />
                     <Text size="2" className="text-gray-600">
-                      Nhấn để chọn tệp
+                      {t("upload_placeholder_file")}
                     </Text>
                     <Text size="1" className="text-gray-400 mt-1">
                       PDF, Word, Excel, PowerPoint, hình ảnh, video...
@@ -156,7 +158,7 @@ export function UploadAttachmentDialog({
             <Flex gap="3" justify="end" className="mt-2">
               <Dialog.Close>
                 <Button variant="soft" color="gray" type="button">
-                  Hủy
+                  {t("upload_cancel")}
                 </Button>
               </Dialog.Close>
               <Button
@@ -166,7 +168,7 @@ export function UploadAttachmentDialog({
                 loading={uploading}
               >
                 <FiUpload size={16} />
-                {uploading ? "Đang tải lên..." : "Tải lên"}
+                {uploading ? t("upload_submitting") : t("upload_submit")}
               </Button>
             </Flex>
           </Flex>

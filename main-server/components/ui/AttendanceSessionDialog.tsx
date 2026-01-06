@@ -12,6 +12,7 @@ import {
 } from "@radix-ui/themes";
 import { FiX, FiUsers, FiCheck, FiClock, FiUserCheck } from "react-icons/fi";
 import axios from "@/lib/axios";
+import { useTranslations } from "next-intl";
 
 interface Student {
   id: string;
@@ -51,6 +52,7 @@ export function AttendanceSessionDialog({
   students,
   sessionId,
 }: AttendanceSessionDialogProps) {
+  const t = useTranslations("attendance");
   const [session, setSession] = useState<AttendanceSession | null>(null);
   const [isCreating, setIsCreating] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
@@ -122,7 +124,7 @@ export function AttendanceSessionDialog({
       const diff = end.getTime() - now.getTime();
 
       if (diff <= 0) {
-        setRemainingTime("Hết giờ");
+        setRemainingTime(t("session.time_up"));
         return;
       }
 
@@ -143,7 +145,7 @@ export function AttendanceSessionDialog({
       const response = await axios.post(
         `/api/classes/${classId}/attendance-sessions`,
         {
-          title: "Điểm danh",
+          title: t("session.title"),
           durationMinutes,
         }
       );
@@ -198,7 +200,7 @@ export function AttendanceSessionDialog({
         <Dialog.Title>
           <Flex justify="between" align="center">
             <Text size="5" weight="bold">
-              Điểm danh
+              {t("dialog_title")}
             </Text>
             <Dialog.Close>
               <Button variant="ghost" color="gray">
@@ -214,24 +216,24 @@ export function AttendanceSessionDialog({
             <Flex direction="column" gap="3" align="center" py="6">
               <FiUserCheck size={48} className="text-gray-400" />
               <Text size="3" className="text-gray-600">
-                Chưa có phiên điểm danh nào đang hoạt động
+                {t("dialog_start_session")}
               </Text>
 
               {/* Duration selector */}
               <Flex gap="2" align="center">
                 <Text size="2" weight="medium">
-                  Thời gian:
+                  {t("label_duration")}
                 </Text>
                 <select
                   value={durationMinutes}
                   onChange={(e) => setDurationMinutes(Number(e.target.value))}
                   className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-mint-500"
                 >
-                  <option value={5}>5 phút</option>
-                  <option value={10}>10 phút</option>
-                  <option value={15}>15 phút</option>
-                  <option value={20}>20 phút</option>
-                  <option value={30}>30 phút</option>
+                  <option value={5}>{t("duration_5min")}</option>
+                  <option value={10}>{t("duration_10min")}</option>
+                  <option value={15}>{t("duration_15min")}</option>
+                  <option value={20}>{t("duration_20min")}</option>
+                  <option value={30}>{t("duration_30min")}</option>
                 </select>
               </Flex>
 
@@ -241,7 +243,7 @@ export function AttendanceSessionDialog({
                 onClick={handleStartSession}
                 disabled={isCreating}
               >
-                {isCreating ? "Đang tạo..." : "Bắt đầu điểm danh"}
+                {isCreating ? t("button_starting") : t("button_start")}
               </Button>
             </Flex>
           ) : (
@@ -255,7 +257,7 @@ export function AttendanceSessionDialog({
                       <FiClock size={20} className="text-mint-500" />
                       <div>
                         <Text size="2" weight="bold" className="block">
-                          Mã điểm danh
+                          {t("session.attendance_code")}
                         </Text>
                         <Text size="6" weight="bold" className="text-mint-500">
                           {session.sessionCode}
@@ -265,7 +267,7 @@ export function AttendanceSessionDialog({
                     <Flex gap="2" align="center">
                       {session.status === "ACTIVE" && remainingTime && (
                         <Badge color="orange" size="2">
-                          Còn lại: {remainingTime}
+                          {t("session.time_remaining", { time: remainingTime })}
                         </Badge>
                       )}
                       <Badge
@@ -273,8 +275,8 @@ export function AttendanceSessionDialog({
                         size="2"
                       >
                         {session.status === "ACTIVE"
-                          ? "Đang hoạt động"
-                          : "Đã đóng"}
+                          ? t("session.active")
+                          : t("session.closed")}
                       </Badge>
                     </Flex>
                   </Flex>
@@ -283,7 +285,7 @@ export function AttendanceSessionDialog({
                   <Flex gap="2" align="center" className="bg-amber-50 p-3 rounded-lg border border-amber-200">
                     <div className="flex-1">
                       <Text size="2" weight="bold" className="block text-amber-900">
-                        Mật khẩu điểm danh (chỉ giáo viên thấy)
+                        {t("attendance_code_label")}
                       </Text>
                       <Text size="5" weight="bold" className="text-amber-600 font-mono">
                         {session.password}
@@ -296,13 +298,13 @@ export function AttendanceSessionDialog({
                       <FiUsers size={18} className="text-gray-500" />
                       <Text size="2">
                         <strong>{attendedStudents.length}</strong>/
-                        <strong>{students.length}</strong> sinh viên
+                        {t("session.students_count", { count: students.length })}
                       </Text>
                     </Flex>
                     <Flex gap="2" align="center">
                       <FiCheck size={18} className="text-green-500" />
                       <Text size="2">
-                        Tỷ lệ: <strong>{attendanceRate}%</strong>
+                        {t("session.attendance_rate", { rate: attendanceRate })}
                       </Text>
                     </Flex>
                   </Flex>
@@ -314,7 +316,7 @@ export function AttendanceSessionDialog({
                       onClick={handleCloseSession}
                       disabled={isClosing}
                     >
-                      {isClosing ? "Đang đóng..." : "Đóng phiên điểm danh"}
+                      {isClosing ? t("session.closing") : t("session.close_session")}
                     </Button>
                   )}
                 </Flex>
@@ -328,7 +330,7 @@ export function AttendanceSessionDialog({
                     <Flex align="center" gap="2" pb="2">
                       <FiCheck className="text-green-500" />
                       <Text size="2" weight="bold">
-                        Đã điểm danh ({attendedStudents.length})
+                        {t("session.attended", { count: attendedStudents.length })}
                       </Text>
                     </Flex>
                     <ScrollArea style={{ height: "350px" }}>
@@ -338,7 +340,7 @@ export function AttendanceSessionDialog({
                             size="1"
                             className="text-gray-500 text-center py-4"
                           >
-                            Chưa có sinh viên nào điểm danh
+                            {t("session.no_students_attended")}
                           </Text>
                         ) : (
                           attendedStudents.map((student) => {
@@ -401,7 +403,7 @@ export function AttendanceSessionDialog({
                     <Flex align="center" gap="2" pb="2">
                       <FiX className="text-red-500" />
                       <Text size="2" weight="bold">
-                        Chưa điểm danh ({unattendedStudents.length})
+                        {t("session.not_attended", { count: unattendedStudents.length })}
                       </Text>
                     </Flex>
                     <ScrollArea style={{ height: "350px" }}>
@@ -411,7 +413,7 @@ export function AttendanceSessionDialog({
                             size="1"
                             className="text-gray-500 text-center py-4"
                           >
-                            Tất cả sinh viên đã điểm danh
+                            {t("session.all_attended")}
                           </Text>
                         ) : (
                           unattendedStudents.map((student) => (

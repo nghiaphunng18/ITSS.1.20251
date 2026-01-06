@@ -218,7 +218,7 @@ export function AssignmentCard({
             {/* Max Points */}
             <Flex gap="1" align="center">
               <Text size="2" weight="bold" className="text-mint-600">
-                {t('points', { points: assignment.maxPoints })}
+                {assignment.maxPoints} {t('points_value')}
               </Text>
             </Flex>
 
@@ -227,7 +227,7 @@ export function AssignmentCard({
               <Flex gap="1" align="center">
                 <FiFile size={14} className="text-gray-500" />
                 <Text size="2" className="text-gray-600">
-                  {t('files', { count: assignment.attachments.length })}
+                  {t('files_count', { count: assignment.attachments.length })}
                 </Text>
               </Flex>
             )}
@@ -237,7 +237,7 @@ export function AssignmentCard({
               <Flex gap="1" align="center">
                 <FiCheckCircle size={14} className="text-gray-500" />
                 <Text size="2" className="text-gray-600">
-                  {t('submissions', { count: assignment._count.submissions })}
+                  {t('submissions_count', { count: assignment._count.submissions })}
                 </Text>
               </Flex>
             )}

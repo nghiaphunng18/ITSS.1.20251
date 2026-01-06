@@ -11,6 +11,7 @@ import {
   Select,
 } from "@radix-ui/themes";
 import { FiPlus } from "react-icons/fi";
+import { useTranslations } from "next-intl";
 import { FilePickerInput, FileAttachment } from "./FilePickerInput";
 
 interface CreatePostDialogProps {
@@ -29,36 +30,47 @@ export function CreatePostDialog({
   onOpenChange,
   onSubmit,
 }: CreatePostDialogProps) {
+  const t = useTranslations("posts.create");
+  const tCommon = useTranslations("common.actions");
   const [formData, setFormData] = useState({
     title: "",
     content: "",
     type: "DISCUSSION",
   });
   const [attachments, setAttachments] = useState<FileAttachment[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await onSubmit({
-      ...formData,
-      attachments: attachments.length > 0 ? attachments : undefined,
-    });
-    setFormData({
-      title: "",
-      content: "",
-      type: "DISCUSSION",
-    });
-    setAttachments([]);
+    setIsSubmitting(true);
+    try {
+      await onSubmit({
+        ...formData,
+        attachments: attachments.length > 0 ? attachments : undefined,
+      });
+      setFormData({
+        title: "",
+        content: "",
+        type: "DISCUSSION",
+      });
+      setAttachments([]);
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Failed to create post:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content style={{ maxWidth: 600 }}>
-        <Dialog.Title>Tạo bài viết mới</Dialog.Title>
+        <Dialog.Title>{t("dialog_title")}</Dialog.Title>
         <form onSubmit={handleSubmit}>
           <Flex direction="column" gap="3" className="mt-4">
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Loại bài viết
+                {t("form_type_label")}
               </Text>
               <Select.Root
                 value={formData.type}
@@ -68,18 +80,18 @@ export function CreatePostDialog({
               >
                 <Select.Trigger />
                 <Select.Content>
-                  <Select.Item value="ANNOUNCEMENT">Thông báo</Select.Item>
-                  <Select.Item value="DISCUSSION">Thảo luận</Select.Item>
-                  <Select.Item value="MATERIAL">Tài liệu</Select.Item>
+                  <Select.Item value="ANNOUNCEMENT">{t("form_type_announcement")}</Select.Item>
+                  <Select.Item value="DISCUSSION">{t("form_type_discussion")}</Select.Item>
+                  <Select.Item value="MATERIAL">{t("form_type_material")}</Select.Item>
                 </Select.Content>
               </Select.Root>
             </label>
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Tiêu đề
+                {t("form_title_label")}
               </Text>
               <TextField.Root
-                placeholder="Nhập tiêu đề..."
+                placeholder={t("form_title_placeholder")}
                 value={formData.title}
                 onChange={(e) =>
                   setFormData({
@@ -92,10 +104,10 @@ export function CreatePostDialog({
             </label>
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Nội dung
+                {t("form_content_label")}
               </Text>
               <TextArea
-                placeholder="Nhập nội dung bài viết..."
+                placeholder={t("form_content_placeholder")}
                 value={formData.content}
                 onChange={(e) =>
                   setFormData({
@@ -103,30 +115,33 @@ export function CreatePostDialog({
                     content: e.target.value,
                   })
                 }
-                rows={6}
-                required
+                style={{ minHeight: "200px" }}
               />
             </label>
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Tệp đính kèm
+                {t("form_attachments_label")}
               </Text>
               <FilePickerInput
                 attachments={attachments}
                 onAttachmentsChange={setAttachments}
-                maxFiles={5}
               />
             </label>
-          </Flex>
-          <Flex gap="3" mt="4" justify="end">
-            <Dialog.Close>
-              <Button variant="soft" color="gray" type="button">
-                Hủy
+
+            <Flex gap="3" justify="end" mt="4">
+              <Dialog.Close>
+                <Button variant="soft" color="gray" type="button">
+                  {tCommon("cancel")}
+                </Button>
+              </Dialog.Close>
+              <Button 
+                type="submit" 
+                className="bg-mint-500"
+                disabled={isSubmitting}
+              >
+                <FiPlus size={16} /> {isSubmitting ? t("creating") : t("create")}
               </Button>
-            </Dialog.Close>
-            <Button type="submit" className="bg-mint-500">
-              <FiPlus size={16} /> Đăng bài
-            </Button>
+            </Flex>
           </Flex>
         </form>
       </Dialog.Content>

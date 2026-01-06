@@ -212,8 +212,7 @@ export function FilePickerInput({
               asChild
             >
               <span>
-                <FiPaperclip size={14} /> Đính kèm file ({attachments.length}/
-                {maxFiles})
+                <FiPaperclip size={14} /> {t('attach_file_count', { count: attachments.length, max: maxFiles })}
               </span>
             </Button>
           </label>
@@ -222,7 +221,7 @@ export function FilePickerInput({
 
       {attachments.length >= maxFiles && (
         <Text size="1" className="text-gray-500">
-          Đã đạt giới hạn {maxFiles} file
+          {t('file_limit_reached', { max: maxFiles })}
         </Text>
       )}
     </Flex>

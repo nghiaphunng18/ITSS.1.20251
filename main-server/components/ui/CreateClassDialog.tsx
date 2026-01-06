@@ -11,6 +11,7 @@ import {
   Checkbox,
 } from "@radix-ui/themes";
 import { FiPlus, FiLock } from "react-icons/fi";
+import { useTranslations } from "next-intl";
 
 // Generate random 8-character class code
 function generateClassCode(): string {
@@ -42,6 +43,8 @@ export function CreateClassDialog({
   onOpenChange,
   onSubmit,
 }: CreateClassDialogProps) {
+  const t = useTranslations("classes.create");
+  const tCommon = useTranslations("common.actions");
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -55,10 +58,10 @@ export function CreateClassDialog({
     e.preventDefault();
     const submitData: any = {
       ...formData,
-      code: generateClassCode(), // Auto-generate class code
+      code: generateClassCode(),
     };
     if (submitData.isPrivate) {
-      submitData.joinCode = generateClassCode(); // Auto-generate join code for private classes
+      submitData.joinCode = generateClassCode();
     } else {
       delete submitData.joinCode;
     }
@@ -76,18 +79,19 @@ export function CreateClassDialog({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content style={{ maxWidth: 500 }}>
-        <Dialog.Title>Tạo lớp học mới</Dialog.Title>
+        <Dialog.Title>{t("dialog_title")}</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Điền thông tin để tạo lớp học mới
+          {t("dialog_description")}
         </Dialog.Description>
+
         <form onSubmit={handleSubmit}>
-          <Flex direction="column" gap="3">
+          <Flex direction="column" gap="4">
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Tên lớp <span className="text-red-500">*</span>
+                {t("form_name_label")}
               </Text>
               <TextField.Root
-                placeholder="VD: Nhập môn Khoa học Máy tính"
+                placeholder={t("form_name_placeholder")}
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
@@ -95,56 +99,50 @@ export function CreateClassDialog({
                 required
               />
             </label>
+
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Mô tả
+                {t("form_description_label")}
               </Text>
               <TextArea
-                placeholder="Mô tả về lớp học..."
+                placeholder={t("form_description_placeholder")}
                 value={formData.description}
                 onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    description: e.target.value,
-                  })
+                  setFormData({ ...formData, description: e.target.value })
                 }
-                rows={3}
               />
             </label>
-            <Flex gap="3">
-              <label className="flex-1">
+
+            <Flex gap="4">
+              <label style={{ flex: 1 }}>
                 <Text as="div" size="2" mb="1" weight="bold">
-                  Học kỳ
+                  {t("form_semester_label")}
                 </Text>
                 <TextField.Root
-                  placeholder="VD: HK1"
+                  placeholder="Fall 2024"
                   value={formData.semester}
                   onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      semester: e.target.value,
-                    })
+                    setFormData({ ...formData, semester: e.target.value })
                   }
                 />
               </label>
-              <label className="flex-1">
+              <label style={{ flex: 1 }}>
                 <Text as="div" size="2" mb="1" weight="bold">
-                  Năm học
+                  {t("form_year_label")}
                 </Text>
                 <TextField.Root
                   type="number"
-                  placeholder={new Date().getFullYear().toString()}
                   value={formData.year}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      year:
-                        parseInt(e.target.value) || new Date().getFullYear(),
+                      year: parseInt(e.target.value) || new Date().getFullYear(),
                     })
                   }
                 />
               </label>
             </Flex>
+
             <label>
               <Flex align="center" gap="2">
                 <Checkbox
@@ -159,25 +157,25 @@ export function CreateClassDialog({
                 <Flex align="center" gap="2">
                   <FiLock size={14} />
                   <Text size="2" weight="bold">
-                    Lớp riêng tư
+                    {t("form_private_label")}
                   </Text>
                 </Flex>
               </Flex>
               <Text size="1" className="text-gray-500 ml-6 mt-1 block">
-                Lớp riêng tư không hiển thị công khai, chỉ tham gia bằng mã lớp.
-                Mã tham gia sẽ được tạo tự động.
+                {t("form_private_note")}
               </Text>
             </label>
-          </Flex>
-          <Flex gap="3" mt="4" justify="end">
-            <Dialog.Close>
-              <Button variant="soft" color="gray" type="button">
-                Hủy
+
+            <Flex gap="3" mt="4" justify="end">
+              <Dialog.Close>
+                <Button variant="soft" color="gray" type="button">
+                  {tCommon("cancel")}
+                </Button>
+              </Dialog.Close>
+              <Button type="submit" className="bg-mint-500">
+                <FiPlus size={16} /> {t("create")}
               </Button>
-            </Dialog.Close>
-            <Button type="submit" className="bg-mint-500">
-              <FiPlus size={16} /> Tạo lớp
-            </Button>
+            </Flex>
           </Flex>
         </form>
       </Dialog.Content>

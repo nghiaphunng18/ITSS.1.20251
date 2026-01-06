@@ -165,7 +165,7 @@ export default function TeacherClassesPage() {
                 }
               >
                 <FiLayers size={18} />
-                {t("interactive_lecture_management")}
+                {t("manage_interactive_slides")}
               </Button>
               <Button
                 size="3"
