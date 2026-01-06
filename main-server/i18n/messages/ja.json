@@ -236,6 +236,11 @@
     }
   },
   "classes": {
+    "statistics": {
+      "students": "{count} 名の学生",
+      "assignments": "{count} 件の課題",
+      "posts": "{count} 件の投稿"
+    },
     "page": {
       "loading": "読み込み中...",
       "page_title": "クラス",
@@ -250,6 +255,7 @@
       "no_enrolled": "まだクラスに登録していません。利用可能なクラスを探索してください！"
     },
     "page_teacher": {
+      "manage_interactive_slides": "インタラクティブスライド管理",
       "loading": "読み込み中...",
       "page_title": "マイクラス",
       "page_subtitle": "あなたが教えているクラスを管理する",
@@ -865,7 +871,10 @@
       "uploading": "アップロード中...",
       "creating": "作成中...",
       "processing": "処理中...",
-      "closing": "終了中..."
+      "closing": "終了中...",
+      "public": "公開",
+      "private": "非公開",
+      "available": "利用可能"
     },
     "actions": {
       "cancel": "キャンセル",
@@ -877,6 +886,7 @@
       "download": "ダウンロード",
       "upload": "アップロード",
       "view": "表示",
+      "back": "戻る",
       "close": "閉じる"
     },
     "messages": {

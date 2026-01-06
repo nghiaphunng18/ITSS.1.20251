@@ -229,7 +229,8 @@
       "status": "Trạng thái",
       "files": "Tệp",
       "view_details": "Xem chi tiết",
-      "download": "Tải về"
+      "download": "Tải về",
+      "back": "Quay lại"
     },
     "page": {
       "loading": "Đang tải...",
@@ -242,6 +243,11 @@
     }
   },
   "classes": {
+    "statistics": {
+      "students": "{count} sinh viên",
+      "assignments": "{count} bài tập",
+      "posts": "{count} bài viết"
+    },
     "page": {
       "loading": "Đang tải...",
       "page_title": "Lớp học",
@@ -256,6 +262,7 @@
       "no_enrolled": "Bạn chưa đăng ký lớp học nào. Hãy khám phá các lớp có sẵn!"
     },
     "page_teacher": {
+      "manage_interactive_slides": "Quản lý bài giảng tương tác",
       "loading": "Đang tải...",
       "page_title": "Lớp học của tôi",
       "page_subtitle": "Quản lý các lớp học bạn đang giảng dạy",
@@ -812,7 +819,10 @@
       "uploading": "Đang tải lên...",
       "creating": "Đang tạo...",
       "processing": "Đang xử lý...",
-      "closing": "Đang đóng..."
+      "closing": "Đang đóng...",
+      "public": "Công khai",
+      "private": "Riêng tư",
+      "available": "Có sẵn"
     },
     "actions": {
       "cancel": "Hủy",

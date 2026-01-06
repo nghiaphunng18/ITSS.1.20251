@@ -48,6 +48,17 @@ export default function TeacherClassesPage() {
   const router = useRouter();
   const locale = useLocale();
   const t = useTranslations("classes.page_teacher");
+  // Safe translator: next-intl throws in dev when a key is missing.
+  // Wrap calls we suspect may be missing to avoid hard errors in the UI.
+  const safeT = (key: string, fallback: string) => {
+    try {
+      return t(key as any) as string;
+    } catch (err) {
+      // In production next-intl usually falls back gracefully. In dev we log and return a fallback.
+      console.warn("Missing translation for classes.page_teacher.", key, err);
+      return fallback;
+    }
+  };
   const teacherTabs = useTeacherTabs();
   const [teachingClasses, setTeachingClasses] = useState<Class[]>([]);
   const [availableClasses, setAvailableClasses] = useState<Class[]>([]);
@@ -165,7 +176,7 @@ export default function TeacherClassesPage() {
                 }
               >
                 <FiLayers size={18} />
-                Quản lý bài giảng tương tác
+                {safeT("manage_interactive_slides", "Quản lý bài giảng tương tác")}
               </Button>
               <Button
                 size="3"

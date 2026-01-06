@@ -7,35 +7,36 @@ import {
   FiMessageSquare,
   FiBell,
 } from "react-icons/fi";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 export const useStudentTabs = () => {
   const t = useTranslations('navigation.dashboard');
+  const locale = useLocale();
   
   return [
     {
       label: t('classes'),
-      href: "/dashboard/student/classes",
+      href: `/${locale}/dashboard/student/classes`,
       icon: <FiBook size={18} />,
     },
     {
       label: t('assignments'),
-      href: "/dashboard/student/assignments",
+      href: `/${locale}/dashboard/student/assignments`,
       icon: <FiFileText size={18} />,
     },
     {
       label: t('groups'),
-      href: "/dashboard/student/groups",
+      href: `/${locale}/dashboard/student/groups`,
       icon: <FiUsers size={18} />,
     },
     {
       label: t('posts'),
-      href: "/dashboard/student/posts",
+      href: `/${locale}/dashboard/student/posts`,
       icon: <FiMessageSquare size={18} />,
     },
     {
       label: t('notifications'),
-      href: "/dashboard/student/notifications",
+      href: `/${locale}/dashboard/student/notifications`,
       icon: <FiBell size={18} />,
     },
   ];
