@@ -772,6 +772,8 @@
       "download_file": "Tải xuống file",
       "uploading": "Đang tải file lên...",
       "attach_file": "Đính kèm file",
+      "attach_file_count": "Đính kèm tệp ({count}/{max})",
+      "file_limit_reached": "Đã đạt giới hạn số lượng tệp tối đa ({max})",
       "max_size": "Kích thước tối đa: 10MB",
       "upload_failed": "Tải file thất bại. Vui lòng thử lại."
     }

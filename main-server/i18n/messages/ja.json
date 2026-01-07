@@ -755,6 +755,8 @@
       "download_file": "ファイルをダウンロード",
       "uploading": "ファイルをアップロード中...",
       "attach_file": "ファイルを添付",
+      "attach_file_count": "ファイルを添付 ({count}/{max})",
+      "file_limit_reached": "最大ファイル数に達しました ({max})",
       "max_size": "最大サイズ: 10MB",
       "upload_failed": "ファイルのアップロードに失敗しました。もう一度お試しください。"
     }
