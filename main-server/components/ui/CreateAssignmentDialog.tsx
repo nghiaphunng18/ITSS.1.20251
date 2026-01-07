@@ -177,15 +177,13 @@ export function CreateAssignmentDialog({
                   onValueChange={(value) =>
                     setFormData({
                       ...formData,
-                      groupId: value || null,
+                      groupId: value === "all" ? null : value,
                     })
                   }
                 >
                   <Select.Trigger placeholder={t("select_group_placeholder")} />
                   <Select.Content>
-                    <Select.Item value="">
-                      {t("all_students")}
-                    </Select.Item>
+                    <Select.Item value="all">{t("all_students")}</Select.Item>
                     {groups.map((group) => (
                       <Select.Item key={group.id} value={group.id}>
                         {group.name}
@@ -242,8 +240,8 @@ export function CreateAssignmentDialog({
                   {t("cancel")}
                 </Button>
               </Dialog.Close>
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="bg-mint-500"
                 disabled={isSubmitting}
               >

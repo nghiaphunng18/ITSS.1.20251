@@ -305,7 +305,17 @@
         "group_config_saved": "グループ設定を保存しました",
         "save_groups_failed": "グループ設定を保存できませんでした",
         "members_saved": "メンバーを保存しました",
-        "save_members_failed": "メンバーを保存できませんでした"
+        "save_members_failed": "メンバーを保存できませんでした",
+        "delete_post_title": "投稿を削除しますか？",
+        "delete_post_description": "この投稿は完全に削除され、元に戻すことはできません。",
+        "delete": "削除",
+        "cancel": "キャンセル",
+        "delete_comment_title": "コメントを削除しますか？",
+        "delete_comment_description": "このコメントは完全に削除され、元に戻すことはできません。",
+        "assignment_created": "課題が作成されました",
+        "groups_updated": "{count} グループが更新されました",
+        "post_deleted": "投稿が削除されました",
+        "post_deleted_success": "投稿は正常に削除されました"
       }
     },
     "actions": {
@@ -418,28 +428,7 @@
       "saving": "保存中...",
       "update_failed": "クラスを更新できませんでした"
     },
-    "join_class_dialog": {
-      "title": "プライベートクラスに参加",
-      "description": "8文字の参加コードを入力してプライベートクラスに参加してください",
-      "class_code_label": "参加コード",
-      "class_code_placeholder": "例: ABC123XY",
-      "join_button": "クラスに参加",
-      "joining": "参加中...",
-      "cancel": "キャンセル",
-      "demo_codes_title": "プライベートクラスのデモコード",
-      "demo_codes_hint": "クリックしてデモコードをコピー",
-      "copy_hint": "クリックしてコードを入力",
-      "error_empty": "クラスコードを入力してください",
-      "error_invalid_format": "クラスコードが無効です！8文字である必要があります。",
-      "error_not_found": "クラスコードが無効です！もう一度確認してください。",
-      "error_cannot_join": "このクラスに参加できません。",
-      "error_already_joined": "既にこのクラスに参加しています。",
-      "error_unknown": "エラーが発生しました。後でもう一度お試しください。",
-      "success_joined": "クラスに参加しました",
-      "success_message": "クラス \"{className}\" に参加しました",
-      "code_copied": "コピーしました",
-      "code_copied_message": "コード \"{code}\" が入力フィールドに入力されました"
-    },
+
     "create_class_dialog": {
       "title": "新しいクラスを作成",
       "description": "新しいクラスを作成するために情報を入力してください",
@@ -488,7 +477,8 @@
       "error_no_students": "グループに分ける学生がいません",
       "error_invalid_input": "入力データが無効です",
       "error_not_integer": "グループ数は整数である必要があります",
-      "error_must_positive": "グループ数は0より大きい必要があります"
+      "error_must_positive": "グループ数は0より大きい必要があります",
+      "all_students_assigned": "全ての学生が割り当て済みです"
     },
     "members_dialog": {
       "title": "メンバー管理",
@@ -586,6 +576,22 @@
       "comment_placeholder": "コメントを書く...",
       "add_attachments": "添付ファイルを追加",
       "send": "送信"
+    },
+    "page": {
+      "student": {
+        "title": "自分の投稿",
+        "maintenance_title": "🚧 メンテナンス中",
+        "maintenance_desc": "投稿管理機能は現在開発中です。今後のバージョンでは、投稿済みの記事の一覧表示、編集、削除が可能になります。",
+        "planned_features": "予定されている機能：自分の投稿、保存した投稿、インタラクション統計。",
+        "back_to_classes": "← クラスに戻る"
+      },
+      "teacher": {
+        "title": "自分の投稿",
+        "maintenance_title": "🚧 メンテナンス中",
+        "maintenance_desc": "投稿管理機能は現在開発中です。今後のバージョンでは、投稿済みの記事の一覧表示、編集、削除、ピン留めが可能になります。",
+        "planned_features": "予定されている機能：自分の投稿、重要なお知らせ、インタラクション統計、投稿のピン留め。",
+        "back_to_classes": "← クラスに戻る"
+      }
     }
   },
   "members": {
@@ -1213,6 +1219,34 @@
     }
   },
   "assignments": {
+    "create": {
+      "dialog_title": "課題を作成",
+      "title": "課題を作成",
+      "description": "新しい課題を作成します",
+
+      "title_label": "課題名",
+      "title_placeholder": "課題名を入力してください",
+
+      "description_label": "説明",
+      "description_placeholder": "課題の説明を入力してください",
+
+      "due_date": "提出期限",
+      "groups": "対象グループ",
+
+      "create": "作成",
+      "cancel": "キャンセル",
+      "creating": "作成中...",
+      "due_date_label": "提出期限",
+      "max_points_label": "満点",
+      "assign_to_group_label": "割り当て先グループ",
+      "select_group_placeholder": "グループを選択",
+      "all_students": "全ての学生",
+      "empty_for_all": "未選択の場合、全ての学生が対象になります",
+      "attachments_label": "添付ファイル",
+      "individual_submission": "個人提出",
+      "individual_submission_desc": "各学生が個別に課題を提出します",
+      "group_submission_desc": "グループごとに1つの課題を提出します"
+    },
     "status": {
       "open": "受付中",
       "closed": "終了",
@@ -1300,5 +1334,27 @@
   "confirm": {
     "default_cancel": "キャンセル",
     "default_confirm": "確認"
+  },
+  "join_class_dialog": {
+    "title": "プライベートクラスに参加",
+    "description": "8文字の参加コードを入力してプライベートクラスに参加してください",
+    "class_code_label": "参加コード",
+    "class_code_placeholder": "例: ABC123XY",
+    "join_button": "クラスに参加",
+    "joining": "参加中...",
+    "cancel": "キャンセル",
+    "demo_codes_title": "プライベートクラスのデモコード",
+    "demo_codes_hint": "クリックしてデモコードをコピー",
+    "copy_hint": "クリックしてコードを入力",
+    "error_empty": "クラスコードを入力してください",
+    "error_invalid_format": "クラスコードが無効です！8文字である必要があります。",
+    "error_not_found": "クラスコードが無効です！もう一度確認してください。",
+    "error_cannot_join": "このクラスに参加できません。",
+    "error_already_joined": "既にこのクラスに参加しています。",
+    "error_unknown": "エラーが発生しました。後でもう一度お試しください。",
+    "success_joined": "クラスに参加しました",
+    "success_message": "クラス \"{className}\" に参加しました",
+    "code_copied": "コピーしました",
+    "code_copied_message": "コード \"{code}\" が入力フィールドに入力されました"
   }
 }

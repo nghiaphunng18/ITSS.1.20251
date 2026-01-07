@@ -144,7 +144,7 @@
       "copyright": "© 2024 HUST LMS. Đại học Bách Khoa Hà Nội."
     }
   },
-  
+
   "classes": {
     "create": {
       "dialog_title": "Tạo lớp học mới",
@@ -312,7 +312,17 @@
         "teachers_added": "Đã thêm {count} giáo viên",
         "teachers_removed": "Đã xóa {count} giáo viên",
         "students_added": "Đã thêm {count} sinh viên",
-        "students_removed": "Đã xóa {count} sinh viên"
+        "students_removed": "Đã xóa {count} sinh viên",
+        "delete_post_title": "Xóa bài viết",
+        "delete_post_description": " Bạn có chắc chắn muốn xóa bài viết này?",
+        "delete": "Xóa",
+        "cancel": "Thoát",
+        "delete_comment_title": "Xóa bình luận",
+        "delete_comment_description": " Bạn có chắc chắn muốn xóa bình luận này?",
+        "assignment_created": "Đã tạo bài tập",
+        "groups_updated": "{count} nhóm đã được cập nhật",
+        "post_deleted": "Đã xóa bài viết",
+        "post_deleted_success": "Bài viết đã được xóa thành công"
       }
     },
     "dialogs": {
@@ -323,28 +333,7 @@
       "confirm_leave_teaching_title": "Xác nhận rời khỏi lớp giảng dạy",
       "confirm_leave_teaching_desc": "Bạn có chắc chắn muốn rời khỏi giảng dạy lớp học này? Bạn có thể tham gia lại sau."
     },
-    "join_class_dialog": {
-      "title": "Tham gia lớp học riêng tư",
-      "description": "Nhập mã tham gia 8 ký tự để tham gia lớp học riêng tư",
-      "class_code_label": "Mã tham gia",
-      "class_code_placeholder": "VD: ABC123XY",
-      "join_button": "Tham gia lớp học",
-      "joining": "Đang tham gia...",
-      "cancel": "Hủy",
-      "demo_codes_title": "Mã Demo Lớp Riêng Tư",
-      "demo_codes_hint": "Nhấp để sao chép mã demo",
-      "copy_hint": "Nhấp để điền mã",
-      "error_empty": "Vui lòng nhập mã lớp học",
-      "error_invalid_format": "Mã lớp học không hợp lệ! Mã phải có đúng 8 ký tự.",
-      "error_not_found": "Mã lớp học không hợp lệ! Vui lòng kiểm tra lại.",
-      "error_cannot_join": "Không thể tham gia lớp học này.",
-      "error_already_joined": "Bạn đã tham gia lớp học này rồi.",
-      "error_unknown": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
-      "success_joined": "Tham gia lớp học thành công",
-      "success_message": "Bạn đã tham gia lớp \"{className}\"",
-      "code_copied": "Đã sao chép",
-      "code_copied_message": "Mã \"{code}\" đã được điền vào ô nhập"
-    },
+
     "create_class_dialog": {
       "title": "Tạo lớp học mới",
       "description": "Điền thông tin để tạo lớp học mới",
@@ -412,7 +401,9 @@
       "error_no_students": "Không có sinh viên để chia nhóm",
       "error_invalid_input": "Dữ liệu nhập không hợp lệ",
       "error_not_integer": "Số lượng nhóm phải là số nguyên",
-      "error_must_positive": "Số lượng nhóm phải lớn hơn 0"
+      "error_must_positive": "Số lượng nhóm phải lớn hơn 0",
+      "save_groups": "Lưu nhóm",
+      "all_students_assigned": "Tất cả học sinh đã được phân nhóm"
     },
     "members_dialog": {
       "title": "Quản lý thành viên",
@@ -444,7 +435,7 @@
       "save_groups": "Lưu nhóm"
     }
   },
-  
+
   "posts": {
     "create": {
       "dialog_title": "Tạo bài viết mới",
@@ -466,7 +457,7 @@
       "material": "Tài liệu",
       "discussion": "Thảo luận"
     },
-    
+
     "dialogs": {
       "edit_post": "Chỉnh sửa bài viết",
       "title_label": "Tiêu đề",
@@ -1120,7 +1111,6 @@
     "ready_to_activate": "Sẵn sàng kích hoạt"
   },
 
-  
   "attendance": {
     "dialog_title": "Bắt đầu điểm danh",
     "dialog_start_session": "Bắt đầu một phiên điểm danh mới",
@@ -1190,6 +1180,34 @@
     }
   },
   "assignments": {
+    "create": {
+      "dialog_title": "Tạo bài tập",
+      "title": "Tạo bài tập",
+      "description": "Tạo một bài tập mới",
+
+      "title_label": "Tên bài tập",
+      "title_placeholder": "Nhập tên bài tập",
+
+      "description_label": "Mô tả",
+      "description_placeholder": "Nhập mô tả bài tập",
+
+      "due_date": "Hạn nộp",
+      "groups": "Nhóm áp dụng",
+
+      "create": "Tạo",
+      "cancel": "Hủy",
+      "creating": "Đang tạo...",
+      "due_date_label": "Hạn nộp",
+      "max_points_label": "Điểm tối đa",
+      "assign_to_group_label": "Giao cho nhóm",
+      "select_group_placeholder": "Chọn nhóm",
+      "all_students": "Tất cả học sinh",
+      "empty_for_all": "Nếu không chọn nhóm, bài tập sẽ áp dụng cho tất cả học sinh",
+      "attachments_label": "Tệp đính kèm",
+      "individual_submission": "Nộp bài cá nhân",
+      "individual_submission_desc": "Mỗi học sinh sẽ nộp bài riêng",
+      "group_submission_desc": "Mỗi nhóm sẽ nộp một bài chung"
+    },
     "status": {
       "open": "Đang mở",
       "closed": "Đã đóng",
@@ -1277,5 +1295,27 @@
   "confirm": {
     "default_cancel": "Hủy",
     "default_confirm": "Xác nhận"
+  },
+  "join_class_dialog": {
+    "title": "Tham gia lớp học riêng tư",
+    "description": "Nhập mã tham gia 8 ký tự để tham gia lớp học riêng tư",
+    "class_code_label": "Mã tham gia",
+    "class_code_placeholder": "VD: ABC123XY",
+    "join_button": "Tham gia lớp học",
+    "joining": "Đang tham gia...",
+    "cancel": "Hủy",
+    "demo_codes_title": "Mã Demo Lớp Riêng Tư",
+    "demo_codes_hint": "Nhấp để sao chép mã demo",
+    "copy_hint": "Nhấp để điền mã",
+    "error_empty": "Vui lòng nhập mã lớp học",
+    "error_invalid_format": "Mã lớp học không hợp lệ! Mã phải có đúng 8 ký tự.",
+    "error_not_found": "Mã lớp học không hợp lệ! Vui lòng kiểm tra lại.",
+    "error_cannot_join": "Không thể tham gia lớp học này.",
+    "error_already_joined": "Bạn đã tham gia lớp học này rồi.",
+    "error_unknown": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+    "success_joined": "Tham gia lớp học thành công",
+    "success_message": "Bạn đã tham gia lớp \"{className}\"",
+    "code_copied": "Đã sao chép",
+    "code_copied_message": "Mã \"{code}\" đã được điền vào ô nhập"
   }
 }
