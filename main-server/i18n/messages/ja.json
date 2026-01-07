@@ -315,7 +315,9 @@
         "assignment_created": "課題が作成されました",
         "groups_updated": "{count} グループが更新されました",
         "post_deleted": "投稿が削除されました",
-        "post_deleted_success": "投稿は正常に削除されました"
+        "post_deleted_success": "投稿は正常に削除されました",
+        "students_added": "{count} 人の学生が追加されました",
+        "students_removed": "{count} 人の学生が削除されました"
       }
     },
     "actions": {

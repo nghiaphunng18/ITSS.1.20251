@@ -1,7 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Badge, Button, Card, Dialog, Flex, Heading, Text } from "@radix-ui/themes";
+import {
+  Badge,
+  Button,
+  Card,
+  Dialog,
+  Flex,
+  Heading,
+  Text,
+  VisuallyHidden,
+} from "@radix-ui/themes";
 import {
   FiFile,
   FiFileText,
@@ -24,7 +33,7 @@ interface DocumentViewerProps {
 
 export function DocumentViewer({ attachment, trigger }: DocumentViewerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const t = useTranslations('common.files');
+  const t = useTranslations("common.files");
 
   // Format file size
   const formatFileSize = (bytes?: number | null): string => {
@@ -116,9 +125,11 @@ export function DocumentViewer({ attachment, trigger }: DocumentViewerProps) {
 
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Dialog.Trigger>
-        {trigger || defaultTrigger}
-      </Dialog.Trigger>
+      <Dialog.Trigger>{trigger || defaultTrigger}</Dialog.Trigger>
+
+      <Dialog.Title>
+        <VisuallyHidden>Document Viewer</VisuallyHidden>
+      </Dialog.Title>
 
       <Dialog.Content style={{ maxWidth: "90vw", maxHeight: "90vh" }}>
         <Flex direction="column" gap="3" style={{ height: "85vh" }}>
@@ -149,12 +160,8 @@ export function DocumentViewer({ attachment, trigger }: DocumentViewerProps) {
 
           {/* Actions */}
           <Flex gap="2">
-            <Button
-              size="2"
-              variant="soft"
-              onClick={handleDownload}
-            >
-              <FiDownload size={16} /> {t('download')}
+            <Button size="2" variant="soft" onClick={handleDownload}>
+              <FiDownload size={16} /> {t("download")}
             </Button>
             <Button
               size="2"
@@ -162,7 +169,7 @@ export function DocumentViewer({ attachment, trigger }: DocumentViewerProps) {
               color="gray"
               onClick={handleOpenInNewTab}
             >
-              <FiExternalLink size={16} /> {t('open_new_tab')}
+              <FiExternalLink size={16} /> {t("open_new_tab")}
             </Button>
           </Flex>
 
@@ -186,16 +193,16 @@ export function DocumentViewer({ attachment, trigger }: DocumentViewerProps) {
                 {getFileIcon()}
                 <Flex direction="column" align="center" gap="2">
                   <Text size="3" weight="medium">
-                    {t('no_preview')}
+                    {t("no_preview")}
                   </Text>
                   <Text size="2" className="text-gray-500">
-                    {attachment.mimeType?.includes("word") || 
-                     attachment.mimeType?.includes("document")
-                      ? t('word_no_preview')
-                      : t('download_to_view')}
+                    {attachment.mimeType?.includes("word") ||
+                    attachment.mimeType?.includes("document")
+                      ? t("word_no_preview")
+                      : t("download_to_view")}
                   </Text>
                   <Button size="3" onClick={handleDownload} className="mt-2">
-                    <FiDownload size={18} /> {t('download_file')}
+                    <FiDownload size={18} /> {t("download_file")}
                   </Button>
                 </Flex>
               </Flex>
