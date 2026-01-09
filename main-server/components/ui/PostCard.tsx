@@ -34,7 +34,7 @@ import { VideoPlayer } from "./VideoPlayer";
 import { FilePickerInput, FileAttachment } from "./FilePickerInput";
 import { VoteButtons } from "./VoteButtons";
 import { useState } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 
 interface PostCardProps {
   post: {
@@ -137,6 +137,8 @@ export function PostCard({
   const tPostActions = useTranslations('posts.actions');
   const tPostTypes = useTranslations('posts.types');
   const tPostDialogs = useTranslations('posts.dialogs');
+  const tComments = useTranslations('comments');
+  const locale = useLocale();
   const [commentText, setCommentText] = useState("");
   const [commentAttachments, setCommentAttachments] = useState<
     FileAttachment[]
@@ -188,15 +190,17 @@ export function PostCard({
 
   return (
     <Card key={post.id} className="bg-white p-4">
-      <Flex gap="3">
+      <Flex gap="4">
         {/* Vote Buttons - Reddit Style */}
         {onVote && (
-          <VoteButtons
-            votes={post.votes}
-            userVote={userVote}
-            onVote={(voteType) => onVote(post.id, voteType)}
-            size="medium"
-          />
+          <div className="flex-shrink-0 pt-1">
+            <VoteButtons
+              votes={post.votes}
+              userVote={userVote}
+              onVote={(voteType) => onVote(post.id, voteType)}
+              size="medium"
+            />
+          </div>
         )}
 
         {/* Post Avatar and Content */}
@@ -204,7 +208,7 @@ export function PostCard({
           size="3"
           src={post.author?.avatar}
           fallback={post.author?.name?.charAt(0) || "U"}
-          className="bg-mint-500"
+          className="bg-mint-500 flex-shrink-0"
         />
         <Flex direction="column" gap="2" className="flex-1">
           <div>
@@ -285,8 +289,8 @@ export function PostCard({
               </Flex>
             </Flex>
             <Text size="1" className="text-gray-500">
-              {new Date(post.createdAt).toLocaleString("vi-VN")}
-              {post.updatedAt !== post.createdAt && " (đã chỉnh sửa)"}
+              {new Date(post.createdAt).toLocaleString(locale === 'ja' ? 'ja-JP' : 'vi-VN')}
+              {post.updatedAt !== post.createdAt && ` ${tComments('edited')}`}
             </Text>
           </div>
           <Heading size="4">{post.title}</Heading>
@@ -339,7 +343,7 @@ export function PostCard({
             <Flex direction="column" gap="3" className="mt-3">
               <Flex justify="between" align="center">
                 <Text size="2" weight="bold" className="text-gray-700">
-                  Bình luận ({post.comments.length})
+                  {tComments('count', { count: post.comments.length })}
                 </Text>
                 {onCommentSortChange && (
                   <Select.Root
@@ -351,8 +355,8 @@ export function PostCard({
                   >
                     <Select.Trigger />
                     <Select.Content>
-                      <Select.Item value="time">Thời gian</Select.Item>
-                      <Select.Item value="votes">Lượt thích</Select.Item>
+                      <Select.Item value="time">{tComments('sort_by_time')}</Select.Item>
+                      <Select.Item value="votes">{tComments('sort_by_votes')}</Select.Item>
                     </Select.Content>
                   </Select.Root>
                 )}
@@ -396,7 +400,7 @@ export function PostCard({
             <Flex direction="column" gap="2" className="mt-2">
               <Flex gap="2">
                 <TextField.Root
-                  placeholder="Viết bình luận..."
+                  placeholder={tComments('write_comment')}
                   value={commentText}
                   onChange={(e) => setCommentText(e.target.value)}
                   onKeyPress={(e) => {

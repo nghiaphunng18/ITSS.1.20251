@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button, Flex, Text, IconButton, Badge, Card } from "@radix-ui/themes";
+import { useTranslations } from "next-intl";
 import {
   FiFile,
   FiFileText,
@@ -34,6 +35,7 @@ export function FilePickerInput({
   onAttachmentsChange,
   maxFiles = 5,
 }: FilePickerInputProps) {
+  const t = useTranslations("common.files");
   // Support both naming conventions
   const attachments = value ?? attachmentsProp ?? [];
   const handleChange = onChange ?? onAttachmentsChange ?? (() => {});
@@ -192,7 +194,7 @@ export function FilePickerInput({
       {isAdding ? (
         <Card size="1">
           <Flex direction="column" gap="2" className="p-3">
-            <Text size="2" weight="medium">Đang tải file lên...</Text>
+            <Text size="2" weight="medium">{t('uploading')}</Text>
           </Flex>
         </Card>
       ) : (
@@ -212,8 +214,7 @@ export function FilePickerInput({
               asChild
             >
               <span>
-                <FiPaperclip size={14} /> Đính kèm file ({attachments.length}/
-                {maxFiles})
+                <FiPaperclip size={14} /> {t('attach_file_count', { count: attachments.length, max: maxFiles })}
               </span>
             </Button>
           </label>
@@ -222,7 +223,7 @@ export function FilePickerInput({
 
       {attachments.length >= maxFiles && (
         <Text size="1" className="text-gray-500">
-          Đã đạt giới hạn {maxFiles} file
+          {t('file_limit_reached', { max: maxFiles })}
         </Text>
       )}
     </Flex>

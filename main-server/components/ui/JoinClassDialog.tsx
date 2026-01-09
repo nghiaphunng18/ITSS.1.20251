@@ -14,6 +14,7 @@ import { FiKey, FiAlertCircle, FiCopy } from "react-icons/fi";
 import axios from "@/lib/axios";
 import { useToast } from "@/contexts/ToastContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslations } from "next-intl";
 
 interface JoinClassDialogProps {
   open: boolean;
@@ -36,6 +37,7 @@ export function JoinClassDialog({
   onOpenChange,
   onSuccess,
 }: JoinClassDialogProps) {
+  const t = useTranslations("join_class_dialog");
   const [classCode, setClassCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -46,13 +48,13 @@ export function JoinClassDialog({
     e.preventDefault();
 
     if (!classCode.trim()) {
-      setError("Vui lòng nhập mã lớp học");
+      setError(t("error_empty"));
       return;
     }
 
     // Basic validation for code format
     if (classCode.length !== 8) {
-      setError("Mã lớp học không hợp lệ! Mã phải có đúng 8 ký tự.");
+      setError(t("error_invalid_format"));
       return;
     }
 
@@ -67,8 +69,8 @@ export function JoinClassDialog({
       });
 
       toast.success(
-        "Tham gia lớp học thành công",
-        `Bạn đã tham gia lớp "${response.data.className}"`
+        t("success_joined"),
+        t("success_message", { className: response.data.className })
       );
 
       setClassCode("");
@@ -78,13 +80,13 @@ export function JoinClassDialog({
       console.error("Failed to join class:", err);
 
       if (err.response?.status === 404) {
-        setError("Mã lớp học không hợp lệ! Vui lòng kiểm tra lại.");
+        setError(t("error_not_found"));
       } else if (err.response?.status === 400) {
-        setError(err.response.data.error || "Không thể tham gia lớp học này.");
+        setError(err.response.data.error || t("error_cannot_join"));
       } else if (err.response?.status === 409) {
-        setError("Bạn đã tham gia lớp học này rồi.");
+        setError(t("error_already_joined"));
       } else {
-        setError("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+        setError(t("error_unknown"));
       }
     } finally {
       setLoading(false);
@@ -93,25 +95,25 @@ export function JoinClassDialog({
 
   const handleCopyCode = (code: string) => {
     setClassCode(code);
-    toast.info("Đã sao chép", `Mã "${code}" đã được điền vào ô nhập`);
+    toast.info(t("code_copied"), t("code_copied_message", { code }));
   };
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content style={{ maxWidth: 550 }}>
-        <Dialog.Title>Tham gia lớp học riêng tư</Dialog.Title>
+        <Dialog.Title>{t("title")}</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Nhập mã lớp học 8 ký tự để tham gia lớp học riêng tư
+          {t("description")}
         </Dialog.Description>
 
         <form onSubmit={handleJoinClass}>
           <Flex direction="column" gap="4">
             <div>
               <Text as="div" size="2" mb="2" weight="bold">
-                Mã lớp học <span className="text-red-500">*</span>
+                {t("class_code_label")} <span className="text-red-500">*</span>
               </Text>
               <TextField.Root
-                placeholder="Nhập mã 8 ký tự (VD: aB3@xY*2)"
+                placeholder={t("class_code_placeholder")}
                 value={classCode}
                 onChange={(e) => {
                   setClassCode(e.target.value);
@@ -141,7 +143,7 @@ export function JoinClassDialog({
                     DEMO
                   </Badge>
                   <Text size="2" weight="bold" className="text-blue-900">
-                    Mã lớp demo để thử nghiệm
+                    {t("demo_codes_title")}
                   </Text>
                 </Flex>
                 <div className="grid grid-cols-1 gap-2">
@@ -175,7 +177,7 @@ export function JoinClassDialog({
                           }}
                         >
                           <FiCopy size={12} />
-                          Dùng
+                          {t("copy_hint")}
                         </Button>
                       </Flex>
                     </Card>
@@ -187,7 +189,7 @@ export function JoinClassDialog({
             <Flex gap="3" justify="end">
               <Dialog.Close>
                 <Button variant="soft" color="gray" type="button">
-                  Hủy
+                  {t("cancel")}
                 </Button>
               </Dialog.Close>
               <Button
@@ -195,7 +197,7 @@ export function JoinClassDialog({
                 disabled={loading || !classCode.trim()}
                 className="bg-mint-500 hover:bg-mint-600"
               >
-                {loading ? "Đang tham gia..." : "Tham gia lớp học"}
+                {loading ? t("joining") : t("join_button")}
               </Button>
             </Flex>
           </Flex>

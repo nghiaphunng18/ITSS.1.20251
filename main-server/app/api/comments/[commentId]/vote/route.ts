@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { VoteType } from "@/prisma/generated/client";
 
 // Vote on a comment
 export async function POST(

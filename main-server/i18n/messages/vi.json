@@ -144,104 +144,27 @@
       "copyright": "© 2024 HUST LMS. Đại học Bách Khoa Hà Nội."
     }
   },
-  "assignments": {
-    "status": {
-      "submitted": "Đã nộp",
-      "graded": "Đã chấm điểm",
-      "late": "Nộp trễ",
-      "draft": "Nháp",
-      "overdue": "Quá hạn",
-      "due_soon": "Sắp đến hạn",
-      "open": "Đang mở",
-      "locked": "Đã khóa"
-    },
-    "general": {
-      "points": "{points} điểm",
-      "files": "{count} tệp",
-      "submissions": "{count} bài nộp",
-      "grade": "Điểm: {grade}/{maxPoints}",
-      "resubmit": "Nộp lại",
-      "submit": "Nộp bài",
-      "group_submission": "Nộp theo nhóm",
-      "view_details": "Xem chi tiết"
-    },
-    "create": {
-      "dialog_title": "Tạo bài tập mới",
-      "title_label": "Tiêu đề",
-      "title_placeholder": "Nhập tiêu đề bài tập...",
-      "description_label": "Mô tả",
-      "description_placeholder": "Nhập mô tả chi tiết bài tập...",
-      "due_date_label": "Hạn nộp",
-      "max_points_label": "Điểm tối đa",
-      "assign_to_group_label": "Giao cho nhóm (tùy chọn)",
-      "select_group_placeholder": "Chọn nhóm...",
-      "all_students": "Tất cả sinh viên",
-      "empty_for_all": "Để trống để giao cho tất cả sinh viên trong lớp",
-      "individual_submission": "Mỗi thành viên nộp bài riêng",
-      "individual_submission_desc": "Mỗi thành viên trong nhóm phải nộp bài riêng của mình",
-      "group_submission_desc": "Chỉ cần một thành viên nộp bài cho cả nhóm",
-      "attachments_label": "Tệp đính kèm",
-      "cancel": "Hủy",
-      "create": "Tạo bài tập",
-      "creating": "Đang tạo..."
-    },
-    "upload": {
-      "dialog_title": "Tải lên bài nộp",
-      "description": "Tải lên tệp cho bài tập (PDF, Word, Excel, PowerPoint, hình ảnh, video, nén...)",
-      "filename_label": "Tên tệp",
-      "filename_note": "Bao gồm phần mở rộng (.pdf, .docx, .zip, etc.)",
-      "url_label": "URL tệp",
-      "url_note": "Liên kết đến tệp (trong thực tế sẽ tự động tải lên)",
-      "upload": "Tải lên",
-      "uploading": "Đang tải lên...",
-      "error_missing_info": "Vui lòng nhập đầy đủ thông tin",
-      "success": "Đã tải lên tệp",
-      "error": "Không thể tải lên tệp"
-    },
-    "details": {
-      "loading": "Đang tải...",
-      "error_loading": "Không thể tải bài tập",
-      "due_date": "Hạn nộp",
-      "max_points": "Điểm tối đa",
-      "teacher": "Giáo viên",
-      "description": "Mô tả",
-      "assignment_files": "Tệp bài tập",
-      "your_submission": "Bài nộp của bạn",
-      "submit_assignment": "Nộp bài tập",
-      "submitted_at": "Đã nộp lúc",
-      "grade": "Điểm",
-      "submission_content": "Nội dung bài nộp",
-      "submitted_files": "Tệp đã nộp",
-      "teacher_feedback": "Nhận xét của giáo viên",
-      "no_submission": "Chưa có bài nộp",
-      "start_submission": "Bắt đầu làm bài",
-      "status_submitted": "Đã nộp",
-      "status_graded": "Đã chấm điểm",
-      "status_late": "Nộp trễ",
-      "status_draft": "Nháp",
-      "status_overdue": "Quá hạn",
-      "status_open": "Đang mở",
-      "submissions": "Bài nộp",
-      "graded": "Đã chấm",
-      "student_submissions": "Bài nộp của sinh viên",
-      "no_submissions_yet": "Chưa có bài nộp nào",
-      "student": "Sinh viên",
-      "status": "Trạng thái",
-      "files": "Tệp",
-      "view_details": "Xem chi tiết",
-      "download": "Tải về"
-    },
-    "page": {
-      "loading": "Đang tải...",
-      "page_title": "Quản lý bài tập",
-      "under_development": "Đang trong quá trình phát triển",
-      "maintenance_title": "🚧 Đang bảo trì",
-      "maintenance_desc": "Tính năng quản lý bài tập đang được phát triển. Bạn sẽ có thể xem các bài tập sắp đến hạn, đã nộp, và chấm điểm trong các phiên bản tiếp theo.",
-      "planned_features": "Dự kiến bao gồm: Danh sách bài tập, Nộp bài, Xem điểm, Lịch sử nộp bài.",
-      "back_to_classes": "← Quay lại lớp học"
-    }
-  },
+
   "classes": {
+    "create": {
+      "dialog_title": "Tạo lớp học mới",
+      "dialog_description": "Điền thông tin để tạo lớp học mới",
+      "form_name_label": "Tên lớp học",
+      "form_name_placeholder": "Nhập tên lớp học...",
+      "form_description_label": "Mô tả",
+      "form_description_placeholder": "Nhập mô tả lớp học...",
+      "form_semester_label": "Kỳ học",
+      "form_year_label": "Năm học",
+      "form_private_label": "Lớp riêng tư",
+      "form_private_note": "Lớp riêng tư không hiển thị công khai, chỉ tham gia bằng mã lớp. Mã tham gia sẽ được tạo tự động.",
+      "cancel": "Hủy",
+      "create": "Tạo lớp"
+    },
+    "statistics": {
+      "students": "{count} sinh viên",
+      "assignments": "{count} bài tập",
+      "posts": "{count} bài viết"
+    },
     "page": {
       "loading": "Đang tải...",
       "page_title": "Lớp học",
@@ -256,6 +179,7 @@
       "no_enrolled": "Bạn chưa đăng ký lớp học nào. Hãy khám phá các lớp có sẵn!"
     },
     "page_teacher": {
+      "manage_interactive_slides": "Quản lý bài giảng tương tác",
       "loading": "Đang tải...",
       "page_title": "Lớp học của tôi",
       "page_subtitle": "Quản lý các lớp học bạn đang giảng dạy",
@@ -388,7 +312,17 @@
         "teachers_added": "Đã thêm {count} giáo viên",
         "teachers_removed": "Đã xóa {count} giáo viên",
         "students_added": "Đã thêm {count} sinh viên",
-        "students_removed": "Đã xóa {count} sinh viên"
+        "students_removed": "Đã xóa {count} sinh viên",
+        "delete_post_title": "Xóa bài viết",
+        "delete_post_description": " Bạn có chắc chắn muốn xóa bài viết này?",
+        "delete": "Xóa",
+        "cancel": "Thoát",
+        "delete_comment_title": "Xóa bình luận",
+        "delete_comment_description": " Bạn có chắc chắn muốn xóa bình luận này?",
+        "assignment_created": "Đã tạo bài tập",
+        "groups_updated": "{count} nhóm đã được cập nhật",
+        "post_deleted": "Đã xóa bài viết",
+        "post_deleted_success": "Bài viết đã được xóa thành công"
       }
     },
     "dialogs": {
@@ -399,28 +333,7 @@
       "confirm_leave_teaching_title": "Xác nhận rời khỏi lớp giảng dạy",
       "confirm_leave_teaching_desc": "Bạn có chắc chắn muốn rời khỏi giảng dạy lớp học này? Bạn có thể tham gia lại sau."
     },
-    "join_class_dialog": {
-      "title": "Tham gia lớp học riêng tư",
-      "description": "Nhập mã tham gia 8 ký tự để tham gia lớp học riêng tư",
-      "class_code_label": "Mã tham gia",
-      "class_code_placeholder": "VD: ABC123XY",
-      "join_button": "Tham gia lớp học",
-      "joining": "Đang tham gia...",
-      "cancel": "Hủy",
-      "demo_codes_title": "Mã Demo Lớp Riêng Tư",
-      "demo_codes_hint": "Nhấp để sao chép mã demo",
-      "copy_hint": "Nhấp để điền mã",
-      "error_empty": "Vui lòng nhập mã lớp học",
-      "error_invalid_format": "Mã lớp học không hợp lệ! Mã phải có đúng 8 ký tự.",
-      "error_not_found": "Mã lớp học không hợp lệ! Vui lòng kiểm tra lại.",
-      "error_cannot_join": "Không thể tham gia lớp học này.",
-      "error_already_joined": "Bạn đã tham gia lớp học này rồi.",
-      "error_unknown": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
-      "success_joined": "Tham gia lớp học thành công",
-      "success_message": "Bạn đã tham gia lớp \"{className}\"",
-      "code_copied": "Đã sao chép",
-      "code_copied_message": "Mã \"{code}\" đã được điền vào ô nhập"
-    },
+
     "create_class_dialog": {
       "title": "Tạo lớp học mới",
       "description": "Điền thông tin để tạo lớp học mới",
@@ -488,7 +401,9 @@
       "error_no_students": "Không có sinh viên để chia nhóm",
       "error_invalid_input": "Dữ liệu nhập không hợp lệ",
       "error_not_integer": "Số lượng nhóm phải là số nguyên",
-      "error_must_positive": "Số lượng nhóm phải lớn hơn 0"
+      "error_must_positive": "Số lượng nhóm phải lớn hơn 0",
+      "save_groups": "Lưu nhóm",
+      "all_students_assigned": "Tất cả học sinh đã được phân nhóm"
     },
     "members_dialog": {
       "title": "Quản lý thành viên",
@@ -516,81 +431,33 @@
       "current_students": "Sinh viên hiện tại",
       "cancel": "Hủy",
       "save_changes": "Lưu thay đổi",
-      "saving": "Đang lưu..."
+      "saving": "Đang lưu...",
+      "save_groups": "Lưu nhóm"
     }
   },
-  "attendance": {
-    "session": {
-      "title": "Điểm danh",
-      "no_active_session": "Chưa có phiên điểm danh nào đang hoạt động",
-      "duration": "Thời gian:",
-      "5_minutes": "5 phút",
-      "10_minutes": "10 phút",
-      "15_minutes": "15 phút",
-      "20_minutes": "20 phút",
-      "30_minutes": "30 phút",
-      "start_attendance": "Bắt đầu điểm danh",
-      "creating": "Đang tạo...",
-      "attendance_code": "Mã điểm danh",
-      "password": "Mật khẩu điểm danh (chỉ giáo viên thấy)",
-      "time_remaining": "Còn lại: {time}",
-      "time_up": "Hết giờ",
-      "active": "Đang hoạt động",
-      "closed": "Đã đóng",
-      "students_count": "{count} sinh viên",
-      "attendance_rate": "Tỷ lệ: {rate}%",
-      "close_session": "Đóng phiên điểm danh",
-      "closing": "Đang đóng...",
-      "attended": "Đã điểm danh ({count})",
-      "no_students_attended": "Chưa có sinh viên nào điểm danh",
-      "not_attended": "Chưa điểm danh ({count})",
-      "all_attended": "Tất cả sinh viên đã điểm danh"
-    },
-    "check_in": {
-      "loading": "Đang tải...",
-      "no_session": "Chưa có phiên điểm danh nào",
-      "teacher_will_start": "Giáo viên sẽ bắt đầu điểm danh trong giờ học",
-      "attended": "Đã điểm danh",
-      "closed_absent": "Đã đóng - Vắng mặt",
-      "expired_absent": "Hết hạn - Vắng mặt",
-      "code": "Mã điểm danh: {code}",
-      "started_at": "Bắt đầu: {time}",
-      "success": "Bạn đã điểm danh thành công",
-      "absent": "Bạn đã vắng mặt buổi điểm danh này",
-      "check_in_now": "Điểm danh ngay",
-      "checking_in": "Đang điểm danh...",
-      "success_message": "Điểm danh thành công!",
-      "error_message": "Không thể điểm danh. Vui lòng thử lại.",
-      "password_dialog_title": "Nhập mật khẩu điểm danh",
-      "password_dialog_description": "Vui lòng nhập mật khẩu 6 chữ số để điểm danh",
-      "password_placeholder": "123456",
-      "confirm": "Xác nhận",
-      "confirming": "Đang xác nhận...",
-      "cancel": "Hủy",
-      "password_required": "Password is required",
-      "incorrect_password": "Incorrect password"
-    }
-  },
+
   "posts": {
+    "create": {
+      "dialog_title": "Tạo bài viết mới",
+      "form_type_label": "Loại bài viết",
+      "form_type_announcement": "Thông báo",
+      "form_type_discussion": "Thảo luận",
+      "form_type_material": "Tài liệu",
+      "form_title_label": "Tiêu đề",
+      "form_title_placeholder": "Nhập tiêu đề...",
+      "form_content_label": "Nội dung",
+      "form_content_placeholder": "Nhập nội dung bài viết...",
+      "form_attachments_label": "Tệp đính kèm",
+      "cancel": "Hủy",
+      "create": "Tạo bài viết",
+      "creating": "Đang tạo..."
+    },
     "types": {
       "announcement": "Thông báo",
       "material": "Tài liệu",
       "discussion": "Thảo luận"
     },
-    "create": {
-      "dialog_title": "Tạo bài viết mới",
-      "type_label": "Loại bài viết",
-      "announcement": "Thông báo",
-      "discussion": "Thảo luận",
-      "material": "Tài liệu",
-      "title_label": "Tiêu đề",
-      "title_placeholder": "Nhập tiêu đề...",
-      "content_label": "Nội dung",
-      "content_placeholder": "Nhập nội dung bài viết...",
-      "attachments": "Tệp đính kèm",
-      "cancel": "Hủy",
-      "post": "Đăng bài"
-    },
+
     "dialogs": {
       "edit_post": "Chỉnh sửa bài viết",
       "title_label": "Tiêu đề",
@@ -657,7 +524,16 @@
   },
   "comments": {
     "posted_at": "Đăng lúc",
-    "edited": "(đã sửa)"
+    "edited": "(đã sửa)",
+    "edit_dialog_title": "Chỉnh sửa bình luận",
+    "edit_dialog_content_label": "Nội dung",
+    "edit_dialog_content_placeholder": "Nhập nội dung",
+    "edit_dialog_save": "Lưu thay đổi",
+    "edit_dialog_cancel": "Hủy",
+    "count": "Bình luận ({count})",
+    "sort_by_time": "Thời gian",
+    "sort_by_votes": "Lượt thích",
+    "write_comment": "Viết bình luận..."
   },
   "members": {
     "management": {
@@ -723,7 +599,23 @@
       "copy_link": "Sao chép liên kết",
       "share": "Chia sẻ",
       "delete": "Xóa"
-    }
+    },
+    "upload_dialog_title": "Tải lên tài liệu",
+    "upload_dialog_description": "Chọn tệp để tải lên (tối đa 10MB)",
+    "upload_label_file": "Chọn tệp",
+    "upload_placeholder_file": "Nhấn để chọn tệp",
+    "upload_selected_file": "Tệp đã chọn:",
+    "upload_cancel": "Hủy",
+    "upload_submit": "Tải lên",
+    "upload_submitting": "Đang tải lên...",
+    "upload_success": "Đã tải lên tài liệu",
+    "upload_error": "Không thể tải lên tài liệu",
+    "error_title": "Lỗi",
+    "error_select_file": "Vui lòng chọn tệp",
+    "error_file_size": "Kích thước tệp vượt quá giới hạn 10MB",
+    "error_upload_failed": "Không thể tải lên tài liệu",
+    "success_title": "Thành công",
+    "success_uploaded": "Đã tải lên tài liệu"
   },
   "notifications": {
     "general": {
@@ -749,7 +641,11 @@
     "labels": {
       "no_group": "Chưa có nhóm",
       "join_group": "Vui lòng tham gia nhóm để làm việc với các thành viên khác",
-      "members": "{count} thành viên"
+      "members": "{count} thành viên",
+      "members_title": "Thành viên nhóm",
+      "assignments_title": "Bài tập nhóm",
+      "assignments_count": "{count} bài tập",
+      "due_label": "Hạn:"
     },
     "page": {
       "student": {
@@ -766,7 +662,24 @@
         "planned_features": "Dự kiến bao gồm: Tạo nhóm, Phân công sinh viên, Theo dõi hoạt động, Đánh giá nhóm.",
         "back_to_classes": "← Quay lại lớp học"
       }
-    }
+    },
+    "dialog_title": "Quản lý nhóm học",
+    "dialog_description": "Chia sinh viên thành các nhóm học tập",
+    "tab_distribution": "Phân phối",
+    "tab_configuration": "Cấu hình",
+    "tab_members": "Thành viên",
+    "label_num_groups": "Số nhóm cần tạo",
+    "placeholder_num_groups": "Nhập số nhóm",
+    "button_auto_generate": "Tạo tự động",
+    "button_manual": "Tạo thủ công",
+    "label_num_members": "Số thành viên trên nhóm",
+    "distribution_auto_success": "Tạo nhóm thành công",
+    "distribution_auto_warning": "Số nhóm ({numGroups}) vượt quá số sinh viên ({studentCount}). Sẽ tạo {actualNumGroups} nhóm.",
+    "distribution_warning_no_students": "Không có sinh viên nào. Vui lòng thêm sinh viên vào lớp trước khi tạo nhóm.",
+    "distribution_tab_title": "Tạo Nhóm Tự Động",
+    "distribution_tab_description": "Hệ thống sẽ chia sinh viên vào các nhóm ngẫu nhiên",
+    "confirm_save_groups": "Lưu cấu hình nhóm",
+    "confirm_message": "Bạn có chắc chắn muốn lưu cấu hình nhóm này? Các nhóm cũ sẽ bị thay thế."
   },
   "teacher_assignments": {
     "page": {
@@ -813,7 +726,10 @@
       "uploading": "Đang tải lên...",
       "creating": "Đang tạo...",
       "processing": "Đang xử lý...",
-      "closing": "Đang đóng..."
+      "closing": "Đang đóng...",
+      "public": "Công khai",
+      "private": "Riêng tư",
+      "available": "Có sẵn"
     },
     "actions": {
       "cancel": "Hủy",
@@ -825,6 +741,7 @@
       "download": "Tải về",
       "upload": "Tải lên",
       "view": "Xem",
+      "back": "Quay lại",
       "close": "Đóng"
     },
     "messages": {
@@ -846,6 +763,8 @@
       "download_file": "Tải xuống file",
       "uploading": "Đang tải file lên...",
       "attach_file": "Đính kèm file",
+      "attach_file_count": "Đính kèm tệp ({count}/{max})",
+      "file_limit_reached": "Đã đạt giới hạn số lượng tệp tối đa ({max})",
       "max_size": "Kích thước tối đa: 10MB",
       "upload_failed": "Tải file thất bại. Vui lòng thử lại."
     }
@@ -1190,5 +1109,213 @@
     "start_question": "Bắt đầu câu hỏi",
     "question_running": "Đang chạy câu hỏi",
     "ready_to_activate": "Sẵn sàng kích hoạt"
+  },
+
+  "attendance": {
+    "dialog_title": "Bắt đầu điểm danh",
+    "dialog_start_session": "Bắt đầu một phiên điểm danh mới",
+    "label_duration": "Thời gian:",
+    "duration_5min": "5 phút",
+    "duration_10min": "10 phút",
+    "duration_15min": "15 phút",
+    "duration_20min": "20 phút",
+    "duration_30min": "30 phút",
+    "button_start": "Bắt đầu điểm danh",
+    "button_starting": "Đang tạo...",
+    "cancel": "Hủy",
+    "attendance_code_label": "Mã điểm danh",
+    "session_active": "Đang hoạt động",
+    "session_closed": "Đã đóng",
+    "remaining": "Còn lại: {time}",
+    "info_mark_attendance": "Để đánh dấu có mặt, sinh viên phải nhập mã này",
+    "session": {
+      "title": "Điểm danh",
+      "no_active_session": "Chưa có phiên điểm danh nào đang hoạt động",
+      "duration": "Thời gian:",
+      "5_minutes": "5 phút",
+      "10_minutes": "10 phút",
+      "15_minutes": "15 phút",
+      "20_minutes": "20 phút",
+      "30_minutes": "30 phút",
+      "start_attendance": "Bắt đầu điểm danh",
+      "creating": "Đang tạo...",
+      "attendance_code": "Mã điểm danh",
+      "password": "Mật khẩu điểm danh (chỉ giáo viên thấy)",
+      "time_remaining": "Còn lại: {time}",
+      "time_up": "Hết giờ",
+      "active": "Đang hoạt động",
+      "closed": "Đã đóng",
+      "students_count": "{count} sinh viên",
+      "attendance_rate": "Tỷ lệ: {rate}%",
+      "close_session": "Đóng phiên điểm danh",
+      "closing": "Đang đóng...",
+      "attended": "Đã điểm danh ({count})",
+      "no_students_attended": "Chưa có sinh viên nào điểm danh",
+      "not_attended": "Chưa điểm danh ({count})",
+      "all_attended": "Tất cả sinh viên đã điểm danh"
+    },
+    "check_in": {
+      "loading": "Đang tải...",
+      "no_session": "Chưa có phiên điểm danh nào",
+      "teacher_will_start": "Giáo viên sẽ bắt đầu điểm danh trong giờ học",
+      "attended": "Đã điểm danh",
+      "closed_absent": "Đã đóng - Vắng mặt",
+      "expired_absent": "Hết hạn - Vắng mặt",
+      "code": "Mã điểm danh: {code}",
+      "started_at": "Bắt đầu: {time}",
+      "success": "Bạn đã điểm danh thành công",
+      "absent": "Bạn đã vắng mặt buổi điểm danh này",
+      "check_in_now": "Điểm danh ngay",
+      "checking_in": "Đang điểm danh...",
+      "success_message": "Điểm danh thành công!",
+      "error_message": "Không thể điểm danh. Vui lòng thử lại.",
+      "password_dialog_title": "Nhập mật khẩu điểm danh",
+      "password_dialog_description": "Vui lòng nhập mật khẩu 6 chữ số để điểm danh",
+      "password_placeholder": "123456",
+      "confirm": "Xác nhận",
+      "confirming": "Đang xác nhận...",
+      "cancel": "Hủy",
+      "password_required": "Password is required",
+      "incorrect_password": "Incorrect password"
+    }
+  },
+  "assignments": {
+    "create": {
+      "dialog_title": "Tạo bài tập",
+      "title": "Tạo bài tập",
+      "description": "Tạo một bài tập mới",
+
+      "title_label": "Tên bài tập",
+      "title_placeholder": "Nhập tên bài tập",
+
+      "description_label": "Mô tả",
+      "description_placeholder": "Nhập mô tả bài tập",
+
+      "due_date": "Hạn nộp",
+      "groups": "Nhóm áp dụng",
+
+      "create": "Tạo",
+      "cancel": "Hủy",
+      "creating": "Đang tạo...",
+      "due_date_label": "Hạn nộp",
+      "max_points_label": "Điểm tối đa",
+      "assign_to_group_label": "Giao cho nhóm",
+      "select_group_placeholder": "Chọn nhóm",
+      "all_students": "Tất cả học sinh",
+      "empty_for_all": "Nếu không chọn nhóm, bài tập sẽ áp dụng cho tất cả học sinh",
+      "attachments_label": "Tệp đính kèm",
+      "individual_submission": "Nộp bài cá nhân",
+      "individual_submission_desc": "Mỗi học sinh sẽ nộp bài riêng",
+      "group_submission_desc": "Mỗi nhóm sẽ nộp một bài chung"
+    },
+    "status": {
+      "open": "Đang mở",
+      "closed": "Đã đóng",
+      "draft": "Nháp",
+      "submitted": "Đã nộp",
+      "graded": "Đã chấm",
+      "late": "Trễ hạn",
+      "overdue": "Quá hạn",
+      "due_soon": "Sắp đến hạn"
+    },
+    "general": {
+      "view_details": "Xem chi tiết",
+      "submit": "Nộp bài",
+      "resubmit": "Nộp lại",
+      "turn_in": "Nộp bài",
+      "locked": "Đã khóa",
+      "overdue": "Quá hạn",
+      "attachments": "Tệp đính kèm",
+      "files": "tệp",
+      "files_count": "{count} tệp",
+      "max_points": "Điểm tối đa",
+      "points": "{points} điểm",
+      "points_value": "điểm",
+      "submissions": "lượt nộp",
+      "submissions_count": "{count} bài nộp",
+      "grade": "Điểm: {grade}/{maxPoints}",
+      "description_label": "Mô tả:",
+      "assignment_files_label": "Tệp đính kèm từ giáo viên:",
+      "your_files_label": "Bài nộp của bạn:",
+      "download": "Tải về",
+      "upload_files": "Tải tệp lên",
+      "add_edit_files": "Thêm/Sửa tệp",
+      "processing": "Đang xử lý...",
+      "submitted_at_label": "Nộp lúc:",
+      "group_submission": "Nộp theo nhóm",
+      "group_notice": "Đây là bài tập nhóm. Chỉ cần một thành viên nộp bài cho cả nhóm.",
+      "can_submit_for_group": "Bạn có thể nộp bài thay cho nhóm.",
+      "not_in_group": "Bạn không thuộc nhóm này.",
+      "teacher_feedback_label": "Nhận xét của giáo viên:",
+      "teacher_label": "Giáo viên",
+      "attach_file": "Đính kèm file",
+      "attach_file_count": "Đính kèm file ({count}/{max})",
+      "file_limit_reached": "Đã đạt giới hạn {max} file"
+    },
+    "details": {
+      "due_date": "Hạn nộp",
+      "max_points": "Điểm tối đa",
+      "description": "Mô tả",
+      "assignment_files": "Tệp bài tập",
+      "your_submission": "Bài nộp của bạn",
+      "submit_assignment": "Nộp bài tập",
+      "submitted_at": "Ngày nộp",
+      "grade": "Điểm",
+      "feedback": "Phản hồi",
+      "submission_files": "Tệp bài nộp",
+      "no_submission": "Chưa có bài nộp",
+      "start_submission": "Bắt đầu nộp bài",
+      "status_submitted": "Đã nộp",
+      "status_graded": "Đã chấm điểm",
+      "status_late": "Trễ hạn",
+      "status_draft": "Nháp",
+      "status_overdue": "Quá hạn",
+      "status_open": "Đang mở",
+      "error_loading": "Không thể tải bài tập"
+    },
+    "page": {
+      "page_title": "Bài tập",
+      "under_development": "Đang phát triển",
+      "maintenance_title": "Tính năng đang phát triển",
+      "maintenance_desc": "Tính năng quản lý bài tập đang được phát triển. Vui lòng quay lại sau."
+    },
+    "upload_dialog_title": "Tải lên bài nộp",
+    "upload_dialog_description": "Chọn file để nộp bài tập này",
+    "upload_label_file": "Chọn file",
+    "upload_placeholder_file": "Nhấn để chọn file",
+    "upload_label_notes": "Ghi chú (tùy chọn)",
+    "upload_placeholder_notes": "Thêm ghi chú cho bài nộp của bạn",
+    "upload_selected_file": "Tệp đã chọn:",
+    "upload_cancel": "Hủy",
+    "upload_submit": "Tải lên",
+    "upload_submitting": "Đang tải lên...",
+    "upload_success": "Tải lên bài nộp thành công",
+    "upload_error": "Không thể tải lên bài nộp"
+  },
+  "confirm": {
+    "default_cancel": "Hủy",
+    "default_confirm": "Xác nhận"
+  },
+  "join_class_dialog": {
+    "title": "Tham gia lớp học riêng tư",
+    "description": "Nhập mã tham gia 8 ký tự để tham gia lớp học riêng tư",
+    "class_code_label": "Mã tham gia",
+    "class_code_placeholder": "VD: ABC123XY",
+    "join_button": "Tham gia lớp học",
+    "joining": "Đang tham gia...",
+    "cancel": "Hủy",
+    "demo_codes_title": "Mã Demo Lớp Riêng Tư",
+    "demo_codes_hint": "Nhấp để sao chép mã demo",
+    "copy_hint": "Nhấp để điền mã",
+    "error_empty": "Vui lòng nhập mã lớp học",
+    "error_invalid_format": "Mã lớp học không hợp lệ! Mã phải có đúng 8 ký tự.",
+    "error_not_found": "Mã lớp học không hợp lệ! Vui lòng kiểm tra lại.",
+    "error_cannot_join": "Không thể tham gia lớp học này.",
+    "error_already_joined": "Bạn đã tham gia lớp học này rồi.",
+    "error_unknown": "Đã xảy ra lỗi. Vui lòng thử lại sau.",
+    "success_joined": "Tham gia lớp học thành công",
+    "success_message": "Bạn đã tham gia lớp \"{className}\"",
+    "code_copied": "Đã sao chép",
+    "code_copied_message": "Mã \"{code}\" đã được điền vào ô nhập"
   }
 }

@@ -12,6 +12,7 @@ import {
   Checkbox,
 } from "@radix-ui/themes";
 import { FiX } from "react-icons/fi";
+import { useTranslations } from "next-intl";
 import { FilePickerInput, FileAttachment } from "./FilePickerInput";
 
 interface CreateAssignmentDialogProps {
@@ -35,6 +36,8 @@ export function CreateAssignmentDialog({
   onSubmit,
   groups = [],
 }: CreateAssignmentDialogProps) {
+  const t = useTranslations("assignments.create");
+  const tCommon = useTranslations("common.actions");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -59,7 +62,6 @@ export function CreateAssignmentDialog({
         ...formData,
         attachments: attachments.length > 0 ? attachments : undefined,
       });
-      // Reset form
       setFormData({
         title: "",
         description: "",
@@ -85,7 +87,7 @@ export function CreateAssignmentDialog({
         <Dialog.Title>
           <Flex justify="between" align="center">
             <Text size="5" weight="bold">
-              Tạo bài tập mới
+              {t("dialog_title")}
             </Text>
             <Dialog.Close>
               <Button variant="ghost" color="gray">
@@ -100,10 +102,10 @@ export function CreateAssignmentDialog({
             {/* Title */}
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Tiêu đề <span className="text-red-500">*</span>
+                {t("title_label")}
               </Text>
               <TextField.Root
-                placeholder="Nhập tiêu đề bài tập..."
+                placeholder={t("title_placeholder")}
                 value={formData.title}
                 onChange={(e) =>
                   setFormData({ ...formData, title: e.target.value })
@@ -115,62 +117,63 @@ export function CreateAssignmentDialog({
             {/* Description */}
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Mô tả
+                {t("description_label")}
               </Text>
               <TextArea
-                placeholder="Nhập mô tả chi tiết bài tập..."
+                placeholder={t("description_placeholder")}
                 value={formData.description}
-                onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-                rows={4}
-              />
-            </label>
-
-            {/* Due Date */}
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                Hạn nộp <span className="text-red-500">*</span>
-              </Text>
-              <input
-                type="datetime-local"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-mint-500"
-                value={formData.dueDate}
-                onChange={(e) =>
-                  setFormData({ ...formData, dueDate: e.target.value })
-                }
-                min={minDate}
-                required
-              />
-            </label>
-
-            {/* Max Points */}
-            <label>
-              <Text as="div" size="2" mb="1" weight="bold">
-                Điểm tối đa
-              </Text>
-              <TextField.Root
-                type="number"
-                placeholder="100"
-                value={formData.maxPoints.toString()}
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    maxPoints: parseInt(e.target.value) || 100,
+                    description: e.target.value,
                   })
                 }
-                min="0"
+                style={{ minHeight: "150px" }}
               />
             </label>
 
-            {/* Group Selection */}
+            {/* Due Date & Max Points */}
+            <Flex gap="4">
+              <label style={{ flex: 1 }}>
+                <Text as="div" size="2" mb="1" weight="bold">
+                  {t("due_date_label")}
+                  <span className="text-red-500"> *</span>
+                </Text>
+                <TextField.Root
+                  type="datetime-local"
+                  value={formData.dueDate}
+                  onChange={(e) =>
+                    setFormData({ ...formData, dueDate: e.target.value })
+                  }
+                  required
+                />
+              </label>
+              <label style={{ flex: 1 }}>
+                <Text as="div" size="2" mb="1" weight="bold">
+                  {t("max_points_label")}
+                </Text>
+                <TextField.Root
+                  type="number"
+                  value={formData.maxPoints}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      maxPoints: parseInt(e.target.value) || 0,
+                    })
+                  }
+                  min="0"
+                />
+              </label>
+            </Flex>
+
+            {/* Group Assignment */}
             {groups.length > 0 && (
               <label>
                 <Text as="div" size="2" mb="1" weight="bold">
-                  Giao cho nhóm (tùy chọn)
+                  {t("assign_to_group_label")}
                 </Text>
                 <Select.Root
-                  value={formData.groupId || "all"}
+                  value={formData.groupId || ""}
                   onValueChange={(value) =>
                     setFormData({
                       ...formData,
@@ -178,12 +181,9 @@ export function CreateAssignmentDialog({
                     })
                   }
                 >
-                  <Select.Trigger
-                    className="w-full"
-                    placeholder="Chọn nhóm..."
-                  />
+                  <Select.Trigger placeholder={t("select_group_placeholder")} />
                   <Select.Content>
-                    <Select.Item value="all">Tất cả sinh viên</Select.Item>
+                    <Select.Item value="all">{t("all_students")}</Select.Item>
                     {groups.map((group) => (
                       <Select.Item key={group.id} value={group.id}>
                         {group.name}
@@ -191,16 +191,16 @@ export function CreateAssignmentDialog({
                     ))}
                   </Select.Content>
                 </Select.Root>
-                <Text size="1" className="text-gray-500 mt-1">
-                  Để trống để giao cho tất cả sinh viên trong lớp
+                <Text size="1" className="text-gray-500 mt-1 block">
+                  {t("empty_for_all")}
                 </Text>
               </label>
             )}
 
-            {/* Submission Type for Group Assignments */}
+            {/* Submission Type */}
             {formData.groupId && (
               <label>
-                <Flex gap="2" align="center">
+                <Flex align="center" gap="2">
                   <Checkbox
                     checked={formData.isSeparateSubmission}
                     onCheckedChange={(checked) =>
@@ -210,41 +210,42 @@ export function CreateAssignmentDialog({
                       })
                     }
                   />
-                  <Text size="2">Mỗi thành viên nộp bài riêng</Text>
+                  <Text size="2" weight="bold">
+                    {t("individual_submission")}
+                  </Text>
                 </Flex>
-                <Text size="1" className="text-gray-500 ml-6 mt-1">
+                <Text size="1" className="text-gray-500 ml-6 mt-1 block">
                   {formData.isSeparateSubmission
-                    ? "Mỗi thành viên trong nhóm phải nộp bài riêng của mình"
-                    : "Chỉ cần một thành viên nộp bài cho cả nhóm"}
+                    ? t("individual_submission_desc")
+                    : t("group_submission_desc")}
                 </Text>
               </label>
             )}
 
             {/* Attachments */}
-            <div>
-              <Text as="div" size="2" mb="2" weight="bold">
-                Tệp đính kèm
+            <label>
+              <Text as="div" size="2" mb="1" weight="bold">
+                {t("attachments_label")}
               </Text>
               <FilePickerInput
-                value={attachments}
-                onChange={setAttachments}
-                maxFiles={10}
+                attachments={attachments}
+                onAttachmentsChange={setAttachments}
               />
-            </div>
+            </label>
 
-            {/* Actions */}
-            <Flex gap="3" justify="end" className="mt-2">
+            {/* Buttons */}
+            <Flex gap="3" justify="end" mt="4">
               <Dialog.Close>
                 <Button variant="soft" color="gray" type="button">
-                  Hủy
+                  {t("cancel")}
                 </Button>
               </Dialog.Close>
               <Button
-                className="bg-mint-500 hover:bg-mint-600"
                 type="submit"
+                className="bg-mint-500"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? "Đang tạo..." : "Tạo bài tập"}
+                {isSubmitting ? t("creating") : t("create")}
               </Button>
             </Flex>
           </Flex>

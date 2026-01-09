@@ -27,7 +27,7 @@ import {
   FiRefreshCw,
 } from "react-icons/fi";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { AssignmentUploadDialog } from "./AssignmentUploadDialog";
 
 interface AssignmentListItemProps {
@@ -103,6 +103,7 @@ export function AssignmentListItem({
   onUploadComplete,
 }: AssignmentListItemProps) {
   const router = useRouter();
+  const locale = useLocale();
   const t = useTranslations('assignments.general');
   const tStatus = useTranslations('assignments.status');
   const [isExpanded, setIsExpanded] = useState(false);
@@ -244,14 +245,14 @@ export function AssignmentListItem({
       if (isPastDue) {
         return {
           icon: <FiLock size={16} />,
-          text: "Đã khóa",
+          text: t('locked'),
           disabled: true,
           color: "gray" as const,
         };
       }
       return {
         icon: <FiRefreshCw size={16} />,
-        text: "Nộp lại",
+        text: t('resubmit'),
         disabled: false,
         color: "orange" as const,
         action: handleUnsubmit,
@@ -261,7 +262,7 @@ export function AssignmentListItem({
     if (isPastDue) {
       return {
         icon: <FiLock size={16} />,
-        text: "Quá hạn",
+        text: t('overdue'),
         disabled: true,
         color: "red" as const,
       };
@@ -269,7 +270,7 @@ export function AssignmentListItem({
 
     return {
       icon: <FiCheckCircle size={16} />,
-      text: "Nộp bài",
+      text: t('turn_in'),
       disabled: !hasSubmittedFiles,
       color: "mint" as const,
       action: handleTurnIn,
@@ -303,7 +304,7 @@ export function AssignmentListItem({
                 )}
                 {assignment.group && !assignment.isSeparateSubmission && (
                   <Badge color="blue" variant="soft">
-                    Nộp theo nhóm
+                    {t('group_submission')}
                   </Badge>
                 )}
               </Flex>
@@ -385,7 +386,7 @@ export function AssignmentListItem({
               {/* Max Points */}
               <Flex gap="1" align="center">
                 <Text size="2" weight="bold" className="text-mint-600">
-                  {assignment.maxPoints} điểm
+                  {assignment.maxPoints} {t('points_value')}
                 </Text>
               </Flex>
 
@@ -394,7 +395,7 @@ export function AssignmentListItem({
                 <Flex gap="1" align="center">
                   <FiFile size={14} className="text-gray-500" />
                   <Text size="2" className="text-gray-600">
-                    {assignment.attachments.length} tệp
+                    {t('files_count', { count: assignment.attachments.length })}
                   </Text>
                 </Flex>
               )}
@@ -404,7 +405,7 @@ export function AssignmentListItem({
                 <Flex gap="1" align="center">
                   <FiCheckCircle size={14} className="text-gray-500" />
                   <Text size="2" className="text-gray-600">
-                    {assignment._count.submissions} bài nộp
+                    {t('submissions_count', { count: assignment._count.submissions })}
                   </Text>
                 </Flex>
               )}
@@ -413,7 +414,7 @@ export function AssignmentListItem({
             {/* Graded Score */}
             {submission?.grade !== undefined && submission.grade !== null && (
               <Badge color="green" size="2">
-                Điểm: {submission.grade}/{assignment.maxPoints}
+                {t('grade', { grade: submission.grade, maxPoints: assignment.maxPoints })}
               </Badge>
             )}
 
@@ -444,7 +445,7 @@ export function AssignmentListItem({
                 {assignment.description && (
                   <div>
                     <Text size="2" weight="bold" className="block mb-2">
-                      Mô tả:
+                      {t('description_label')}
                     </Text>
                     <Text size="2" className="text-gray-700">
                       {assignment.description}
@@ -457,7 +458,7 @@ export function AssignmentListItem({
                   assignment.attachments.length > 0 && (
                     <div>
                       <Text size="2" weight="bold" className="block mb-2">
-                        Tệp đính kèm từ giáo viên:
+                        {t('assignment_files_label')}
                       </Text>
                       <Flex direction="column" gap="2">
                         {assignment.attachments.map((file) => (
@@ -492,7 +493,7 @@ export function AssignmentListItem({
                                   rel="noopener noreferrer"
                                   download
                                 >
-                                  <FiDownload size={14} /> Tải về
+                                  <FiDownload size={14} /> {t('download')}
                                 </a>
                               </Button>
                             </Flex>
@@ -512,7 +513,7 @@ export function AssignmentListItem({
                       submission.attachments.length > 0 && (
                         <div>
                           <Text size="2" weight="bold" className="block mb-2">
-                            Bài nộp của bạn:
+                            {t('your_files_label')}
                           </Text>
                           <Flex direction="column" gap="2">
                             {submission.attachments.map((file) => (
@@ -547,7 +548,7 @@ export function AssignmentListItem({
                                       rel="noopener noreferrer"
                                       download
                                     >
-                                      <FiDownload size={14} /> Tải về
+                                      <FiDownload size={14} /> {t('download')}
                                     </a>
                                   </Button>
                                 </Flex>
@@ -570,7 +571,7 @@ export function AssignmentListItem({
                         }
                       >
                         <FiUpload size={16} />
-                        {hasSubmittedFiles ? "Thêm/Sửa tệp" : "Tải tệp lên"}
+                        {hasSubmittedFiles ? t('add_edit_files') : t('upload_files')}
                       </Button>
 
                       <Button
@@ -580,14 +581,14 @@ export function AssignmentListItem({
                         onClick={submitButton.action}
                       >
                         {submitButton.icon}
-                        {isSubmitting ? "Đang xử lý..." : submitButton.text}
+                        {isSubmitting ? t('processing') : submitButton.text}
                       </Button>
 
                       {submission?.submittedAt && (
                         <Text size="2" className="text-gray-600">
-                          Nộp lúc:{" "}
+                          {t('submitted_at_label')}{" "}
                           {new Date(submission.submittedAt).toLocaleString(
-                            "vi-VN"
+                            locale === 'ja' ? 'ja-JP' : 'vi-VN'
                           )}
                         </Text>
                       )}
@@ -602,11 +603,10 @@ export function AssignmentListItem({
                             className="text-blue-600 mt-1 shrink-0"
                           />
                           <Text size="2" className="text-blue-900">
-                            Đây là bài tập nhóm. Chỉ cần một thành viên nộp bài
-                            cho cả nhóm.
+                            {t('group_notice')}
                             {userGroupId === assignment.group.id
-                              ? " Bạn có thể nộp bài thay cho nhóm."
-                              : " Bạn không thuộc nhóm này."}
+                              ? ` ${t('can_submit_for_group')}`
+                              : ` ${t('not_in_group')}`}
                           </Text>
                         </Flex>
                       </Card>
@@ -616,7 +616,7 @@ export function AssignmentListItem({
                     {submission?.feedback && (
                       <div>
                         <Text size="2" weight="bold" className="block mb-2">
-                          Nhận xét của giáo viên:
+                          {t('teacher_feedback_label')}
                         </Text>
                         <Card className="p-3 bg-yellow-50">
                           <Text size="2" className="text-gray-700">
@@ -638,7 +638,7 @@ export function AssignmentListItem({
                     />
                     <div>
                       <Text size="1" className="text-gray-500">
-                        Giáo viên
+                        {t('teacher_label')}
                       </Text>
                       <Text size="2" weight="medium">
                         {assignment.createdBy.name}

@@ -66,6 +66,7 @@ export function CommentCard({
   onMarkAnswer,
 }: CommentCardProps) {
   const tPostActions = useTranslations('posts.actions');
+  const tComments = useTranslations('comments');
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [editContent, setEditContent] = useState(comment.content);
 
@@ -204,23 +205,23 @@ export function CommentCard({
       {/* Edit Dialog */}
       <Dialog.Root open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <Dialog.Content style={{ maxWidth: 500 }}>
-          <Dialog.Title>Chỉnh sửa bình luận</Dialog.Title>
+          <Dialog.Title>{tComments("edit_dialog_title")}</Dialog.Title>
           <Flex direction="column" gap="3" className="mt-4">
             <label>
               <Text as="div" size="2" mb="1" weight="bold">
-                Nội dung
+                {tComments("edit_dialog_content_label")}
               </Text>
               <TextArea
                 value={editContent}
                 onChange={(e) => setEditContent(e.target.value)}
-                placeholder="Nhập nội dung"
+                placeholder={tComments("edit_dialog_content_placeholder")}
                 rows={4}
               />
             </label>
             <Flex gap="3" justify="end">
               <Dialog.Close>
                 <Button variant="soft" color="gray">
-                  Hủy
+                  {tComments("edit_dialog_cancel")}
                 </Button>
               </Dialog.Close>
               <Button
@@ -228,7 +229,7 @@ export function CommentCard({
                 className="bg-mint-500"
                 disabled={!editContent.trim()}
               >
-                Lưu thay đổi
+                {tComments("edit_dialog_save")}
               </Button>
             </Flex>
           </Flex>

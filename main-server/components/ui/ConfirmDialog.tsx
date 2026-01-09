@@ -1,5 +1,6 @@
 import { Dialog, Button, Flex } from "@radix-ui/themes";
 import { ReactNode } from "react";
+import { useTranslations } from "next-intl";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -19,11 +20,15 @@ export default function ConfirmDialog({
   title,
   description,
   onConfirm,
-  confirmLabel = "Xác nhận",
-  cancelLabel = "Hủy",
+  confirmLabel,
+  cancelLabel,
   confirmColor = "red",
   trigger,
 }: ConfirmDialogProps) {
+  const tConfirm = useTranslations('confirm');
+  
+  const finalConfirmLabel = confirmLabel || tConfirm("default_confirm");
+  const finalCancelLabel = cancelLabel || tConfirm("default_cancel");
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       {trigger && <Dialog.Trigger>{trigger}</Dialog.Trigger>}
@@ -35,11 +40,11 @@ export default function ConfirmDialog({
         <Flex gap="3" justify="end">
           <Dialog.Close>
             <Button variant="soft" color="gray">
-              {cancelLabel}
+              {finalCancelLabel}
             </Button>
           </Dialog.Close>
           <Button color={confirmColor} onClick={onConfirm}>
-            {confirmLabel}
+            {finalConfirmLabel}
           </Button>
         </Flex>
       </Dialog.Content>

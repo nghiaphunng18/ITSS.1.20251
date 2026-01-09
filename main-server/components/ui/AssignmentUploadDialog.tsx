@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Dialog, Button, Flex, Text } from "@radix-ui/themes";
 import { FiUpload, FiFile, FiX } from "react-icons/fi";
 import { useToast } from "@/contexts/ToastContext";
+import { useTranslations } from "next-intl";
 
 interface AssignmentUploadDialogProps {
   open: boolean;
@@ -25,6 +26,7 @@ export function AssignmentUploadDialog({
   studentId,
   onUpload,
 }: AssignmentUploadDialogProps) {
+  const t = useTranslations("assignments");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -99,7 +101,7 @@ export function AssignmentUploadDialog({
         throw new Error("Failed to save submission");
       }
 
-      toast.success("Thành công", "Đã tải lên tệp");
+      toast.success(t("upload_success"), "");
       setSelectedFile(null);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -108,7 +110,7 @@ export function AssignmentUploadDialog({
       onOpenChange(false);
     } catch (error) {
       console.error("Upload error:", error);
-      toast.error("Lỗi", "Không thể tải lên tệp");
+      toast.error("Lỗi", t("upload_error"));
     } finally {
       setUploading(false);
     }
@@ -117,16 +119,16 @@ export function AssignmentUploadDialog({
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Content style={{ maxWidth: 500 }}>
-        <Dialog.Title>Tải lên bài nộp</Dialog.Title>
+        <Dialog.Title>{t("upload_dialog_title")}</Dialog.Title>
         <Dialog.Description size="2" mb="4">
-          Chọn tệp để tải lên (tối đa 10MB)
+          {t("upload_dialog_description")}
         </Dialog.Description>
 
         <form onSubmit={handleSubmit}>
           <Flex direction="column" gap="3">
             <div>
               <Text as="div" size="2" mb="2" weight="bold">
-                Chọn tệp <span className="text-red-500">*</span>
+                {t("upload_label_file")} <span className="text-red-500">*</span>
               </Text>
               
               {!selectedFile ? (
@@ -141,7 +143,7 @@ export function AssignmentUploadDialog({
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-blue-500 transition-colors">
                     <FiUpload className="mx-auto text-4xl text-gray-400 mb-2" />
                     <Text size="2" className="text-gray-600">
-                      Nhấn để chọn tệp
+                      {t("upload_placeholder_file")}
                     </Text>
                     <Text size="1" className="text-gray-400 mt-1">
                       PDF, Word, Excel, PowerPoint, hình ảnh, video, nén...
@@ -179,7 +181,7 @@ export function AssignmentUploadDialog({
             <Flex gap="3" justify="end" className="mt-2">
               <Dialog.Close>
                 <Button variant="soft" color="gray" type="button">
-                  Hủy
+                  {t("upload_cancel")}
                 </Button>
               </Dialog.Close>
               <Button
@@ -189,7 +191,7 @@ export function AssignmentUploadDialog({
                 loading={uploading}
               >
                 <FiUpload size={16} />
-                {uploading ? "Đang tải lên..." : "Tải lên"}
+                {uploading ? t("upload_submitting") : t("upload_submit")}
               </Button>
             </Flex>
           </Flex>

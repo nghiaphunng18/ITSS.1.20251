@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Flex, Text, Button, Card, Badge, Dialog, TextField } from "@radix-ui/themes";
+import { useTranslations, useLocale } from "next-intl";
 import { FiUserCheck, FiClock, FiCheck, FiLock } from "react-icons/fi";
 import axios from "@/lib/axios";
 import { useToast } from "@/contexts/ToastContext";
@@ -61,6 +62,13 @@ export function AttendanceCheckIn({
     }
   };
 
+  const t = useTranslations("attendance");
+  const tCheck = useTranslations("attendance.check_in");
+  const tSession = useTranslations("attendance.session");
+  const tCommon = useTranslations("common.messages");
+  const tConfirm = useTranslations("confirm");
+  const locale = useLocale();
+
   useEffect(() => {
     fetchSessions();
 
@@ -78,16 +86,16 @@ export function AttendanceCheckIn({
         studentId,
         password,
       });
-      toast.success("Đã điểm danh", "Điểm danh thành công!");
+      toast.success(tSession("title"), tCheck("success"));
       setPasswordDialogOpen(false);
       setPassword("");
       setSelectedSessionId(null);
       fetchSessions();
     } catch (error: any) {
       const message =
-        error.response?.data?.error || "Không thể điểm danh. Vui lòng thử lại.";
+        error.response?.data?.error || tCommon("error");
       setPasswordError(message);
-      toast.error("Lỗi", message);
+      toast.error(tCommon("error"), message);
     } finally {
       setCheckingIn(null);
     }
@@ -100,25 +108,25 @@ export function AttendanceCheckIn({
     setPasswordDialogOpen(true);
   };
 
-  if (isLoading) {
+    if (isLoading) {
     return (
       <Flex justify="center" align="center" py="6">
         <Text size="2" className="text-gray-500">
-          Đang tải...
+          {tCheck("loading")}
         </Text>
       </Flex>
     );
   }
 
-  if (sessions.length === 0) {
+    if (sessions.length === 0) {
     return (
       <Flex direction="column" gap="3" align="center" py="6">
         <FiUserCheck size={48} className="text-gray-400" />
         <Text size="3" className="text-gray-600">
-          Chưa có phiên điểm danh nào
+          {tCheck("no_session")}
         </Text>
         <Text size="2" className="text-gray-500">
-          Giáo viên sẽ bắt đầu điểm danh trong giờ học
+          {tCheck("teacher_will_start")}
         </Text>
       </Flex>
     );
@@ -140,16 +148,16 @@ export function AttendanceCheckIn({
 
         if (hasCheckedIn) {
           statusColor = "green";
-          statusText = "Đã điểm danh";
+          statusText = tCheck("attended");
         } else if (isClosed) {
           statusColor = "red";
-          statusText = "Đã đóng - Vắng mặt";
+          statusText = tCheck("closed_absent");
         } else if (isActive && !isExpired) {
           statusColor = "orange";
-          statusText = "Đang hoạt động";
+          statusText = t("session_active");
         } else if (isExpired) {
           statusColor = "red";
-          statusText = "Hết hạn - Vắng mặt";
+          statusText = tCheck("expired_absent");
         }
 
         const canCheckIn = isActive && !isExpired && !hasCheckedIn;
@@ -166,19 +174,23 @@ export function AttendanceCheckIn({
                     </Text>
                   </Flex>
                   <Text size="2" className="text-gray-600">
-                    Mã điểm danh:{" "}
+                    {t("attendance_code_label")} {" "}
                     <span className="font-mono font-bold text-mint-600 text-lg">
                       {session.sessionCode}
                     </span>
                   </Text>
                   <Text size="1" className="text-gray-500">
-                    Bắt đầu:{" "}
-                    {new Date(session.startTime).toLocaleString("vi-VN", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                      hour: "2-digit",
-                      minute: "2-digit",
+                    {tCheck("started_at", {
+                      time: new Date(session.startTime).toLocaleString(
+                        locale === "ja" ? "ja-JP" : "vi-VN",
+                        {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        }
+                      ),
                     })}
                   </Text>
                 </Flex>
@@ -195,7 +207,7 @@ export function AttendanceCheckIn({
                 >
                   <FiCheck className="text-green-600" size={20} />
                   <Text size="2" className="text-green-700">
-                    Bạn đã điểm danh thành công
+                    {tCheck("success")}
                   </Text>
                 </Flex>
               ) : isClosed || isExpired ? (
@@ -205,7 +217,7 @@ export function AttendanceCheckIn({
                   className="bg-red-50 p-3 rounded-lg"
                 >
                   <Text size="2" className="text-red-700">
-                    Bạn đã vắng mặt buổi điểm danh này
+                    {tCheck("absent")}
                   </Text>
                 </Flex>
               ) : canCheckIn ? (
@@ -216,8 +228,8 @@ export function AttendanceCheckIn({
                   disabled={checkingIn === session.id}
                 >
                   {checkingIn === session.id
-                    ? "Đang điểm danh..."
-                    : "Điểm danh ngay"}
+                    ? tCheck("checking_in")
+                    : tCheck("check_in_now")}
                 </Button>
               ) : null}
             </Flex>
@@ -232,14 +244,14 @@ export function AttendanceCheckIn({
             <Flex align="center" gap="2">
               <FiLock className="text-mint-500" />
               <Text size="5" weight="bold">
-                Nhập mật khẩu điểm danh
+                {tSession("password")}
               </Text>
             </Flex>
           </Dialog.Title>
 
           <Flex direction="column" gap="4" className="mt-4">
             <Text size="2" className="text-gray-600">
-              Vui lòng nhập mật khẩu 6 chữ số để điểm danh
+              {t("info_mark_attendance")}
             </Text>
 
             <TextField.Root
@@ -265,7 +277,7 @@ export function AttendanceCheckIn({
             <Flex gap="3" justify="end">
               <Dialog.Close>
                 <Button variant="soft" color="gray">
-                  Hủy
+                  {tCommon("confirm")}
                 </Button>
               </Dialog.Close>
               <Button
@@ -273,7 +285,7 @@ export function AttendanceCheckIn({
                 onClick={() => selectedSessionId && handleCheckIn(selectedSessionId)}
                 disabled={password.length !== 6 || checkingIn !== null}
               >
-                {checkingIn ? "Đang xác nhận..." : "Xác nhận"}
+                {checkingIn ? tCheck("checking_in") : tCommon("confirm")}
               </Button>
             </Flex>
           </Flex>
